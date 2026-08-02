@@ -1,0 +1,93 @@
+generated: '2026-08-02'
+method: searched
+source: https://anaconda.com/docs/anaconda-org/release-notes, https://anaconda.statuspage.io,
+  openapi/anaconda-server-openapi-original.json
+versioning:
+- api: anaconda:server-api
+  scheme: product-version
+  current: '6.5'
+  evidence: OpenAPI info.version 6.5; the on-premises product is versioned separately
+    (psm-on-prem docs are published per release, e.g. 6.8.0).
+  docs: https://anaconda.com/docs/psm-on-prem/main
+- api: anaconda:org-management-api
+  scheme: uri-path + header
+  current: v1
+  path_prefix: /api/v1
+  header: 'X-API-Version: v1'
+  docs: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+- api: anaconda:audit-logs-api
+  scheme: header
+  current: v1
+  header: 'X-API-Version: v1'
+  docs: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+- api: anaconda:anaconda-org-api
+  scheme: server-advertised
+  current: 0.2.1
+  evidence: 'live response header `x-binstar-api-version: 0.2.1`'
+deprecation:
+  policy_url: https://anaconda.com/docs/anaconda-org/release-notes
+  formal_policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  note: >-
+    Anaconda marks deprecated operations in the OpenAPI itself (24 of 172 Anaconda
+    Server operations carry `deprecated: true`) and announces removals in dated release
+    notes, but publishes no standalone deprecation policy and emits no RFC 8594 Sunset
+    or Deprecation headers.
+  historical_removals:
+  - version: 4.0.0
+    date: '2024-08-20'
+    change: Projects, Notebooks and Environments removed from Anaconda.org.
+  guidance:
+  - Do not use `--username` / `--password` flags in CI/CD workflows; use tokens instead.
+sla:
+  url: null
+  uptime_target: null
+  note: No public SLA / uptime commitment found on the pricing or legal pages.
+status_page: https://anaconda.statuspage.io
+status_page_api: https://anaconda.statuspage.io/api/v2/summary.json
+status_page_verified: '2026-08-02'
+release_notes:
+- name: Anaconda.org release notes
+  url: https://anaconda.com/docs/anaconda-org/release-notes
+- name: Anaconda CLI release notes
+  url: https://anaconda.com/docs/cli-reference/anaconda-cli/release-notes
+- name: anaconda-client release notes
+  url: https://anaconda.com/docs/cli-reference/anaconda-client/release-notes
+- name: anaconda-ai release notes
+  url: https://anaconda.com/docs/cli-reference/anaconda-ai/release-notes
+- name: AI Navigator release notes
+  url: https://anaconda.com/docs/legacy/ai-navigator/resources/release-notes
+deprecated_operations:
+  count: 24
+  source: openapi/anaconda-server-openapi-original.json
+  operations:
+  - repo.endpoints.account.register
+  - repo.endpoints.account.register_confirm
+  - repo.endpoints.account.unregister
+  - repo.endpoints.account.unregister_confirm
+  - repo.endpoints.account.edit_account
+  - repo.endpoints.account.delete
+  - repo.endpoints.account.logs
+  - repo.endpoints.users.post
+  - repo.endpoints.users.get
+  - repo.endpoints.users.put
+  - repo.endpoints.users.delete
+  - repo.endpoints.users.logs
+  - repo.endpoints.channels.channel_artifacts.get_artifact_readme
+  - repo.endpoints.channels.channel_artifacts.move_artifact
+  - repo.endpoints.channels.channel_artifacts.copy_artifact
+  - repo.endpoints.channels.subchannel_artifacts.get_artifact_readme
+  - repo.endpoints.channels.subchannel_artifacts.move_artifact
+  - repo.endpoints.channels.subchannel_artifacts.copy_artifact
+  - repo.endpoints.channels.subchannel_artifacts.download_artifact_file
+  - repo.endpoints.artifacts.get_all_by_type
+  - repo.endpoints.artifacts.get_all_by_type_and_name
+  - repo.endpoints.artifacts.artifact_channels
+  - repo.endpoints.artifacts.download_artifact
+  - repo.endpoints.artifacts.versions
+legacy_surfaces:
+- name: Anaconda AI Navigator
+  status: legacy
+  evidence: Its documentation now lives under /docs/legacy/ai-navigator/, superseded
+    by Anaconda Desktop.

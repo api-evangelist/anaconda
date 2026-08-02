@@ -1,0 +1,113 @@
+generated: '2026-08-02'
+method: derived
+source: openapi/anaconda-server-openapi-original.json, openapi/anaconda-org-management-openapi-original.json,
+  openapi/anaconda-audit-logs-openapi-original.json, openapi/anaconda-ai-navigator-openapi-original.json,
+  openapi/anaconda-desktop-openapi-original.json
+format: vendor-json
+rfc9457: false
+note: Anaconda publishes no `application/problem+json` responses in any of its five
+  OpenAPI documents — every error body is `application/json` with a vendor envelope.
+  Two distinct envelopes are in use across the estate (see `envelopes` below), which
+  is itself a consistency gap worth reporting to the provider.
+envelopes:
+- id: anaconda-server-error
+  apis: [anaconda:server-api]
+  content_type: application/json
+  schema: ErrorResponse
+  shape:
+    code: string — internal error code, usable as a message-catalog key (example `bad-parameter`)
+    message: string — short human-readable message, intended mainly for logging
+    status: integer — the HTTP status code, repeated in the body (example 401)
+  source: openapi/anaconda-server-openapi-original.json#/components/schemas/ErrorResponse
+- id: anaconda-platform-error
+  apis: [anaconda:org-management-api]
+  content_type: application/json
+  schema: ErrorResponse -> ErrorDetails
+  shape:
+    error.message: string (required) — a human-readable error message
+    error.code: string (required) — an error code identifying the type of error
+    error.data: any (optional) — additional error context
+  source: openapi/anaconda-org-management-openapi-original.json#/components/schemas/ErrorDetails
+- id: fastapi-validation-error
+  apis: [anaconda:org-management-api, anaconda:audit-logs-api]
+  content_type: application/json
+  status: 422
+  schema: HTTPValidationError -> ValidationError[]
+  shape:
+    detail[].loc: string[] — location of the validation error, e.g. ["body", "name"]
+    detail[].msg: string — human-readable validation message
+    detail[].type: string — validation error type
+  source: openapi/anaconda-org-management-openapi-original.json#/components/schemas/HTTPValidationError
+problems:
+- status: 400
+  title: Bad request
+  detail: Server cannot execute the request due to something perceived to be a client
+    error.
+  envelope: anaconda-server-error
+  occurrences: 63
+  source_component: openapi/anaconda-server-openapi-original.json#/components/responses/BadRequest
+- status: 401
+  title: Unauthenticated
+  detail: No token was provided, or the token is invalid.
+  envelope: anaconda-server-error
+  occurrences: 150
+  remediation: Obtain a JWT from the Anaconda identity service, or send a user token
+    in the X-Auth header. See authentication/anaconda-authentication.yml.
+  source_component: openapi/anaconda-server-openapi-original.json#/components/responses/Unauthenticated
+- status: 402
+  title: No free seats remaining in the organization subscription
+  detail: A seat could not be assigned because the organization's subscription has
+    no free seats.
+  envelope: anaconda-platform-error
+  occurrences: 1
+  api: anaconda:org-management-api
+  source_operation: openapi/anaconda-org-management-openapi-original.json#assign_seat
+- status: 403
+  title: Forbidden
+  detail: The caller is authenticated but access to the resource is forbidden.
+  envelope: anaconda-server-error
+  occurrences: 140
+  source_component: openapi/anaconda-server-openapi-original.json#/components/responses/Forbidden
+- status: 404
+  title: Not found
+  detail: The specified resource was not found. Platform variants include `Service
+    account not found`, `User not found`, `User token not found`, `A seat is not currently
+    assigned to the user`; AI Navigator variants include `Model not found`, `Model
+    or file not found`, `Server not found`, `Server is not running`.
+  envelope: anaconda-server-error
+  occurrences: 95
+  source_component: openapi/anaconda-server-openapi-original.json#/components/responses/NotFound
+- status: 409
+  title: Conflict
+  detail: Creating or updating the resource raises a conflict. Variants include `A
+    seat is already assigned to the user`, `Server is currently running and cannot
+    be deleted`, `Table already exists`.
+  envelope: anaconda-server-error
+  occurrences: 10
+  source_component: openapi/anaconda-server-openapi-original.json#/components/responses/Conflict
+- status: 422
+  title: Validation error
+  detail: Request body or query parameters failed validation. Body is a FastAPI-style
+    HTTPValidationError with a `detail[]` array of {loc, msg, type}.
+  envelope: fastapi-validation-error
+  occurrences: 20
+  apis: [anaconda:org-management-api, anaconda:audit-logs-api]
+- status: 500
+  title: Internal server error
+  detail: An unexpected server-side error occurred.
+  envelope: anaconda-server-error
+  occurrences: 156
+  source_component: openapi/anaconda-server-openapi-original.json#/components/responses/InternalServerError
+coverage:
+  specs_analysed: 5
+  operations_analysed: 223
+  distinct_status_codes: 8
+  reusable_error_components: 6
+  problem_json_operations: 0
+gaps:
+- Two incompatible error envelopes across the estate (flat `{code,message,status}`
+  on the repository API vs nested `{error:{code,message,data}}` on the Platform admin
+  APIs).
+- No RFC 9457 `application/problem+json` anywhere.
+- No published registry of the `code` values either envelope can return, so an agent
+  cannot branch on error code without trial and error.

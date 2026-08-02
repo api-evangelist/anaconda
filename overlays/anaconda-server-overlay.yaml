@@ -1,0 +1,33 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Anaconda Server API
+  version: 1.0.0
+extends: openapi/anaconda-server-openapi-original.json
+x-generated: '2026-08-02'
+x-method: generated
+actions:
+- target: $.info
+  description: Stamp API Evangelist provenance onto the harvested specification.
+  update:
+    x-apievangelist-provider: anaconda
+    x-apievangelist-api: anaconda:server-api
+    x-apievangelist-harvested: '2026-08-02'
+    x-apievangelist-source: https://api.anaconda.cloud/openapi.json
+    x-apievangelist-artifacts:
+    - authentication/anaconda-authentication.yml
+    - conventions/anaconda-conventions.yml
+    - errors/anaconda-problem-types.yml
+    - lifecycle/anaconda-lifecycle.yml
+    - conformance/anaconda-conformance.yml
+- target: $
+  description: 2 of 172 operations carry no tags.
+  update:
+    x-apievangelist-gap-tags:
+      operations: 172
+      untagged: 2
+- target: $
+  description: 6 of 172 operations carry no summary.
+  update:
+    x-apievangelist-gap-summaries:
+      operations: 172
+      missing_summaries: 6

@@ -1,0 +1,141 @@
+generated: '2026-08-02'
+method: derived
+source: mcp/anaconda-mcp.yml + openapi/anaconda-ai-navigator-openapi-original.json
+  + openapi/anaconda-desktop-openapi-original.json
+description: Binds each published Anaconda MCP tool to the OpenAPI operation that backs
+  it, so the tool inherits a real input contract instead of a guessed one. Anaconda's
+  AI Navigator and Desktop OpenAPI documents declare NO operationId values, so REST
+  operations are addressed here by `METHOD path` — this is a real gap in the specs,
+  not an omission in this crosswalk.
+surfaces:
+  openapi:
+  - file: openapi/anaconda-ai-navigator-openapi-original.json
+    title: AI Navigator API 1.0.0
+    operations: 20
+    operation_ids: false
+    gated: false
+  - file: openapi/anaconda-desktop-openapi-original.json
+    title: Desktop API 1.0.0
+    operations: 13
+    operation_ids: false
+    gated: false
+  - file: openapi/anaconda-server-openapi-original.json
+    title: Anaconda Server API 6.5
+    operations: 172
+    operation_ids: true
+    gated: false
+    note: No MCP tool maps onto this surface; the MCP servers are environment/model
+      oriented, not repository-administration oriented.
+  graphql: none published
+  mcp:
+  - server: anaconda-ai-mcp
+    command: anaconda ai mcp
+    transport: stdio (default) | streamable-http
+    tools_list_gated: true
+    gating_reason: local-only server, no remote endpoint to introspect anonymously
+  - server: anaconda-mcp
+    command: anaconda mcp
+    transport: stdio
+    tools_list_gated: true
+    gating_reason: local-only gateway; Anaconda publishes capabilities in prose, not
+      a named tool list
+crosswalk:
+- tool: list_models
+  server: anaconda-ai-mcp
+  category: models
+  rest:
+  - GET /api/models
+  binding: rest
+  confidence: high
+  note: The spec's `Get all models` operation retrieves the entire catalog or only
+    locally downloaded models, matching the tool's documented behaviour.
+- tool: download_model
+  server: anaconda-ai-mcp
+  category: models
+  rest:
+  - PATCH /api/models/{modelId}/files/{fileId}
+  binding: rest
+  confidence: medium
+  note: The only download-related REST operation published is `Update download status
+    of a model file`. The byte transfer itself is not exposed as a documented public
+    operation, so the tool is likely a composite over this operation plus an internal
+    fetch.
+- tool: list_servers
+  server: anaconda-ai-mcp
+  category: servers
+  rest:
+  - GET /api/servers
+  binding: rest
+  confidence: high
+- tool: start_server
+  server: anaconda-ai-mcp
+  category: servers
+  rest:
+  - PATCH /api/servers/{serverId}
+  binding: rest
+  confidence: high
+  note: 'Spec operation summary: `Control server state (start/stop)` — one REST operation
+    backs two MCP tools.'
+- tool: stop_server
+  server: anaconda-ai-mcp
+  category: servers
+  rest:
+  - PATCH /api/servers/{serverId}
+  binding: rest
+  confidence: high
+  note: Same operation as start_server, differentiated by request body state.
+- tool: remove_server
+  server: anaconda-ai-mcp
+  category: servers
+  rest:
+  - DELETE /api/servers/{serverId}
+  binding: rest
+  confidence: high
+mcp_only:
+- tool: '(anaconda-mcp gateway capabilities)'
+  reason: The conda-environment gateway operates on the local machine's conda state
+    (`.condarc`, environment list, solver, PyPI-to-conda name mapping). None of it
+    is exposed by any published Anaconda OpenAPI — it is a local filesystem/solver
+    surface, not an HTTP one. This is a genuine surface divergence.
+rest_only:
+- capability: model files
+  operations:
+  - GET /models/{modelId}/files
+  - GET /api/models/{modelId}/files/{fileId}
+  - DELETE /api/models/{modelId}/files/{fileId}
+  note: File inspection and deletion have no MCP tool.
+- capability: model detail
+  operations:
+  - GET /api/models/{id}
+- capability: server creation and detail
+  operations:
+  - POST /api/servers
+  - GET /api/servers/{serverId}
+  note: The MCP tool set can start/stop/remove servers but not create or inspect one.
+- capability: vector database
+  operations:
+  - GET /api/vector-db/health
+  - POST /api/vector-db
+  - PATCH /api/vector-db
+  - GET /api/vector-db/tables
+  - POST /api/vector-db/tables
+  - DELETE /api/vector-db/tables/{tableName}
+  note: The entire embedded vector-database surface is REST/CLI/SDK only — no MCP tool.
+- capability: health checks
+  operations:
+  - GET /api
+  - GET /api/models/health
+  - GET /api/servers/health
+- capability: Anaconda Server repository administration
+  operations: 172 operations across channels, artifacts, CVEs, accounts, users, groups,
+    mirrors, installers and system administration
+  source: openapi/anaconda-server-openapi-original.json
+  note: No MCP tool covers the Anaconda Platform repository API at all.
+coverage:
+  tools_named: 6
+  tools_bound: 6
+  tools_bound_high_confidence: 5
+  mcp_only_surfaces: 1
+  rest_operations_total: 205
+  rest_operations_with_a_tool: 5
+  rest_operations_with_a_tool_pct: 2.4

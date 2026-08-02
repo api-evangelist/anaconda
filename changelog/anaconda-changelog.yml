@@ -1,0 +1,57 @@
+generated: '2026-08-02'
+method: searched
+source: https://anaconda.com/docs/anaconda-org/release-notes
+scheme: dated release notes, versioned as `<anaconda.org backend>/<frontend>` (e.g.
+  4.2.23/1.0.32)
+current_version: 4.2.23/1.0.32
+note: Anaconda publishes several separate dated release-note streams rather than one
+  estate-wide changelog. The recent window below is from the Anaconda.org stream; the
+  other streams are listed under `streams`.
+streams:
+- name: Anaconda.org
+  url: https://anaconda.com/docs/anaconda-org/release-notes
+- name: Anaconda CLI
+  url: https://anaconda.com/docs/cli-reference/anaconda-cli/release-notes
+- name: anaconda-client
+  url: https://anaconda.com/docs/cli-reference/anaconda-client/release-notes
+- name: anaconda-ai
+  url: https://anaconda.com/docs/cli-reference/anaconda-ai/release-notes
+- name: AI Navigator (legacy)
+  url: https://anaconda.com/docs/legacy/ai-navigator/resources/release-notes
+entries:
+- version: 4.2.23/1.0.32
+  date: '2026-07-28'
+  breaking: false
+  additions:
+  - '"Install via Desktop" button for installing a package into an Anaconda Desktop
+    environment'
+  - Package comparison mode supporting up to five packages side by side
+- version: 4.2.23/1.0.30
+  date: '2026-07-21'
+  breaking: false
+  additions:
+  - Anaconda-curated pre-built environments are now searchable and installable
+- version: 4.2.23/1.0.29
+  date: '2026-07-13'
+  breaking: false
+  additions:
+  - '"Try This Package" beta — in-browser code execution with a package'
+  fixes:
+  - Improved package download-count accuracy
+- version: 4.2.20/1.0.28
+  date: '2026-06-12'
+  breaking: false
+  fixes:
+  - External links in package descriptions open in a new tab
+- version: 4.2.13
+  date: '2025-12-18'
+  breaking: false
+- version: 4.0.0
+  date: '2024-08-20'
+  breaking: true
+  removals:
+  - Projects, Notebooks and Environments removed from Anaconda.org
+x-evidence:
+  fetched: '2026-08-02'
+  url: https://anaconda.com/docs/anaconda-org/release-notes
+  window: recent entries only; the live release-notes page is the source of truth

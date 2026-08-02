@@ -1,0 +1,32 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Anaconda Desktop API
+  version: 1.0.0
+extends: openapi/anaconda-desktop-openapi-original.json
+x-generated: '2026-08-02'
+x-method: generated
+actions:
+- target: $.info
+  description: Stamp API Evangelist provenance onto the harvested specification.
+  update:
+    x-apievangelist-provider: anaconda
+    x-apievangelist-api: anaconda:desktop
+    x-apievangelist-harvested: '2026-08-02'
+    x-apievangelist-source: https://anaconda.com/docs/llms.txt
+    x-apievangelist-artifacts:
+    - authentication/anaconda-authentication.yml
+    - conventions/anaconda-conventions.yml
+    - errors/anaconda-problem-types.yml
+    - lifecycle/anaconda-lifecycle.yml
+    - conformance/anaconda-conformance.yml
+- target: $
+  description: The published specification declares no servers[]; recorded as a documented gap rather
+    than an invented host.
+  update:
+    x-apievangelist-servers-note: Local-only API. Anaconda publishes no host/port for this surface.
+- target: $
+  description: 13 of 13 operations carry no operationId, so tools and agents cannot address them by name.
+  update:
+    x-apievangelist-gap-operation-ids:
+      operations: 13
+      missing_operation_ids: 13

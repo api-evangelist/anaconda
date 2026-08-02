@@ -1,0 +1,68 @@
+generated: '2026-08-02'
+method: searched
+source: live probes of the /.well-known/ surface on every Anaconda host in apis.yml
+  and every OpenAPI servers[] host
+hosts:
+- host: https://anaconda.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/plain; charset=utf-8
+    file: anaconda-security.txt
+    note: RFC 9116. Canonical, Contact (Intigriti VDP), Expires 2026-10-01.
+  - path: /.well-known/openid-configuration
+    status: 200
+    content_type: application/json
+    file: anaconda-openid-configuration.json
+    note: OIDC discovery for the Anaconda identity service (issuer https://auth.anaconda.com/api/auth).
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: https://www.anaconda.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/plain; charset=utf-8
+    file: anaconda-security.txt
+    note: Identical body to the apex host; Canonical points at https://anaconda.com.
+- host: https://api.anaconda.cloud
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+- host: https://api.anaconda.org
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/plain; charset=utf-8
+    file: anaconda-security.txt
+    note: Served across the anaconda.org estate as well.
+  - path: /.well-known/openid-configuration
+    status: 200
+    note: OIDC discovery is also answered on the anaconda.org API host.
+- host: https://docs.anaconda.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: anaconda-security.txt
+extra:
+- path: /api/auth/.well-known/jwks.json
+  host: https://anaconda.com
+  status: 200
+  content_type: application/json
+  note: JWKS advertised by the OIDC discovery document (jwks_uri).
+x-evidence:
+  fetched: '2026-08-02'
+  probes: 18

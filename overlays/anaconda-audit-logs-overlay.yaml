@@ -1,0 +1,27 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Anaconda Audit Logs API
+  version: 1.0.0
+extends: openapi/anaconda-audit-logs-openapi-original.json
+x-generated: '2026-08-02'
+x-method: generated
+actions:
+- target: $.info
+  description: Stamp API Evangelist provenance onto the harvested specification.
+  update:
+    x-apievangelist-provider: anaconda
+    x-apievangelist-api: anaconda:audit-logs
+    x-apievangelist-harvested: '2026-08-02'
+    x-apievangelist-source: https://anaconda.com/docs/llms.txt
+    x-apievangelist-artifacts:
+    - authentication/anaconda-authentication.yml
+    - conventions/anaconda-conventions.yml
+    - errors/anaconda-problem-types.yml
+    - lifecycle/anaconda-lifecycle.yml
+    - conformance/anaconda-conformance.yml
+- target: $
+  description: 5 of 5 operations carry no tags.
+  update:
+    x-apievangelist-gap-tags:
+      operations: 5
+      untagged: 5

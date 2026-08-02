@@ -1,0 +1,911 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Audit Logs API",
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "https://anaconda.com",
+      "description": "Anaconda Cloud"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "AuditLogResponse": {
+        "description": "**Response** representation of an audit log entry, including core fields and\na formatted, human-readable message.\n",
+        "properties": {
+          "action_key": {
+            "description": "Key that identifies the type of action recorded (for example, `policy_updated`).\n",
+            "title": "Action Key",
+            "type": "string"
+          },
+          "action_verb": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Short verb or phrase that summarizes the action taken (for example,\n`created`, `updated`, `deleted`).\n",
+            "title": "Action Verb"
+          },
+          "actor_email": {
+            "anyOf": [
+              {
+                "maxLength": 320,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Email address of the actor who performed the action.\n",
+            "title": "Actor Email"
+          },
+          "actor_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string",
+                "example": "<uuid>"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "UUID of the user or system principal responsible for the action.\n",
+            "title": "Actor Id"
+          },
+          "actor_type": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Type of actor that initiated the event (for example, `user` or `system`).\n",
+            "title": "Actor Type"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string",
+            "example": "<timestamp>"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string",
+            "example": "<uuid>"
+          },
+          "message": {
+            "description": "Human-readable message describing the audit event, derived from the\nstructured fields in the log.\n",
+            "readOnly": true,
+            "title": "Message",
+            "type": "string"
+          },
+          "meta": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Arbitrary metadata associated with the event, represented as a JSON object.\n",
+            "title": "Meta"
+          },
+          "occurred_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string",
+                "example": "<timestamp>"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Time at which the event occurred, as reported by the emitting service.\n",
+            "title": "Occurred At"
+          },
+          "org_id": {
+            "format": "uuid",
+            "title": "Org Id",
+            "type": "string",
+            "example": "<uuid>"
+          },
+          "org_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Name of the organization to which this audit log entry belongs.\n",
+            "title": "Org Name"
+          },
+          "service_name": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Name of the service that wrote the audit log entry.\n",
+            "title": "Service Name"
+          },
+          "target_email": {
+            "anyOf": [
+              {
+                "maxLength": 320,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional email address associated with the resource or subject affected\nby the action.\n",
+            "title": "Target Email"
+          },
+          "target_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string",
+                "example": "<uuid>"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Identifier of the resource affected by the action.\n",
+            "title": "Target Id"
+          },
+          "target_type": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Type of resource affected by the action (for example, `user`, `group`, `policy`).\n",
+            "title": "Target Type"
+          }
+        },
+        "required": [
+          "action_key",
+          "id",
+          "org_id",
+          "created_at",
+          "message"
+        ],
+        "title": "AuditLogResponse",
+        "type": "object"
+      },
+      "ExportJobResponse": {
+        "description": "**Response** containing the state of a bulk export job and, when complete,\nits download URL.\n",
+        "properties": {
+          "completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string",
+                "example": "<timestamp>"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Time when the export job finished processing, if it has completed.\n",
+            "title": "Completed At"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string",
+            "example": "<timestamp>"
+          },
+          "download_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "URL to download the exported data in JSON Lines format, present when\nthe job has completed successfully.\n",
+            "title": "Download Url"
+          },
+          "error_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Error message describing why the export job failed, if applicable.\n",
+            "title": "Error Message"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string",
+            "example": "<uuid>"
+          },
+          "org_id": {
+            "format": "uuid",
+            "title": "Org Id",
+            "type": "string",
+            "example": "<uuid>"
+          },
+          "progress": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Approximate completion percentage for the export job, in the range `0–100`.\n",
+            "title": "Progress"
+          },
+          "status": {
+            "description": "Current status of the export job (for example, `pending`, `running`,\n`completed`, or `failed`).\n",
+            "title": "Status",
+            "type": "string"
+          },
+          "total_records": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Total number of records included in the export, when known.\n",
+            "title": "Total Records"
+          }
+        },
+        "required": [
+          "id",
+          "org_id",
+          "status",
+          "created_at"
+        ],
+        "title": "ExportJobResponse",
+        "type": "object"
+      },
+      "ExportRequest": {
+        "description": "**Request body** for creating a new export job that filters audit logs and\nwrites them in JSON Lines format.\n",
+        "properties": {
+          "from_date": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string",
+                "example": "<timestamp>"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Lower bound (inclusive) for filtering audit logs by `occurred_at`.\nOnly events with `occurred_at >= from_date` are exported.\n",
+            "title": "From Date"
+          },
+          "q": {
+            "default": [],
+            "description": "Search filters in the format `column_name:search_string1,search_string2`.\n\nMultiple values for a single column are separated by commas. To combine\nmultiple `q` entries, use `search_operator`.\n",
+            "items": {
+              "type": "string"
+            },
+            "title": "Q",
+            "type": "array"
+          },
+          "search_operator": {
+            "default": "or",
+            "description": "Logical operator used to combine multiple `q` filters:\n\n- `or` — export logs that match **any** search condition  \n- `and` — export logs that match **all** search conditions\n",
+            "title": "Search Operator",
+            "type": "string"
+          },
+          "to_date": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string",
+                "example": "<timestamp>"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Upper bound (inclusive) for filtering audit logs by `occurred_at`.\nOnly events with `occurred_at <= to_date` are exported.\n",
+            "title": "To Date"
+          }
+        },
+        "title": "ExportRequest",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "description": "**Error response** returned when the request fails validation.\n",
+        "properties": {
+          "detail": {
+            "description": "List of validation errors describing which fields are invalid and why.\n",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "PaginatedResponse_AuditLogResponse_": {
+        "description": "**Paginated response** that wraps a list of audit log entries and the total\nnumber of matching records.\n",
+        "properties": {
+          "items": {
+            "description": "Page of audit log entries returned for the current request.\n",
+            "items": {
+              "$ref": "#/components/schemas/AuditLogResponse"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "total_count": {
+            "description": "Total number of audit log entries matching the query, across all pages.\n",
+            "title": "Total Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total_count"
+        ],
+        "title": "PaginatedResponse[AuditLogResponse]",
+        "type": "object"
+      },
+      "ValidationError": {
+        "description": "**Validation error** describing an issue with a specific part of the request.\n",
+        "properties": {
+          "loc": {
+            "description": "Location of the validation error as a path of components, such as\n`[\"body\", \"field_name\"]` or `[\"query\", \"param_name\"]`.\n",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "description": "Human-readable description of the validation error.\n",
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "description": "Machine-readable error type code.\n",
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "JWT or Access Token": {
+        "bearerFormat": "JWT or Access Token",
+        "description": "Bearer token obtained by authenticating with your organization's [service account](/anaconda-platform/admin/service-accounts) credentials (`client_id` and `client_secret`).\n\nSee the [Getting started](/anaconda-platform/admin/audit-logs/audit-log-api) page for the full authentication flow.",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "paths": {
+    "/api/audit-logs": {
+      "get": {
+        "description": "Retrieve audit logs for your organization with support for search, sorting, pagination, and date filtering.",
+        "operationId": "get_audit_logs__get",
+        "parameters": [
+          {
+            "description": "Filter audit logs by field values. Use the format `column_name:value1,value2` to match entries where the column contains any of the specified values.\n\nYou can pass multiple `q` parameters to build complex filters. They are combined using the `search_operator` parameter.",
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "default": [],
+              "items": {
+                "type": "string"
+              },
+              "title": "Q",
+              "type": "array"
+            }
+          },
+          {
+            "description": "The logical operator used to combine multiple `q` filters.\n\nUse `or` to return logs matching any filter. Use `and` to return only logs matching all filters.",
+            "in": "query",
+            "name": "search_operator",
+            "required": false,
+            "schema": {
+              "default": "or",
+              "title": "Search Operator",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Sort the results by one or more columns. Use the format `column_name` for ascending order or `-column_name` for descending order.\n\nFor example, `-occurred_at` sorts by most recent first.",
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Sort",
+              "type": "string"
+            }
+          },
+          {
+            "description": "The maximum number of audit log entries to return per page.",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 1000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "The number of entries to skip before returning results. Use with `limit` to paginate through large result sets.",
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Only return audit logs that occurred on or after this timestamp. Use ISO 8601 format with timezone.",
+            "in": "query",
+            "name": "from_date",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string",
+                  "example": "<timestamp>"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "From Date"
+            }
+          },
+          {
+            "description": "Only return audit logs that occurred on or before this timestamp. Use ISO 8601 format with timezone.",
+            "in": "query",
+            "name": "to_date",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string",
+                  "example": "<timestamp>"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "To Date"
+            }
+          },
+          {
+            "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`.",
+            "in": "header",
+            "name": "X-Org-Name",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Org-Name"
+            }
+          },
+          {
+            "description": "The API version to use. Set to `v1`.",
+            "in": "header",
+            "name": "X-API-Version",
+            "required": true,
+            "schema": {
+              "default": "v1",
+              "title": "X-Api-Version",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request succeeded and a paginated list of audit logs is returned.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_AuditLogResponse_"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The request parameters failed validation.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT or Access Token": []
+          }
+        ],
+        "summary": "Get Audit Logs"
+      }
+    },
+    "/api/audit-logs/{audit_log_id}": {
+      "get": {
+        "description": "Retrieve a single audit log entry by its unique identifier.",
+        "operationId": "get_audit_log__audit_log_id__get",
+        "parameters": [
+          {
+            "description": "UUID of the audit log entry to retrieve.\n",
+            "in": "path",
+            "name": "audit_log_id",
+            "required": true,
+            "schema": {
+              "description": "Identifier of the audit log entry.\n",
+              "format": "uuid",
+              "title": "Audit Log Id",
+              "type": "string",
+              "example": "<uuid>"
+            }
+          },
+          {
+            "description": "Name of the organization to scope the request to. This header is required\nin multi-tenant deployments.\n",
+            "in": "header",
+            "name": "X-Org-Name",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Organization name used to resolve the tenant context.\n",
+              "title": "X-Org-Name"
+            }
+          },
+          {
+            "description": "The API version to use. Set to `v1`.",
+            "in": "header",
+            "name": "X-API-Version",
+            "required": false,
+            "schema": {
+              "default": "v1",
+              "description": "API version to target for this request.\n",
+              "title": "X-Api-Version",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request succeeded and the requested audit log entry is returned.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditLogResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The request parameters failed validation.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT or Access Token": []
+          }
+        ],
+        "summary": "Get Audit Log"
+      }
+    },
+    "/api/audit-logs/export": {
+      "post": {
+        "description": "Create a bulk export job that writes audit logs in JSON Lines format. The export is processed asynchronously — use the returned job ID to check status and download the results.",
+        "operationId": "create_export_job_export_post",
+        "parameters": [
+          {
+            "description": "Name of the organization to scope the request to. This header is required\nin multi-tenant deployments.\n",
+            "in": "header",
+            "name": "X-Org-Name",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Organization name used to resolve the tenant context.\n",
+              "title": "X-Org-Name"
+            }
+          },
+          {
+            "description": "The API version to use. Set to `v1`.",
+            "in": "header",
+            "name": "X-API-Version",
+            "required": false,
+            "schema": {
+              "default": "v1",
+              "description": "API version to target for this request.\n",
+              "title": "X-Api-Version",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Request succeeded and an export job identifier is returned.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "title": "Response Create Export Job Export Post",
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The request body or headers failed validation.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT or Access Token": []
+          }
+        ],
+        "summary": "Create Export Job"
+      }
+    },
+    "/api/audit-logs/export/{job_id}": {
+      "get": {
+        "description": "Retrieve the current status of an export job and, when complete, the download URL for the exported data.",
+        "operationId": "get_export_job_status_export__job_id__get",
+        "parameters": [
+          {
+            "description": "UUID of the export job to query.\n",
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "description": "Identifier of the export job.\n",
+              "format": "uuid",
+              "title": "Job Id",
+              "type": "string",
+              "example": "<uuid>"
+            }
+          },
+          {
+            "description": "Name of the organization to scope the request to. This header is required\nin multi-tenant deployments.\n",
+            "in": "header",
+            "name": "X-Org-Name",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Organization name used to resolve the tenant context.\n",
+              "title": "X-Org-Name"
+            }
+          },
+          {
+            "description": "The API version to use. Set to `v1`.",
+            "in": "header",
+            "name": "X-API-Version",
+            "required": false,
+            "schema": {
+              "default": "v1",
+              "description": "API version to target for this request.\n",
+              "title": "X-Api-Version",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request succeeded and the export job status is returned.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportJobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The request parameters failed validation.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT or Access Token": []
+          }
+        ],
+        "summary": "Get Export Job Status"
+      }
+    },
+    "/api/audit-logs/export/{job_id}/download": {
+      "get": {
+        "description": "Download the exported audit log data for a completed export job in JSON Lines format.",
+        "operationId": "download_export_export__job_id__download_get",
+        "parameters": [
+          {
+            "description": "UUID of the export job whose data should be downloaded.\n",
+            "in": "path",
+            "name": "job_id",
+            "required": true,
+            "schema": {
+              "description": "Identifier of the export job.\n",
+              "format": "uuid",
+              "title": "Job Id",
+              "type": "string",
+              "example": "<uuid>"
+            }
+          },
+          {
+            "description": "Name of the organization to scope the request to. This header is required\nin multi-tenant deployments.\n",
+            "in": "header",
+            "name": "X-Org-Name",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Organization name used to resolve the tenant context.\n",
+              "title": "X-Org-Name"
+            }
+          },
+          {
+            "description": "The API version to use. Set to `v1`.",
+            "in": "header",
+            "name": "X-API-Version",
+            "required": false,
+            "schema": {
+              "default": "v1",
+              "description": "API version to target for this request.\n",
+              "title": "X-Api-Version",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request succeeded and the export data is streamed in the response.\n",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "The request parameters failed validation.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT or Access Token": []
+          }
+        ],
+        "summary": "Download Export"
+      }
+    }
+  }
+}

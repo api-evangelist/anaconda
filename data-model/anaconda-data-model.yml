@@ -1,0 +1,325 @@
+generated: '2026-08-02'
+method: derived
+source: openapi/anaconda-server-openapi-original.json
+description: 'Entity-relationship graph derived from $ref links and id-reference fields in the Anaconda
+  Server API OpenAPI. Relationships marked confidence: low are inferred from field naming (`*_id`) rather
+  than an explicit $ref.'
+summary:
+  schemas_total: 95
+  entities_with_relationships: 28
+  relationships_total: 73
+entities:
+- name: Account
+  fields: 4
+  relationships:
+  - target: user
+    kind: belongs_to
+    via: user_id
+    confidence: low
+- name: Artifact
+  fields: 10
+  relationships:
+  - target: ArtifactFamily
+    kind: has_one
+    via: family
+  - target: ChannelPrivacy
+    kind: has_one
+    via: privacy
+- name: ArtifactDependency
+  fields: 3
+  relationships:
+  - target: Artifact
+    kind: has_one
+    via: artifact
+- name: ArtifactDownloadReportResponse
+  fields: 17
+  relationships:
+  - target: user
+    kind: belongs_to
+    via: user_id
+    confidence: low
+  - target: channel
+    kind: belongs_to
+    via: channel_id
+    confidence: low
+  - target: CVE_status
+    kind: has_one
+    via: cve_status
+- name: ArtifactFile
+  fields: 15
+  relationships:
+  - target: ArtifactFamily
+    kind: has_one
+    via: family
+  - target: CVE_status
+    kind: has_one
+    via: cve_status
+- name: AuthRole
+  fields: 4
+  relationships:
+  - target: AuthRolePermissions
+    kind: has_one
+    via: permissions
+- name: AuthRolePermissions
+  fields: 18
+  relationships:
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: channel
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: channel.default-channel
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: channel.group
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: channel.mirror
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: channel.routes-filtered
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: subchannel
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: subchannel.group
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: subchannel.mirror
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: artifact
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: cve
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: role
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: system
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: system.license
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: system.settings
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: user.token
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: mirror
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: audit-logs
+  - target: AuthRolePermissionValue
+    kind: has_one
+    via: cve-notifications
+- name: CVENotificationChanges
+  fields: 5
+  relationships:
+  - target: cve
+    kind: belongs_to
+    via: cve_id
+    confidence: low
+- name: CVENotificationsHistory
+  fields: 9
+  relationships:
+  - target: ArtifactFamily
+    kind: has_one
+    via: artifact_family
+  - target: CVENotificationChanges
+    kind: has_many
+    via: notification_changes
+- name: CVEPackage
+  fields: 9
+  relationships:
+  - target: CVE_status
+    kind: has_one
+    via: cve_status
+  - target: ArtifactFamily
+    kind: has_one
+    via: artifact_family
+- name: Channel
+  fields: 13
+  relationships:
+  - target: ChannelPrivacy
+    kind: has_one
+    via: privacy
+  - target: ChannelType
+    kind: has_one
+    via: channel_type
+  - target: ChannelIndexingBehavior
+    kind: has_one
+    via: indexing_behavior
+  - target: VirtualChannelSource
+    kind: has_many
+    via: sources
+  - target: ChannelFilters
+    kind: has_one
+    via: filters
+- name: ChannelCreateRequest
+  fields: 8
+  relationships:
+  - target: ChannelPrivacy
+    kind: has_one
+    via: privacy
+  - target: ChannelType
+    kind: has_one
+    via: channel_type
+  - target: ChannelIndexingBehavior
+    kind: has_one
+    via: indexing_behavior
+  - target: VirtualChannelSource
+    kind: has_many
+    via: sources
+  - target: ChannelFilters
+    kind: has_one
+    via: filters
+  - target: ChannelSettings
+    kind: has_one
+    via: settings
+- name: ChannelGroup
+  fields: 7
+  relationships:
+  - target: group
+    kind: belongs_to
+    via: group_id
+    confidence: low
+- name: ChannelGroupRequest
+  fields: 2
+  relationships:
+  - target: group
+    kind: belongs_to
+    via: group_id
+    confidence: low
+- name: ChannelUpdateRequest
+  fields: 6
+  relationships:
+  - target: ChannelPrivacy
+    kind: has_one
+    via: privacy
+  - target: ChannelFilters
+    kind: has_one
+    via: filters
+  - target: ChannelSettings
+    kind: has_one
+    via: settings
+- name: DiagnoseRoutesAndBlobs
+  fields: 3
+  relationships:
+  - target: DiagnosisDetails
+    kind: has_one
+    via: artifact_routes
+  - target: DiagnosisDetails
+    kind: has_one
+    via: index_blobs
+- name: FileFiltered
+  fields: 7
+  relationships:
+  - target: channel
+    kind: belongs_to
+    via: channel_id
+    confidence: low
+  - target: RouteChange
+    kind: has_one
+    via: change
+  - target: mirror
+    kind: belongs_to
+    via: mirror_id
+    confidence: low
+- name: Mirror
+  fields: 15
+  relationships:
+  - target: mirror
+    kind: belongs_to
+    via: mirror_id
+    confidence: low
+  - target: MirrorSyncState
+    kind: has_one
+    via: sync_state
+- name: MirrorWithChannel
+  fields: 12
+  relationships:
+  - target: MirrorSyncState
+    kind: has_one
+    via: sync_state
+- name: ProductLicense
+  fields: 9
+  relationships:
+  - target: ProductLicenseMetrics
+    kind: has_one
+    via: metrics
+  - target: ProductLicenseCompliance
+    kind: has_one
+    via: compliance
+- name: ProductLicenseCompliance
+  fields: 4
+  relationships:
+  - target: ProductLicenseComplianceGroup
+    kind: has_one
+    via: ok
+  - target: ProductLicenseComplianceGroup
+    kind: has_one
+    via: warn_limit
+  - target: ProductLicenseComplianceGroup
+    kind: has_one
+    via: over_quota
+  - target: ProductLicenseComplianceGroup
+    kind: has_one
+    via: no_data
+- name: Subchannel
+  fields: 10
+  relationships:
+  - target: ChannelPrivacy
+    kind: has_one
+    via: privacy
+  - target: ChannelType
+    kind: has_one
+    via: channel_type
+  - target: ChannelIndexingBehavior
+    kind: has_one
+    via: indexing_behavior
+  - target: VirtualChannelSource
+    kind: has_many
+    via: sources
+- name: SystemSettings
+  fields: 4
+  relationships:
+  - target: cve_channel
+    kind: belongs_to
+    via: cve_channel_id
+    confidence: low
+- name: UserResourceToken
+  fields: 6
+  relationships:
+  - target: UserTokenPermissionResourceItem
+    kind: has_many
+    via: resources
+- name: UserTokenCreateResourceRequest
+  fields: 4
+  relationships:
+  - target: UserTokenPermissionResourceItem
+    kind: has_many
+    via: resources
+- name: UserTokenPermissionResourceItem
+  fields: 3
+  relationships:
+  - target: resource
+    kind: belongs_to
+    via: resource_id
+    confidence: low
+- name: UserTokenUpdateRequest
+  fields: 3
+  relationships:
+  - target: UserTokenPermissionResourceItem
+    kind: has_many
+    via: resources
+- name: UsersTokenUpdateRequest
+  fields: 3
+  relationships:
+  - target: UserTokenPermissionResourceItem
+    kind: has_many
+    via: resources

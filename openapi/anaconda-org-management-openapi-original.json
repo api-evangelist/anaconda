@@ -1,0 +1,1338 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Organization Management API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://anaconda.com",
+      "description": "Anaconda Cloud"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "OrganizationServiceAccount": {
+        "type": "object",
+        "required": [
+          "name",
+          "client_id",
+          "org_id"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the service account."
+          },
+          "client_id": {
+            "type": "string",
+            "description": "The unique client identifier for the service account."
+          },
+          "org_id": {
+            "type": "string",
+            "description": "The organization ID the service account belongs to."
+          }
+        }
+      },
+      "OrganizationServiceAccountWithSecret": {
+        "type": "object",
+        "required": [
+          "name",
+          "client_id",
+          "org_id",
+          "client_secret"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the service account."
+          },
+          "client_id": {
+            "type": "string",
+            "description": "The unique client identifier for the service account."
+          },
+          "org_id": {
+            "type": "string",
+            "description": "The organization ID the service account belongs to."
+          },
+          "client_secret": {
+            "type": "string",
+            "description": "The client secret for authenticating as this service account. This value is only shown once at creation time."
+          }
+        }
+      },
+      "OrganizationServiceAccountListResponse": {
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "description": "The list of service accounts in the organization.",
+            "items": {
+              "$ref": "#/components/schemas/OrganizationServiceAccount"
+            }
+          }
+        }
+      },
+      "CreateOrganizationServiceAccountRequest": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "The name for the new service account. Must use lowercase letters, numbers, hyphens, or underscores only."
+          }
+        }
+      },
+      "CreateOrganizationManagedUsersRequest": {
+        "type": "object",
+        "required": [
+          "user_emails"
+        ],
+        "properties": {
+          "user_emails": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "email"
+            },
+            "description": "A list of email addresses for the users to onboard."
+          }
+        }
+      },
+      "CreateOrganizationManagedUserRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "email",
+            "description": "The email address for the new user. If omitted, an organization-managed user is created instead."
+          },
+          "first_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The first name of the user. For managed users, use a descriptive name for the token's intended purpose."
+          },
+          "last_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The last name of the user. For managed users, use a descriptive name for the token's intended purpose."
+          }
+        }
+      },
+      "ManagedUser": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier for the created user."
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "email",
+            "description": "The email address of the user."
+          },
+          "first_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The first name of the user."
+          },
+          "last_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The last name of the user."
+          }
+        }
+      },
+      "OrganizationUser": {
+        "type": "object",
+        "required": [
+          "id",
+          "email",
+          "role",
+          "subscriptions"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for this user."
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "The email address of this user."
+          },
+          "first_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The first name of this user."
+          },
+          "last_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The last name of this user."
+          },
+          "role": {
+            "$ref": "#/components/schemas/UserOrganizationRole"
+          },
+          "subscriptions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The subscription product codes assigned to this user."
+          },
+          "groups": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/UserGroupSchema"
+            },
+            "description": "The groups this user belongs to. Only populated when `include_groups=true` is passed."
+          }
+        }
+      },
+      "OrganizationUserList": {
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "description": "A list of users in the organization.",
+            "items": {
+              "$ref": "#/components/schemas/OrganizationUser"
+            }
+          }
+        }
+      },
+      "UserOrganizationRole": {
+        "type": "string",
+        "enum": [
+          "member",
+          "admin",
+          "billing_manager"
+        ],
+        "description": "The role of the user within the organization."
+      },
+      "UserGroupSchema": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "org_id",
+          "created_at",
+          "updated_at",
+          "user_count"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The unique identifier for this group."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of this group."
+          },
+          "org_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The organization ID this group belongs to."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When this group was created."
+          },
+          "updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When this group was last updated."
+          },
+          "user_count": {
+            "type": "integer",
+            "description": "The number of users in this group."
+          }
+        }
+      },
+      "CreateTokenRequest": {
+        "type": "object",
+        "required": [
+          "expires_at"
+        ],
+        "properties": {
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The expiration date and time for the token in ISO 8601 format (for example, `2026-12-31T00:00:00+00:00`)."
+          },
+          "expiration_tolerance_months": {
+            "type": "integer",
+            "default": 0,
+            "description": "Number of additional months to extend the token beyond the `expires_at` date as a grace period."
+          },
+          "send_token_email": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to send the token to the user via email."
+          }
+        }
+      },
+      "CreateTokenResponse": {
+        "type": "object",
+        "required": [
+          "token"
+        ],
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "The generated access token value."
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The expiration date and time of the token."
+          }
+        }
+      },
+      "UpdateTokenAPIRequest": {
+        "type": "object",
+        "properties": {
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "The new expiration date and time for the token in ISO 8601 format. Ignored when `is_renewal` is `true`."
+          },
+          "expiration_tolerance_months": {
+            "type": "integer",
+            "default": 0,
+            "description": "Number of additional months to extend the token beyond the `expires_at` date as a grace period."
+          },
+          "is_renewal": {
+            "type": "boolean",
+            "default": false,
+            "description": "Set to `true` to automatically extend the token expiration to match your organization's subscription end date. When `true`, the `expires_at` field is ignored."
+          }
+        }
+      },
+      "Token": {
+        "type": "object",
+        "required": [
+          "id",
+          "expires_at",
+          "metadata"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier for this token."
+          },
+          "expires_at": {
+            "type": "string",
+            "description": "The expiration date and time of this token."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata associated with this token."
+          },
+          "revoked": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Whether this token has been revoked."
+          }
+        }
+      },
+      "TokenListResponse": {
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "description": "The list of tokens for the user.",
+            "items": {
+              "$ref": "#/components/schemas/Token"
+            }
+          }
+        }
+      },
+      "AutoRegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "users_in_onboarding_process": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Email addresses of users that were successfully queued for onboarding."
+          },
+          "users_unavailable_for_onboarding": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Email addresses of users that could not be onboarded (for example, because they already have an account or no seats are available)."
+          },
+          "total_organization_seats": {
+            "type": "string",
+            "description": "The total number of seats in your organization's subscription."
+          },
+          "available_organization_seats": {
+            "type": "string",
+            "description": "The number of remaining unassigned seats."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorDetails"
+          }
+        }
+      },
+      "ErrorDetails": {
+        "type": "object",
+        "required": [
+          "message",
+          "code"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "A human-readable error message."
+          },
+          "code": {
+            "type": "string",
+            "description": "An error code identifying the type of error."
+          },
+          "data": {
+            "description": "Additional error context, if available."
+          }
+        }
+      },
+      "HTTPValidationError": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "array",
+            "description": "A list of validation errors.",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "properties": {
+          "loc": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The location of the validation error (for example, `[\"body\", \"name\"]`)."
+          },
+          "msg": {
+            "type": "string",
+            "description": "A human-readable validation error message."
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of validation error."
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "JWT or Access Token": {
+        "bearerFormat": "JWT",
+        "description": "Bearer token obtained by authenticating with [service account](/anaconda-platform/admin/service-accounts) credentials (`client_id` and `client_secret`).\n\nSee the [Getting started](/anaconda-platform/admin/org-management-api/org-management-api) page for the full authentication flow.",
+        "scheme": "bearer",
+        "type": "http"
+      },
+      "Organization Admin": {
+        "bearerFormat": "JWT",
+        "description": "Bearer token obtained by authenticating with your organization admin's email and password (`grant_type=password`).\n\nSee the [Getting started](/anaconda-platform/admin/org-management-api/org-management-api) page for the full authentication flow.",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "paths": {
+    "/api/v1/organizations/{org_id}/service-accounts": {
+      "post": {
+        "operationId": "create_service_account",
+        "summary": "Create Service Account",
+        "description": "Creates a service account for the specified organization.",
+        "tags": [
+          "organizations"
+        ],
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrganizationServiceAccountRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Service account created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationServiceAccountWithSecret"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Organization Admin": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "list_service_accounts",
+        "summary": "List Service Accounts",
+        "description": "Returns a list of all service accounts in the organization.",
+        "tags": [
+          "organizations"
+        ],
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of service accounts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationServiceAccountListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Organization Admin": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/{org_id}/service-accounts/{client_id}": {
+      "delete": {
+        "operationId": "delete_service_account",
+        "summary": "Delete Service Account",
+        "description": "Deletes the service account associated with the specified client ID.",
+        "tags": [
+          "organizations"
+        ],
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+          },
+          {
+            "name": "client_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The client ID of the service account to delete."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Service account deleted successfully"
+          },
+          "404": {
+            "description": "Service account not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Organization Admin": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/{org_id}/users_auto_registration": {
+      "post": {
+        "operationId": "auto_register_users",
+        "summary": "Onboard Users",
+        "description": "Onboards users by adding them to your organization, assigning seats, and generating organization access tokens.",
+        "tags": [
+          "organizations"
+        ],
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrganizationManagedUsersRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Onboarding results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoRegistrationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT or Access Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/{org_id}/users": {
+      "post": {
+        "operationId": "add_user",
+        "summary": "Add User",
+        "description": "Adds a user to the organization.",
+        "tags": [
+          "organizations"
+        ],
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrganizationManagedUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedUser"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT or Access Token": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "list_users",
+        "summary": "List Users",
+        "description": "Returns a list of all users in the organization.",
+        "tags": [
+          "organizations"
+        ],
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+          },
+          {
+            "name": "include_groups",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "Set to `true` to include each user's group memberships in the response."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of organization users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrganizationUserList"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT or Access Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/{org_id}/users/{user_id}": {
+      "delete": {
+        "operationId": "remove_user",
+        "summary": "Remove User",
+        "description": "Removes a user from the organization.",
+        "tags": [
+          "organizations"
+        ],
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The unique identifier of the user to remove."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User removed successfully"
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Request conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT or Access Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/{org_id}/users/{user_id}/seats": {
+      "post": {
+        "operationId": "assign_seat",
+        "summary": "Assign Seat",
+        "description": "Assigns a subscription seat to the specified user.",
+        "tags": [
+          "organizations"
+        ],
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The unique identifier of the user to assign a seat to."
+          },
+          {
+            "name": "send_seat_assigned_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "description": "Whether to send the user an email notification about the seat assignment."
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Seat assigned successfully"
+          },
+          "402": {
+            "description": "No free seats remaining in the organization subscription",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A seat is already assigned to the user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT or Access Token": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "revoke_seat",
+        "summary": "Revoke Seat",
+        "description": "Removes a subscription seat from the specified user. The seat becomes available for assignment to another user.",
+        "tags": [
+          "organizations"
+        ],
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The unique identifier of the user whose seat to revoke."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Seat revoked successfully"
+          },
+          "404": {
+            "description": "A seat is not currently assigned to the user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT or Access Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/{org_id}/users/{user_id}/token": {
+      "post": {
+        "operationId": "create_user_token",
+        "summary": "Create User Token",
+        "description": "Generates an organization access token for the specified user.",
+        "tags": [
+          "organizations"
+        ],
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The unique identifier of the user to assign a token to."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTokenResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT or Access Token": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "update_user_token",
+        "summary": "Update User Token",
+        "description": "Updates the expiration date of a user's organization access token.",
+        "tags": [
+          "organizations"
+        ],
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The unique identifier of the user whose token to update."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTokenAPIRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token updated successfully"
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT or Access Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/{org_id}/users/{user_id}/tokens": {
+      "get": {
+        "operationId": "list_user_tokens",
+        "summary": "List User Tokens",
+        "description": "Returns all tokens assigned to the specified user, including their IDs, expiration dates, and revocation status.",
+        "tags": [
+          "organizations"
+        ],
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The unique identifier of the user whose tokens to retrieve."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of user tokens",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT or Access Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/{org_id}/users/{user_id}/tokens/{token_id}": {
+      "delete": {
+        "operationId": "revoke_user_token",
+        "summary": "Revoke User Token",
+        "description": "Revokes a user's organization access token.",
+        "tags": [
+          "organizations"
+        ],
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The unique identifier of the user whose token to revoke."
+          },
+          {
+            "name": "token_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "The unique identifier of the token to revoke."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Token revoked successfully"
+          },
+          "404": {
+            "description": "User token not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Request conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT or Access Token": []
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,109 @@
+generated: '2026-08-02'
+method: derived
+source: openapi/*.json, well-known/anaconda-openid-configuration.json, well-known/anaconda-security.txt,
+  security/anaconda-trust-center.yml
+standards:
+- id: openapi-3.0
+  conforms: true
+  evidence: openapi/anaconda-server-openapi-original.json (3.0.0), anaconda-desktop-openapi-original.json
+    (3.0.0), anaconda-ai-navigator-openapi-original.json (3.0.0)
+- id: openapi-3.1
+  conforms: true
+  evidence: openapi/anaconda-org-management-openapi-original.json (3.1.0), anaconda-audit-logs-openapi-original.json
+    (3.1.0)
+- id: oauth2
+  conforms: true
+  evidence: /.well-known/openid-configuration advertises authorization_code, client_credentials,
+    refresh_token, password and device_code grants with a token endpoint at https://anaconda.com/api/auth/oauth2/token
+- id: oidc
+  conforms: true
+  evidence: OIDC discovery document served at https://anaconda.com/.well-known/openid-configuration
+    (issuer https://auth.anaconda.com/api/auth) with userinfo, jwks_uri and end_session
+    endpoints
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: false
+  evidence: /.well-known/oauth-authorization-server returns 404; only the OIDC discovery
+    path is served
+- id: rfc8628-device-authorization-grant
+  conforms: true
+  evidence: device_authorization_endpoint https://anaconda.com/api/auth/oauth2/device/authorize
+    and the urn:ietf:params:oauth:grant-type:device_code grant are advertised
+- id: rfc9116-security-txt
+  conforms: true
+  evidence: well-known/anaconda-security.txt — Canonical, Contact and Expires fields
+    present
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: zero operations across the five specs return application/problem+json;
+    three vendor error envelopes are used instead (errors/anaconda-problem-types.yml)
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: >-
+    no Sunset or Deprecation header documented or observed; deprecation is
+    signalled only by `deprecated: true` in the OpenAPI and by dated release notes
+- id: rfc9111-http-caching
+  conforms: unknown
+  evidence: not probed
+- id: json-api
+  conforms: false
+  evidence: responses are plain application/json with vendor envelopes
+- id: pagination-offset-limit
+  conforms: true
+  evidence: shared components.parameters `offset-query` / `limit-query` referenced
+    by 45 Anaconda Server operations; audit logs uses the same limit/offset/sort triple
+- id: idempotency-key
+  conforms: false
+  evidence: no idempotency header or parameter in any published specification, and
+    no idempotency page in the documentation index
+- id: model-context-protocol
+  conforms: true
+  evidence: two first-party MCP servers published (mcp/anaconda-mcp.yml) with stdio
+    and streamable-http transports
+- id: a2a-agent-card
+  conforms: false
+  evidence: /.well-known/agent-card.json and /.well-known/agent.json return 404 on
+    every Anaconda host probed
+- id: asyncapi
+  conforms: false
+  evidence: no AsyncAPI document published; the only event surface is three WebSocket
+    endpoints declared in the Anaconda Server OpenAPI
+- id: llms-txt
+  conforms: true
+  evidence: https://anaconda.com/docs/llms.txt served as text/plain, indexing 444 documentation
+    pages and 5 OpenAPI specs
+- id: openmetrics
+  conforms: true
+  evidence: 'GET /system/metrics on the Anaconda Server API returns application/openmetrics-text
+    (operationId repo.endpoints.system.metrics)'
+- id: cyclonedx-sbom
+  conforms: partial
+  evidence: an `sbom-query` parameter and SBOM-related artifact operations exist on
+    the Anaconda Server API; the SBOM format is not asserted in the specification
+compliance_programs:
+- id: soc2-type2
+  published: true
+  source: https://trust.anaconda.com/
+- id: iso-27001-2022
+  published: true
+  source: https://trust.anaconda.com/
+- id: pci-dss
+  published: true
+  source: https://trust.anaconda.com/
+- id: gdpr
+  published: true
+  source: https://trust.anaconda.com/
+- id: ccpa
+  published: true
+  source: https://trust.anaconda.com/
+- id: pipeda
+  published: true
+  source: https://trust.anaconda.com/
+- id: vpat-accessibility
+  published: true
+  source: https://trust.anaconda.com/
+- id: hipaa
+  published: false
+- id: fedramp
+  published: false
+compliance_page: https://www.anaconda.com/security-compliance
+trust_center: security/anaconda-trust-center.yml

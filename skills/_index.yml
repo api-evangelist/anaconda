@@ -1,0 +1,77 @@
+generated: '2026-08-02'
+method: generated
+source: openapi/anaconda-server-openapi-original.json, openapi/anaconda-org-management-openapi-original.json,
+  openapi/anaconda-audit-logs-openapi-original.json, openapi/anaconda-ai-navigator-openapi-original.json
+note: Every step in every skill is grounded in an operation that exists verbatim in the
+  referenced specification. Where Anaconda publishes no operationId (the AI Navigator and
+  Desktop APIs), operations are addressed by `METHOD path` and the gap is called out in
+  the skill rather than papered over. No provider-published AGENTS.md or skill files were
+  found on anaconda.com.
+skills:
+- file: anaconda-audit-channel-cves.md
+  name: Audit an Anaconda channel for CVEs
+  api: openapi/anaconda-server-openapi-original.json
+  operations:
+  - repo.endpoints.channels.channels.list_channels
+  - repo.endpoints.channels.channel_artifacts.list_channel_cves
+  - repo.endpoints.channels.channel_artifacts.get_channel_cve_details
+  - repo.endpoints.channels.channel_artifacts.list_channel_cve_files
+  - repo.endpoints.channels.channel_artifacts.list_artifact_cves
+  - repo.endpoints.channels.channels_cve_history.get_cve_channel_history
+- file: anaconda-manage-channels-and-artifacts.md
+  name: Create a channel and manage its artifacts
+  api: openapi/anaconda-server-openapi-original.json
+  operations:
+  - repo.endpoints.channels.channels.post_channel
+  - repo.endpoints.channels.channels.get_channel
+  - repo.endpoints.channels.subchannels.post_subchannel
+  - repo.endpoints.channels.channel_artifacts.list_artifacts
+  - repo.endpoints.channels.channel_artifacts.get_artifact
+  - repo.endpoints.channels.channel_artifacts.list_artifact_files
+  - repo.endpoints.channels.channel_artifacts.list_artifact_dependencies
+  - repo.endpoints.channels.channel_artifacts.list_artifact_dependants
+  - repo.endpoints.channels.channel_artifacts.refresh_artifact_family_index
+  - repo.endpoints.channels.channel_artifacts.delete_artifact
+  - repo.endpoints.channels.channel_artifacts.bulk
+- file: anaconda-onboard-org-users.md
+  name: Onboard users into an Anaconda organization
+  api: openapi/anaconda-org-management-openapi-original.json
+  operations:
+  - create_service_account
+  - list_service_accounts
+  - delete_service_account
+  - add_user
+  - list_users
+  - remove_user
+  - assign_seat
+  - revoke_seat
+  - create_user_token
+  - update_user_token
+  - list_user_tokens
+  - auto_register_users
+- file: anaconda-export-audit-logs.md
+  name: Export Anaconda audit logs
+  api: openapi/anaconda-audit-logs-openapi-original.json
+  operations:
+  - get_audit_logs__get
+  - get_audit_log__audit_log_id__get
+  - create_export_job_export_post
+  - get_export_job_status_export__job_id__get
+  - download_export_export__job_id__download_get
+- file: anaconda-run-local-models.md
+  name: Run a local model and vector database with Anaconda AI
+  api: openapi/anaconda-ai-navigator-openapi-original.json
+  operations:
+  - GET /api/models
+  - GET /api/models/{id}
+  - GET /models/{modelId}/files
+  - PATCH /api/models/{modelId}/files/{fileId}
+  - GET /api/servers
+  - POST /api/servers
+  - PATCH /api/servers/{serverId}
+  - DELETE /api/servers/{serverId}
+  - POST /api/vector-db
+  - PATCH /api/vector-db
+  - POST /api/vector-db/tables
+  - GET /api/vector-db/tables
+  - DELETE /api/vector-db/tables/{tableName}

@@ -1,0 +1,127 @@
+generated: '2026-08-02'
+method: derived
+source: openapi/anaconda-server-openapi-original.json, openapi/anaconda-audit-logs-openapi-original.json,
+  openapi/anaconda-org-management-openapi-original.json, live response headers on api.anaconda.cloud
+  / api.anaconda.org / anaconda.com
+docs: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+description: Cross-cutting request/response semantics for the Anaconda API estate,
+  derived from the five published OpenAPI documents and confirmed against live response
+  headers. Cross-links authentication/, errors/, lifecycle/ and scopes/.
+authentication:
+  style: bearer token (JWT) or header API key
+  headers:
+  - 'Authorization: Bearer <token>'
+  - 'X-Auth: <user token>'   # Anaconda Server repository API only
+  - 'X-Org-Name: <org_id>'   # Platform admin APIs
+  - 'X-API-Version: v1'      # Platform admin APIs
+  token_lifetime_seconds: 900
+  detail: authentication/anaconda-authentication.yml
+idempotency:
+  supported: false
+  evidence: No `Idempotency-Key` (or any idempotency-shaped) header or query parameter
+    appears in any of the five published OpenAPI documents, and the documentation index
+    at https://anaconda.com/docs/llms.txt contains zero occurrences of "idempoten".
+  note: Recorded as a genuine absence. No Idempotency pointer is wired in apis.yml.
+pagination:
+  style: offset-limit
+  applies_to: [anaconda:server-api, anaconda:audit-logs-api]
+  parameters:
+  - name: offset
+    in: query
+    type: integer
+    default: 0
+    description: the offset of the result set
+  - name: limit
+    in: query
+    type: integer
+    default: 100
+    max: 1000
+    description: the number of results in the result set
+  response_envelope:
+    items: array of resource objects
+    total_count: number — the full result-set size
+    example_operation: GET /channels (anaconda:server-api)
+  reused_as: components.parameters `offset-query` / `limit-query`, referenced by 45
+    operations in the Anaconda Server API
+  cursor_pagination: false
+sorting:
+  parameter: sort
+  style: comma-separated column list; prefix a column with `-` for descending order
+    (e.g. `-occurred_at`)
+  typed_enums: The Anaconda Server API constrains `sort` per resource family with
+    enums (artifact-sort-query, file-sort-query, channel-sort-query, mirror-sort-query,
+    cve-sort-query).
+filtering_and_search:
+  parameter: q
+  server_api: free-text search string
+  audit_logs_api: 'repeatable structured filter using `column_name:value1,value2`,
+    combined with the `search_operator` parameter (`or` default, or `and`)'
+  domain_filters: The repository API exposes a rich typed filter vocabulary — cve_status,
+    min_cve_score, max_cve_score, architectures, version, package-state, created/created-min/created-max,
+    updated, permission, include-subchannels, with_cve_counts_by_severity, omit_cve,
+    sbom, with_hash.
+field_expansion:
+  supported: partial
+  note: No generic `expand`/`fields` mechanism. Response shaping is done with purpose-built
+    booleans (`with_cve_counts_by_severity`, `cve_extra_info`, `with_hash`, `only_names`,
+    `omit_cve`, `with-user-counts`) rather than a uniform sparse-fieldset convention.
+metadata:
+  supported: false
+  note: No customer-defined `metadata` object on resources.
+request_tracing:
+  request_id_header: none observed
+  observed_headers:
+  - cf-ray (Cloudflare edge request id — infrastructure, not a documented API contract)
+  - x-binstar-api-version (anaconda.org API version banner, observed value 0.2.1)
+  note: Anaconda does not document a first-party request-id header for support correlation.
+versioning:
+  schemes:
+  - api: anaconda:server-api
+    style: unversioned path under /api; the product version is carried in the OpenAPI
+      `info.version` (6.5)
+  - api: anaconda:org-management-api
+    style: 'URI path — /api/v1/... — plus a required `X-API-Version: v1` header'
+  - api: anaconda:audit-logs-api
+    style: 'unversioned path /api/audit-logs with a required `X-API-Version: v1` header'
+  - api: anaconda:anaconda-org-api
+    style: unversioned; the server advertises `x-binstar-api-version` on every response
+  detail: lifecycle/anaconda-lifecycle.yml
+error_envelope:
+  count: 3
+  note: Anaconda uses three different error shapes across the estate; see errors/anaconda-problem-types.yml
+    for the full breakdown. No RFC 9457 problem+json.
+  shapes:
+  - '{code, message, status}  — Anaconda Server repository API'
+  - '{error: {code, message, data}} — Platform admin APIs'
+  - '{detail: [{loc, msg, type}]} — 422 validation errors (FastAPI style)'
+rate_limits:
+  documented: false
+  evidence: No rate-limit headers observed on live responses from api.anaconda.cloud,
+    api.anaconda.org or anaconda.com, and the documentation index contains no rate-limit
+    or throttling page.
+  note: Anaconda's repository Terms of Service restrict heavy commercial use and third-party
+    mirroring, but that is a licence term, not a published quota.
+content_negotiation:
+  request: application/json; application/x-www-form-urlencoded at the IAM token endpoint
+  response: application/json (124 operations), text/csv (3 report/export operations),
+    application/openmetrics-text (1 metrics operation), application/jsonl (audit-log
+    bulk export files)
+async_jobs:
+  pattern: The Audit Logs API models bulk export as an asynchronous job — POST an export
+    request, receive a job id, poll GET /api/audit-logs/export/{job_id} for status,
+    then GET .../download for the JSON Lines result.
+  status_codes: 202 Accepted is used across 11 Anaconda Server operations for long-running
+    work.
+security_headers_observed:
+- "content-security-policy: frame-ancestors 'self'"
+- 'x-content-type-options: nosniff'
+- 'referrer-policy: no-referrer (anaconda.cloud) / same-origin (anaconda.org)'
+- 'x-download-options: noopen'
+- 'strict-transport-security: max-age=15552000 (api.anaconda.org only; not set on
+    anaconda.com or www.anaconda.com)'
+cross_links:
+  authentication: authentication/anaconda-authentication.yml
+  scopes: scopes/anaconda-scopes.yml
+  errors: errors/anaconda-problem-types.yml
+  lifecycle: lifecycle/anaconda-lifecycle.yml
+  security: security/anaconda-domain-security.yml

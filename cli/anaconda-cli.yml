@@ -1,0 +1,136 @@
+generated: '2026-08-02'
+method: searched
+source: https://anaconda.com/docs/cli-reference/main, https://anaconda.com/docs/llms.txt
+name: anaconda
+description: Anaconda ships a single `anaconda` CLI entrypoint (`anaconda-cli-base`)
+  whose surface is assembled from installable plugins — `anaconda-auth` (identity and
+  tokens), `anaconda-client` (anaconda.org repository operations, exposed under `anaconda
+  org`), `anaconda-ai` (local models, inference servers and a vector database), and
+  `anaconda-mcp` (MCP client wiring). `conda` itself remains the separate package/environment
+  manager.
+docs: https://anaconda.com/docs/cli-reference/main
+install:
+- method: conda
+  command: conda install anaconda-cli-base
+- method: pip
+  command: pip install anaconda-cli-base
+- method: plugin
+  command: anaconda tools install <plugin>
+  docs: https://anaconda.com/docs/cli-reference/anaconda-cli/tools
+self_update: anaconda self-update
+docs_self_update: https://anaconda.com/docs/cli-reference/anaconda-cli/self-update
+command_groups:
+- group: anaconda auth
+  plugin: anaconda-auth
+  docs: https://anaconda.com/docs/cli-reference/anaconda-auth/commands/index
+  commands:
+  - anaconda auth login
+  - anaconda auth logout
+  - anaconda auth whoami
+  - anaconda auth api-key
+- group: anaconda token
+  plugin: anaconda-auth
+  docs: https://anaconda.com/docs/cli-reference/anaconda-auth/commands/token
+  commands:
+  - anaconda token
+  - anaconda token config
+  - anaconda token install
+  - anaconda token list
+  - anaconda token remove
+  - anaconda token set
+  - anaconda token uninstall
+- group: anaconda sites
+  plugin: anaconda-auth
+  docs: https://anaconda.com/docs/cli-reference/anaconda-auth/commands/sites
+  commands:
+  - anaconda sites
+  - anaconda sites add
+  - anaconda sites list
+  - anaconda sites modify
+  - anaconda sites remove
+  - anaconda sites show
+- group: anaconda org
+  plugin: anaconda-client
+  api: anaconda:anaconda-org-api
+  docs: https://anaconda.com/docs/cli-reference/anaconda-client/commands/index
+  commands:
+  - anaconda org auth
+  - anaconda org login
+  - anaconda org logout
+  - anaconda org whoami
+  - anaconda org config
+  - anaconda org upload
+  - anaconda org download
+  - anaconda org copy
+  - anaconda org move
+  - anaconda org remove
+  - anaconda org update
+  - anaconda org search
+  - anaconda org show
+  - anaconda org package
+  - anaconda org label
+  - anaconda org groups
+- group: anaconda channel
+  plugin: anaconda-client
+  api: anaconda:anaconda-org-api
+  docs: https://anaconda.com/docs/cli-reference/anaconda-client/commands/channel
+  commands:
+  - anaconda channel create
+  - anaconda channel list
+  - anaconda channel modify
+  - anaconda channel remove
+  - anaconda channel share
+  - anaconda channel show
+  - anaconda channel upload
+- group: anaconda ai
+  plugin: anaconda-ai
+  api: anaconda:ai-navigator-api
+  docs: https://anaconda.com/docs/cli-reference/anaconda-ai/commands/index
+  commands:
+  - anaconda ai config
+  - anaconda ai models
+  - anaconda ai download
+  - anaconda ai launch
+  - anaconda ai servers
+  - anaconda ai stop
+  - anaconda ai remove
+  - anaconda ai version
+  - anaconda ai launch-vectordb
+  - anaconda ai stop-vectordb
+  - anaconda ai delete-vectordb
+  - anaconda ai create-table
+  - anaconda ai list-tables
+  - anaconda ai drop-table
+  - anaconda ai mcp
+- group: anaconda mcp
+  plugin: anaconda-mcp
+  docs: https://anaconda.com/docs/cli-reference/anaconda-mcp/commands/index
+  commands:
+  - anaconda mcp setup
+  - anaconda mcp clients
+  - anaconda mcp remove
+key_flows:
+- name: Authenticate and provision a repository token
+  steps:
+  - anaconda auth login
+  - anaconda token install
+  - anaconda auth whoami
+- name: Publish a conda package to a channel
+  steps:
+  - anaconda org login
+  - anaconda org upload <package-file>
+  - anaconda org label --copy main <channel>
+- name: Run a local model and expose it to an agent
+  steps:
+  - anaconda ai download <model>
+  - anaconda ai launch <model>
+  - anaconda ai mcp --transport streamable-http --port 9000
+ci_integration:
+  name: Anaconda GitHub Actions
+  docs: https://anaconda.com/docs/cli-reference/anaconda-cli/github-actions
+troubleshooting:
+- https://anaconda.com/docs/cli-reference/anaconda-cli/troubleshooting
+- https://anaconda.com/docs/cli-reference/anaconda-auth/troubleshooting
+- https://anaconda.com/docs/cli-reference/anaconda-client/troubleshooting
+- https://anaconda.com/docs/cli-reference/anaconda-mcp/troubleshooting
+packages: packages/anaconda-packages.yml

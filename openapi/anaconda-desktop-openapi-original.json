@@ -1,0 +1,1664 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Desktop API",
+    "version": "1.0.0",
+    "description": "API documentation for Desktop"
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "UUID",
+        "description": "Enter your API key here"
+      }
+    },
+    "schemas": {
+      "TrainedFor": {
+        "type": "string",
+        "enum": [
+          "text-generation",
+          "sentence-similarity"
+        ],
+        "description": "The primary task the model was trained for"
+      },
+      "ModelFile": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "downloadUrl",
+          "sizeBytes",
+          "sha256checksum",
+          "quantization",
+          "format",
+          "maxRamUsage"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the model file"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the model file"
+          },
+          "downloadUrl": {
+            "type": "string",
+            "description": "URL to download the model file"
+          },
+          "sizeBytes": {
+            "type": "number",
+            "description": "Size of the model file in bytes"
+          },
+          "sha256checksum": {
+            "type": "string",
+            "description": "SHA-256 hash of the model file for integrity verification"
+          },
+          "quantization": {
+            "type": "string",
+            "description": "Quantization method used for the model"
+          },
+          "format": {
+            "type": "string",
+            "description": "File format of the model"
+          },
+          "isDownloaded": {
+            "type": "boolean",
+            "description": "Whether the model file has been downloaded locally"
+          },
+          "maxRamUsage": {
+            "type": "number",
+            "description": "Maximum RAM required to run the model in bytes"
+          },
+          "downloadStatus": {
+            "type": "object",
+            "description": "Information about the download status of the file",
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "not_started",
+                  "in_progress",
+                  "paused",
+                  "completed"
+                ],
+                "description": "Current status of the download"
+              },
+              "progress": {
+                "$ref": "#/components/schemas/Download"
+              },
+              "localPath": {
+                "type": "string",
+                "description": "Local path where the file is stored (only when status is completed)"
+              }
+            }
+          }
+        }
+      },
+      "LocalModelFile": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ModelFile"
+          },
+          {
+            "type": "object",
+            "required": [
+              "localPath",
+              "isDownloaded"
+            ],
+            "properties": {
+              "localPath": {
+                "type": "string",
+                "description": "Local file system path where the model is stored"
+              },
+              "isDownloaded": {
+                "type": "boolean",
+                "description": "Whether the model file has been downloaded"
+              }
+            }
+          }
+        ]
+      },
+      "ModelSummary": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "metadata"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the model"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the model"
+          },
+          "metadata": {
+            "type": "object",
+            "required": [
+              "numParameters",
+              "trainedFor",
+              "description",
+              "quantizations"
+            ],
+            "properties": {
+              "numParameters": {
+                "oneOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "description": "Number of parameters in the model (string for legacy models)"
+              },
+              "contextWindowSize": {
+                "type": "number",
+                "description": "Maximum context window size for the model"
+              },
+              "trainedFor": {
+                "type": "string",
+                "description": "Primary task the model was trained for"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the model"
+              },
+              "quantizations": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "modelFileName",
+                    "method",
+                    "sizeBytes",
+                    "maxRamUsage"
+                  ],
+                  "properties": {
+                    "modelFileName": {
+                      "type": "string",
+                      "description": "Name of the model file"
+                    },
+                    "method": {
+                      "type": "string",
+                      "description": "Quantization method used"
+                    },
+                    "sizeBytes": {
+                      "type": "number",
+                      "description": "Size of the quantized model in bytes"
+                    },
+                    "maxRamUsage": {
+                      "type": "number",
+                      "description": "Maximum RAM usage of the quantized model"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Model": {
+        "type": "object",
+        "required": [
+          "datePublished",
+          "publisher",
+          "name",
+          "id",
+          "resources",
+          "license",
+          "languages",
+          "library_name",
+          "trainedFor",
+          "numParameters",
+          "model_type",
+          "description",
+          "contextWindowSize",
+          "files"
+        ],
+        "properties": {
+          "datePublished": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date when the model was published"
+          },
+          "publisher": {
+            "type": "string",
+            "description": "Publisher or organization that released the model"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the model"
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the model"
+          },
+          "resources": {
+            "type": "object",
+            "required": [
+              "canonicalUrl"
+            ],
+            "properties": {
+              "canonicalUrl": {
+                "type": "string",
+                "description": "Official URL for the model"
+              },
+              "paperUrl": {
+                "type": "string",
+                "description": "URL to the research paper associated with the model"
+              }
+            }
+          },
+          "license": {
+            "type": "string",
+            "description": "License under which the model is distributed"
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Languages supported by the model"
+          },
+          "library_name": {
+            "type": "string",
+            "description": "Library or framework the model is designed for"
+          },
+          "trainedFor": {
+            "$ref": "#/components/schemas/TrainedFor"
+          },
+          "numParameters": {
+            "type": "number",
+            "description": "Number of parameters in the model"
+          },
+          "model_type": {
+            "type": "string",
+            "description": "Type or architecture of the model"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed description of the model"
+          },
+          "contextWindowSize": {
+            "type": "number",
+            "description": "Maximum context window size in tokens"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModelFile"
+            },
+            "description": "Files associated with the model"
+          }
+        }
+      },
+      "LocalModel": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "datePublished",
+              "publisher",
+              "name",
+              "id",
+              "resources",
+              "license",
+              "languages",
+              "library_name",
+              "trainedFor",
+              "numParameters",
+              "model_type",
+              "description",
+              "files"
+            ],
+            "properties": {
+              "datePublished": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Date when the model was published"
+              },
+              "publisher": {
+                "type": "string",
+                "description": "Publisher or organization that released the model"
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the model"
+              },
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for the model"
+              },
+              "resources": {
+                "type": "object",
+                "required": [
+                  "canonicalUrl"
+                ],
+                "properties": {
+                  "canonicalUrl": {
+                    "type": "string",
+                    "description": "Official URL for the model"
+                  },
+                  "paperUrl": {
+                    "type": "string",
+                    "description": "URL to the research paper associated with the model"
+                  }
+                }
+              },
+              "license": {
+                "type": "string",
+                "description": "License under which the model is distributed"
+              },
+              "languages": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Languages supported by the model"
+              },
+              "library_name": {
+                "type": "string",
+                "description": "Library or framework the model is designed for"
+              },
+              "trainedFor": {
+                "$ref": "#/components/schemas/TrainedFor"
+              },
+              "model_type": {
+                "type": "string",
+                "description": "Type or architecture of the model"
+              },
+              "description": {
+                "type": "string",
+                "description": "Detailed description of the model"
+              },
+              "numParameters": {
+                "oneOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "description": "Number of parameters in the model (string for legacy models)"
+              },
+              "contextWindowSize": {
+                "type": "number",
+                "description": "Maximum context window size (optional for legacy models)"
+              },
+              "files": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/LocalModelFile"
+                },
+                "description": "Files associated with the model"
+              }
+            }
+          }
+        ]
+      },
+      "Download": {
+        "type": "object",
+        "required": [
+          "fileId",
+          "modelId",
+          "filename",
+          "downloadedRatio",
+          "transferredBytes",
+          "totalBytes",
+          "paused",
+          "downloadTimeTaken",
+          "averageMbps"
+        ],
+        "properties": {
+          "fileId": {
+            "type": "string",
+            "description": "ID of the file being downloaded"
+          },
+          "modelId": {
+            "type": "string",
+            "description": "ID of the model being downloaded"
+          },
+          "filename": {
+            "type": "string",
+            "description": "Name of the file being downloaded"
+          },
+          "downloadedRatio": {
+            "type": "number",
+            "description": "Percentage of download completion (0-1)"
+          },
+          "transferredBytes": {
+            "type": "number",
+            "description": "Number of bytes transferred"
+          },
+          "totalBytes": {
+            "type": "number",
+            "description": "Total size of the file in bytes"
+          },
+          "paused": {
+            "type": "boolean",
+            "description": "Whether the download is paused"
+          },
+          "downloadTimeTaken": {
+            "type": "number",
+            "description": "Time taken for download in milliseconds"
+          },
+          "averageMbps": {
+            "type": "number",
+            "description": "Average download speed in Mbps"
+          }
+        }
+      },
+      "DownloadAction": {
+        "type": "object",
+        "required": [
+          "action"
+        ],
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "start",
+              "pause",
+              "resume"
+            ],
+            "description": "Action to perform on the download"
+          }
+        }
+      },
+      "DownloadStatus": {
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": [
+              "status"
+            ],
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "in_progress",
+                  "paused",
+                  "completed"
+                ],
+                "description": "Current status of the download"
+              },
+              "progress": {
+                "$ref": "#/components/schemas/Download",
+                "description": "Download progress information (only when status is in_progress or paused)"
+              },
+              "localPath": {
+                "type": "string",
+                "description": "Local path where the file is stored (only when status is completed)"
+              }
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "INVALID_REQUEST",
+                  "DATABASE_NOT_RUNNING",
+                  "INTERNAL_SERVER_ERROR",
+                  "INVALID_SERVER_ID",
+                  "SERVER_NOT_RUNNING",
+                  "SERVER_RUNNING",
+                  "INTERNAL_SERVER_ERROR"
+                ]
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "Server": {
+        "type": "object",
+        "required": [
+          "serverConfig"
+        ],
+        "properties": {
+          "serverConfig": {
+            "type": "object",
+            "required": [
+              "modelFileName"
+            ],
+            "properties": {
+              "modelFileName": {
+                "type": "string"
+              },
+              "apiParams": {
+                "type": "object"
+              },
+              "loadParams": {
+                "type": "object"
+              },
+              "inferParams": {
+                "type": "object"
+              },
+              "logsDir": {
+                "type": "string"
+              }
+            }
+          },
+          "startServerOnCreate": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ServerAction": {
+        "type": "object",
+        "required": [
+          "action"
+        ],
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "start",
+              "stop"
+            ]
+          }
+        }
+      },
+      "ServerDetails": {
+        "type": "object",
+        "properties": {
+          "modelFile": {
+            "type": "object",
+            "description": "Details about the model file used by the server",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "localPath": {
+                "type": "string"
+              },
+              "isDownloaded": {
+                "type": "boolean"
+              },
+              "quantization": {
+                "type": "string"
+              }
+            }
+          },
+          "serverConfig": {
+            "type": "object",
+            "description": "Original server configuration",
+            "properties": {
+              "modelFileName": {
+                "type": "string"
+              },
+              "apiParams": {
+                "type": "object"
+              },
+              "loadParams": {
+                "type": "object"
+              },
+              "inferParams": {
+                "type": "object"
+              },
+              "logsDir": {
+                "type": "string"
+              }
+            }
+          },
+          "server": {
+            "type": "object",
+            "properties": {
+              "host": {
+                "type": "string"
+              },
+              "port": {
+                "type": "integer"
+              }
+            }
+          },
+          "tag": {
+            "type": "string",
+            "description": "Server tag (e.g., 'inference', 'embedding')"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "STARTING",
+              "RUNNING",
+              "STOPPING",
+              "STOPPED",
+              "ERROR"
+            ]
+          },
+          "serverProcessId": {
+            "type": "integer",
+            "nullable": true
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique server identifier"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/models/health": {
+      "get": {
+        "summary": "Check the health of the models API",
+        "tags": [
+          "Models"
+        ],
+        "responses": {
+          "200": {
+            "description": "Models API is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "/api/models/health ok"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/models": {
+      "get": {
+        "summary": "Get all models",
+        "description": "Retrieves a list of models, either from the entire catalog or only those downloaded locally",
+        "tags": [
+          "Models"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "downloaded",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "When true, returns only models that have at least one file downloaded locally"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of models retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ModelSummary"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/models/{id}": {
+      "get": {
+        "summary": "Get model details by ID",
+        "description": "Retrieves detailed information about a specific model, including its metadata and files",
+        "tags": [
+          "Models"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the model to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Model details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Unique identifier for the model"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of the model"
+                        },
+                        "metadata": {
+                          "type": "object",
+                          "properties": {
+                            "numParameters": {
+                              "type": "number",
+                              "description": "Number of parameters in the model"
+                            },
+                            "contextWindowSize": {
+                              "type": "number",
+                              "description": "Maximum context window size in tokens"
+                            },
+                            "trainedFor": {
+                              "$ref": "#/components/schemas/TrainedFor"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "Detailed description of the model"
+                            },
+                            "license": {
+                              "type": "string",
+                              "description": "License under which the model is distributed"
+                            },
+                            "languages": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "description": "Languages supported by the model"
+                            },
+                            "last_updated": {
+                              "type": "string",
+                              "format": "date-time",
+                              "description": "Date when the model was last updated"
+                            },
+                            "library_name": {
+                              "type": "string",
+                              "description": "Library or framework the model is designed for"
+                            },
+                            "model_type": {
+                              "type": "string",
+                              "description": "Type or architecture of the model"
+                            },
+                            "resources": {
+                              "type": "object",
+                              "properties": {
+                                "canonicalUrl": {
+                                  "type": "string",
+                                  "description": "Official URL for the model"
+                                },
+                                "paperUrl": {
+                                  "type": "string",
+                                  "description": "URL to the research paper associated with the model"
+                                }
+                              }
+                            },
+                            "publisher": {
+                              "type": "string",
+                              "description": "Publisher or organization that released the model"
+                            },
+                            "files": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "description": "Unique identifier for the model file"
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "description": "Name of the model file"
+                                  },
+                                  "downloadUrl": {
+                                    "type": "string",
+                                    "description": "URL to download the model file"
+                                  },
+                                  "sizeBytes": {
+                                    "type": "number",
+                                    "description": "Size of the model file in bytes"
+                                  },
+                                  "sha256checksum": {
+                                    "type": "string",
+                                    "description": "SHA-256 hash of the model file for integrity verification"
+                                  },
+                                  "quantization": {
+                                    "type": "string",
+                                    "description": "Quantization method used for the model"
+                                  },
+                                  "format": {
+                                    "type": "string",
+                                    "description": "File format of the model"
+                                  },
+                                  "maxRamUsage": {
+                                    "type": "number",
+                                    "description": "Maximum RAM required to run the model in bytes"
+                                  },
+                                  "isDownloaded": {
+                                    "type": "boolean",
+                                    "description": "Whether the model file has been downloaded locally"
+                                  },
+                                  "localPath": {
+                                    "type": "string",
+                                    "description": "Local file system path where the model is stored"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Model not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/models/{modelId}/files": {
+      "get": {
+        "summary": "List all files for a specific model",
+        "tags": [
+          "Models",
+          "Files"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "modelId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the model"
+          },
+          {
+            "in": "query",
+            "name": "downloaded",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filter to only show downloaded files"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of model files retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ModelFile"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Model not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/models/{modelId}/files/{fileId}": {
+      "get": {
+        "summary": "Get details of a specific model file",
+        "tags": [
+          "Models",
+          "Files"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "modelId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the model"
+          },
+          {
+            "in": "path",
+            "name": "fileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Model file details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ModelFile"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Model or file not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update download status of a model file",
+        "tags": [
+          "Models",
+          "Files"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "modelId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the model"
+          },
+          {
+            "in": "path",
+            "name": "fileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the file"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DownloadAction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Download status updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DownloadStatus"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid action",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Model or file not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a model file",
+        "tags": [
+          "Models",
+          "Files"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "modelId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the model"
+          },
+          {
+            "in": "path",
+            "name": "fileId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Model or file not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/servers/health": {
+      "get": {
+        "summary": "Check the health of the servers API",
+        "tags": [
+          "Servers"
+        ],
+        "responses": {
+          "200": {
+            "description": "Servers API is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "/api/servers/health ok"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/servers": {
+      "get": {
+        "summary": "Get all servers",
+        "tags": [
+          "Servers"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "fileId",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter servers by model file ID"
+          },
+          {
+            "in": "query",
+            "name": "tag",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter servers by tag"
+          },
+          {
+            "in": "query",
+            "name": "port",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Filter servers by port"
+          },
+          {
+            "in": "query",
+            "name": "host",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter servers by host"
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "running",
+                "stopped",
+                "starting",
+                "stopping",
+                "errored",
+                "unavailable"
+              ]
+            },
+            "description": "Filter servers by status"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of servers retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ServerDetails"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new server",
+        "tags": [
+          "Servers"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Server"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Server created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Server"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Model not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/servers/{serverId}": {
+      "get": {
+        "summary": "Get server details by ID",
+        "tags": [
+          "Servers"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "serverId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the server to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Server details retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ServerDetails"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid server ID format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Server not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Control server state (start/stop)",
+        "tags": [
+          "Servers"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "serverId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the server to control"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServerAction"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Server state changed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "running",
+                            "stopped"
+                          ]
+                        },
+                        "startedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "stoppedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Server already in requested state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or server not running",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Server not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a server",
+        "tags": [
+          "Servers"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "serverId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ID of the server to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Server deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "deleted"
+                          ]
+                        },
+                        "deletedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid server ID format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Server not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Server is currently running and cannot be deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": []
+}
