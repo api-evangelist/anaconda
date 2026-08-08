@@ -1,0 +1,14 @@
+{
+  "repo": "anaconda",
+  "feeds": [
+    {
+      "source": "https://community.anaconda.cloud/",
+      "feed_url": "https://forum.anaconda.com/posts.rss",
+      "title": "",
+      "saved": 7,
+      "method": "discovered"
+    }
+  ],
+  "post_count": 7,
+  "fetched": "2026-08-06T14:08:46Z"
+}
