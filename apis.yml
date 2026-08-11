@@ -42,115 +42,14 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 apis:
-- aid: anaconda:server-api
-  name: Anaconda Server API
-  description: The repository API behind the Anaconda Platform and the on-premises
-    Anaconda Server — channels, artifacts (conda, PyPI, CRAN), subchannels, mirrors,
-    installers, CVE and vulnerability metadata, accounts, users, groups, tokens, license
-    and system administration. Published as OpenAPI 3.0.0 (version 6.5) with 129 paths
-    and 172 operations, secured with a JWT bearer scheme and an X-Auth user-token API
-    key.
-  humanURL: https://anaconda.com/docs/anaconda-platform/main
-  baseURL: https://api.anaconda.cloud/api
-  tags:
-  - Repository
-  - Package Management
-  - Channels
-  - Artifacts
-  - Vulnerabilities
-  properties:
-  - type: OpenAPI
-    url: openapi/anaconda-server-openapi-original.json
-  - type: Documentation
-    url: https://anaconda.com/docs/anaconda-platform/main
-- aid: anaconda:org-management-api
-  name: Anaconda Organization Management API
-  description: Administrative API for Anaconda Platform organizations — create and
-    delete service accounts, add and remove users, assign and revoke subscription seats,
-    onboard users in bulk, and create, update, list and revoke organization access
-    tokens. OpenAPI 3.1.0, authenticated with a service-account client_credentials
-    bearer token plus X-Org-Name and X-API-Version headers.
-  humanURL: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
-  baseURL: https://anaconda.com
-  tags:
-  - Organizations
-  - User Management
-  - Provisioning
-  - Tokens
-  properties:
-  - type: OpenAPI
-    url: openapi/anaconda-org-management-openapi-original.json
-  - type: APIReference
-    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
-- aid: anaconda:audit-logs-api
-  name: Anaconda Audit Logs API
-  description: Read and export organization audit events from the Anaconda Platform.
-    Supports listing audit logs with limit/offset/sort pagination, retrieving a single
-    event, and creating asynchronous bulk export jobs that write JSON Lines files,
-    with job-status polling and a signed download endpoint. OpenAPI 3.1.0.
-  humanURL: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
-  baseURL: https://anaconda.com
-  tags:
-  - Audit Logs
-  - Compliance
-  - Governance
-  - Export
-  properties:
-  - type: OpenAPI
-    url: openapi/anaconda-audit-logs-openapi-original.json
-  - type: APIReference
-    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
-- aid: anaconda:ai-navigator-api
-  name: Anaconda AI Navigator API
-  description: Local HTTP API exposed by Anaconda AI Navigator for managing curated
-    local models, model files, inference servers, and an embedded vector database —
-    list and download models, start and stop model servers, and create, list and drop
-    vector-database tables. OpenAPI 3.0.0 with a bearer (UUID API key) scheme; the
-    server runs on the developer's own machine, so the specification publishes no
-    servers[] entry.
-  humanURL: https://anaconda.com/docs/api-reference/get-api
-  x-baseURL-note: Local-only API. Anaconda publishes the OpenAPI with an empty servers[]
-    array and documents no host/port, so no baseURL is asserted here rather than inventing
-    one.
-  tags:
-  - Artificial Intelligence
-  - Models
-  - Inference
-  - Vector Database
-  properties:
-  - type: OpenAPI
-    url: openapi/anaconda-ai-navigator-openapi-original.json
-  - type: APIReference
-    url: https://anaconda.com/docs/api-reference/get-api
-- aid: anaconda:desktop-api
-  name: Anaconda Desktop API
-  description: Local HTTP API exposed by Anaconda Desktop for model and inference-server
-    management — list the model catalog, inspect and delete model files, track download
-    status, and create, start, stop and delete local model servers. OpenAPI 3.0.0 with
-    a bearer (UUID API key) scheme; runs on the developer's own machine so no servers[]
-    host is published.
-  humanURL: https://anaconda.com/docs/anaconda-desktop/main
-  x-baseURL-note: Local-only API. Anaconda publishes the OpenAPI with an empty servers[]
-    array and documents no host/port, so no baseURL is asserted here rather than inventing
-    one.
-  tags:
-  - Desktop
-  - Models
-  - Inference
-  - Artificial Intelligence
-  properties:
-  - type: OpenAPI
-    url: openapi/anaconda-desktop-openapi-original.json
-  - type: Documentation
-    url: https://anaconda.com/docs/anaconda-desktop/main
 - aid: anaconda:anaconda-org-api
   name: Anaconda.org Repository API
-  description: The public REST API behind anaconda.org — the community package repository
-    that serves conda and PyPI artifacts. Exposes user/organization profiles, packages,
-    releases, files, labels and channels, and is the API the first-party anaconda-client
-    library and `anaconda org` CLI plugin speak to. Anonymous reads are open; writes
-    require an Anaconda.org token. No OpenAPI is published for this surface as of this
-    profiling pass.
+  description: >-
+    The public REST API behind anaconda.org — the community package repository that serves conda and PyPI
+    artifacts. Exposes user/organization profiles, packages, releases, files, labels and channels, and
+    is the API the first-party anaconda-client library and `anaconda org` CLI plugin speak to. Anonymous
+    reads are open; writes require an Anaconda.org token. No OpenAPI is published for this surface as
+    of this profiling pass.
   humanURL: https://anaconda.com/docs/anaconda-org/main
   baseURL: https://api.anaconda.org
   tags:
@@ -165,17 +64,16 @@ apis:
     url: https://anaconda.com/docs/cli-reference/anaconda-client/commands/index
 - aid: anaconda:mcp
   name: Anaconda MCP
-  description: Anaconda's Model Context Protocol surface for AI coding agents. `anaconda-mcp`
-    is a unified local gateway that composes conda-aware MCP servers, giving Claude
-    Desktop, Claude Code, Cursor, VS Code, OpenCode and Windsurf direct access to conda
-    environments, installed packages, channel configuration and structured package
-    metadata for real dependency resolution. `anaconda ai mcp` is a second server exposing
-    the AI Navigator model and inference-server operations as MCP tools over stdio or
-    streamable-http.
+  description: >-
+    Anaconda's Model Context Protocol surface for AI coding agents. `anaconda-mcp` is a unified local
+    gateway that composes conda-aware MCP servers, giving Claude Desktop, Claude Code, Cursor, VS Code,
+    OpenCode and Windsurf direct access to conda environments, installed packages, channel configuration
+    and structured package metadata for real dependency resolution. `anaconda ai mcp` is a second server
+    exposing the AI Navigator model and inference-server operations as MCP tools over stdio or streamable-http.
   humanURL: https://anaconda.com/docs/cli-reference/anaconda-mcp/getting-started
-  x-baseURL-note: Locally hosted MCP servers (stdio by default; `anaconda ai mcp` also
-    offers streamable-http on 127.0.0.1:8000). Anaconda publishes no remote/hosted MCP
-    endpoint, so no baseURL is asserted here.
+  x-baseURL-note: >-
+    Locally hosted MCP servers (stdio by default; `anaconda ai mcp` also offers streamable-http on 127.0.0.1:8000).
+    Anaconda publishes no remote/hosted MCP endpoint, so no baseURL is asserted here.
   tags:
   - MCP
   - Agents
@@ -188,6 +86,446 @@ apis:
     url: mcp/anaconda-tool-crosswalk.yml
   - type: Documentation
     url: https://anaconda.com/docs/cli-reference/anaconda-mcp/getting-started
+- aid: anaconda:anaconda-account-api
+  name: Anaconda Account API
+  description: User account actions
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - account
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-account-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-ai-navigator-api-api
+  name: Anaconda AI Navigator API API
+  description: The AI Navigator API API from Anaconda — 1 operation(s) for ai navigator api.
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - AI Navigator API
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-ai-navigator-api-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-artifacts-api
+  name: Anaconda Artifacts API
+  description: Artifact endpoints - search, retrieve, mirror
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - artifacts
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-artifacts-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-audit-logs-api
+  name: Anaconda Audit Logs API
+  description: The Audit Logs API from Anaconda — 5 operation(s) for audit logs.
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - Audit Logs
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-audit-logs-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-auth-api
+  name: Anaconda Auth API
+  description: Authentication endpoints
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - auth
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-auth-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-channels-api
+  name: Anaconda Channels API
+  description: Channel management endpoints
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - channels
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-channels-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-cves-api
+  name: Anaconda Cves API
+  description: The cves API from Anaconda — 20 operation(s) for cves.
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - cves
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-cves-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-diagnosis-api
+  name: Anaconda Diagnosis API
+  description: The diagnosis API from Anaconda — 1 operation(s) for diagnosis.
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - diagnosis
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-diagnosis-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-docs-api
+  name: Anaconda Docs API
+  description: The docs API from Anaconda — 1 operation(s) for docs.
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - docs
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-docs-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-files-api
+  name: Anaconda Files API
+  description: The Files API from Anaconda — 2 operation(s) for files.
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - Files
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-files-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-groups-api
+  name: Anaconda Groups API
+  description: Group management endpoints
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - groups
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-groups-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-installers-api
+  name: Anaconda Installers API
+  description: The installers API from Anaconda — 2 operation(s) for installers.
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - installers
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-installers-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-mirrors-api
+  name: Anaconda Mirrors API
+  description: The mirrors API from Anaconda — 1 operation(s) for mirrors.
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - mirrors
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-mirrors-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-models-api
+  name: Anaconda Models API
+  description: The Models API from Anaconda — 5 operation(s) for models.
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - Models
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-models-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-organizations-api
+  name: Anaconda Organizations API
+  description: The organizations API from Anaconda — 9 operation(s) for organizations.
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-organizations-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-repo-api
+  name: Anaconda Repo API
+  description: The Repo API from Anaconda — 2 operation(s) for repo.
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - Repo
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-repo-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-reports-api
+  name: Anaconda Reports API
+  description: The reports API from Anaconda — 1 operation(s) for reports.
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - reports
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-reports-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-servers-api
+  name: Anaconda Servers API
+  description: The Servers API from Anaconda — 3 operation(s) for servers.
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - Servers
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-servers-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-system-api
+  name: Anaconda System API
+  description: System endpoints - version, health, etc.
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - system
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-system-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-users-api
+  name: Anaconda Users API
+  description: User role management endpoints (CRUD is managed separately)
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - users
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-users-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-vectordb-api
+  name: Anaconda Vector DB API
+  description: The VectorDB API from Anaconda — 4 operation(s) for vectordb.
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - VectorDB
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-vectordb-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-websocket-api
+  name: Anaconda Websocket API
+  description: The websocket API from Anaconda — 3 operation(s) for websocket.
+  humanURL: https://anaconda.com/docs/anaconda-platform/main
+  baseURL: https://api.anaconda.cloud/api
+  tags:
+  - websocket
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-websocket-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
 common:
 - type: AgenticAccess
   url: agentic-access/anaconda-agentic-access.yml
