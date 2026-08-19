@@ -1,0 +1,30 @@
+openapi: 3.2.0
+info:
+  version: '6.5'
+  title: Anaconda Server Docs API
+servers:
+- url: https://api.anaconda.cloud/api
+tags:
+- name: docs
+paths:
+  /external-docs:
+    get:
+      tags:
+      - docs
+      summary: Redirect a user to the right documentation location
+      operationId: repo.endpoints.system.get_external_docs
+      responses:
+        '302':
+          description: redirect to the current documentation of Anaconda Server
+components:
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: repo.auth.token_provider.decode_token
+    user_token:
+      type: apiKey
+      name: X-Auth
+      in: header
+      x-apikeyInfoFunc: repo.auth.token_provider.decode_user_private_token

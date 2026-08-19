@@ -1,0 +1,118 @@
+openapi: 3.2.0
+info:
+  version: '6.5'
+  title: Anaconda Server Installers API
+servers:
+- url: https://api.anaconda.cloud/api
+tags:
+- name: installers
+paths:
+  /installers:
+    get:
+      tags:
+      - installers
+      summary: Get list of miniconda installers available for download.
+      operationId: repo.endpoints.installers.list_installers
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Installers'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /installers/{installer_name}:
+    get:
+      tags:
+      - installers
+      summary: Donwload miniconda installer from mounted installers.zip
+      operationId: repo.endpoints.installers.download_installer
+      parameters:
+      - $ref: '#/components/parameters/installer_name-parameter'
+      responses:
+        '200':
+          description: successfully found the resource to download
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    Installers:
+      type: object
+      properties:
+        installers:
+          type: object
+          properties:
+            os:
+              type: string
+            platform:
+              type: string
+            python_version:
+              type: string
+            version:
+              type: string
+            description:
+              type: string
+            updated_at:
+              type: string
+            size:
+              type: integer
+            sha256:
+              type: string
+            internal:
+              type: boolean
+            url:
+              type: string
+            top:
+              type: boolean
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+  parameters:
+    installer_name-parameter:
+      name: installer_name
+      in: path
+      required: true
+      description: the unique name of installer file
+      schema:
+        type: string
+        example: Miniconda3-py37_4.10.1-Linux-aarch64.sh
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: repo.auth.token_provider.decode_token
+    user_token:
+      type: apiKey
+      name: X-Auth
+      in: header
+      x-apikeyInfoFunc: repo.auth.token_provider.decode_user_private_token

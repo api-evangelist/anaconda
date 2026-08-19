@@ -1,0 +1,60 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Server Repo API",
+    "version": "6.5"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Repo",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "repo.endpoints.docker.publish_events",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/repo/docker/events",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "repo.endpoints.docker.get_repository",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/repo/docker/repositories/:channel_id/:image_name",
+            "params": [
+              {
+                "name": "channel_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "image_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "apikey",
+              "key": "X-Auth",
+              "value": "{{X-Auth}}",
+              "placement": "header"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,83 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Server Auth API",
+    "version": "6.5"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "auth",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Authenticate user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/auth/login",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Authenticate user"
+        },
+        {
+          "info": {
+            "name": "repo.endpoints.auth.logout_get",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/auth/logout"
+          }
+        },
+        {
+          "info": {
+            "name": "Initiates authentication flow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/auth/authorize"
+          },
+          "docs": "Initiates authentication flow"
+        },
+        {
+          "info": {
+            "name": "Callback endpoint, used for final redirect from the OpenID connect provider",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/auth/callback/kc",
+            "params": [
+              {
+                "name": "code",
+                "value": "",
+                "type": "query",
+                "description": "authorization_code from OpenID provider"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "redirect_uri",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "kc means Keycloak, could be potentially extended with different providers"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

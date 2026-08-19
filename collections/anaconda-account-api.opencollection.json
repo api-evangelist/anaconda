@@ -1,0 +1,478 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Server Account API",
+    "version": "6.5"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "account",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get full history of all system events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/system/history",
+            "params": [
+              {
+                "name": "event_types",
+                "value": "",
+                "type": "query",
+                "description": "comma separated list of event types to filter"
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "query",
+                "description": "id of a user to filter for"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get full history of all system events"
+        },
+        {
+          "info": {
+            "name": "This allows a non-user to create an user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/account/register",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This allows a non-user to create an user"
+        },
+        {
+          "info": {
+            "name": "Once a new user is registered they must confirm their registration via an email",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/account/register/:account_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "the uuid in the link of the confirmation email"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "When a new account is registered, it must first be confirmed before full access is granted. An email will be sent to the email address used during registration. There will be a link in that email that points to https://server.com/register/{accountid}"
+        },
+        {
+          "info": {
+            "name": "This allows a user to unregister their account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/account/unregister",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "If the user wants to unregister their account from repo, this endpoint uses the currently logged in user to unregister. A confirmation email will be sent to the registered address before unregistration is complete."
+        },
+        {
+          "info": {
+            "name": "This is confirm that the user does want to unregister their account from repo",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/account/unregister/:account_id",
+            "params": [
+              {
+                "name": "account_id",
+                "value": "",
+                "type": "path",
+                "description": "the uuid in the link of the confirmation email"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint will normally be called due to the user confirming their unregistration from the confirmation email they received"
+        },
+        {
+          "info": {
+            "name": "This gets the account data for the currently logged in user.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/account",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "The platform will know what user to get data for by using the JWT token.There is no need to query parameters"
+        },
+        {
+          "info": {
+            "name": "Edit the currently logged in user's account",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/account",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "The user that is currently logged in is determined by the JWT token that is available"
+        },
+        {
+          "info": {
+            "name": "Delete the account temporarily until confirmed",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.anaconda.cloud/api/account",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete the account temporarily until confirmed"
+        },
+        {
+          "info": {
+            "name": "Get user tokens for current account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/account/tokens",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the list of created token by this user, either `scope` or `resource` type."
+        },
+        {
+          "info": {
+            "name": "Create a new user token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/account/tokens",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Give access to allow user to do specific actions on one or more resources"
+        },
+        {
+          "info": {
+            "name": "Get information about the current user token, provided with X-Auth header",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/account/token-info",
+            "auth": {
+              "type": "apikey",
+              "key": "X-Auth",
+              "value": "{{X-Auth}}",
+              "placement": "header"
+            }
+          },
+          "docs": "Get information about the current user token, provided with X-Auth header"
+        },
+        {
+          "info": {
+            "name": "Update user token information",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/account/tokens/:token_id",
+            "params": [
+              {
+                "name": "token_id",
+                "value": "",
+                "type": "path",
+                "description": "Id of the token position, not an X-Auth or JWT token itself!"
+              },
+              {
+                "name": "reissue_token",
+                "value": "",
+                "type": "query",
+                "description": "update token endpoint by default reissues a new token."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "By default reissues a new token and returns in `token` attribute. If `reissue_token` query parameter is false, then token is not reissued and old value is used. The api returns `null` as a token in this case.\n"
+        },
+        {
+          "info": {
+            "name": "Delete specific user token",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.anaconda.cloud/api/account/tokens/:token_id",
+            "params": [
+              {
+                "name": "token_id",
+                "value": "",
+                "type": "path",
+                "description": "Id of the token position, not an X-Auth or JWT token itself!"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete specific user token"
+        },
+        {
+          "info": {
+            "name": "Get the history logs for the account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/account/history",
+            "params": [
+              {
+                "name": "event_types",
+                "value": "",
+                "type": "query",
+                "description": "comma separated list of event types to filter"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the history logs for the account"
+        },
+        {
+          "info": {
+            "name": "repo.endpoints.account.publish_events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/account/history/ws",
+            "params": [
+              {
+                "name": "timeout",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "event_types",
+                "value": "",
+                "type": "query",
+                "description": "comma separated list of event types to filter"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "Get the audit logs for the account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/account/logs",
+            "params": [
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "created",
+                "value": "",
+                "type": "query",
+                "description": "timestamp start boundary for when created. I guess this could be either \"only artifacts created on this exact date\" or \"artifacts created on this date and newer\""
+              },
+              {
+                "name": "updated",
+                "value": "",
+                "type": "query",
+                "description": "timestamp end boundary"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "this gets the logs for the account and if the account is owned by an admin user then it retrieves the logs for everyone. maybe that's too much"
+        },
+        {
+          "info": {
+            "name": "Get channels the user has access to",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/account/channels",
+            "params": [
+              {
+                "name": "permission",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "include_subchannels",
+                "value": "",
+                "type": "query",
+                "description": "option to include or exclude subchannels from the response"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort channels (may be comma-separated)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get channels the user has access to"
+        },
+        {
+          "info": {
+            "name": "Get the permissions for this user's account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/account/permissions"
+          },
+          "docs": "Get the permissions for this user's account"
+        },
+        {
+          "info": {
+            "name": "Get the scopes for specific user account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/account/scopes",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the scopes for specific user account"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

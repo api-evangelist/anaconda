@@ -1,0 +1,53 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Server Mirrors API",
+    "version": "6.5"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "mirrors",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get list of mirrors",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/mirrors",
+            "params": [
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort mirrors (may be comma-separated)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get list of mirrors"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

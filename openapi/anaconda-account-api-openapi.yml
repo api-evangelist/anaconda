@@ -1,0 +1,1090 @@
+openapi: 3.2.0
+info:
+  version: '6.5'
+  title: Anaconda Server Account API
+  description: User account actions
+servers:
+- url: https://api.anaconda.cloud/api
+tags:
+- name: account
+  description: User account actions
+paths:
+  /system/history:
+    get:
+      tags:
+      - account
+      summary: Get full history of all system events
+      operationId: repo.endpoints.system.history
+      parameters:
+      - $ref: '#/components/parameters/event-types-query'
+      - $ref: '#/components/parameters/user-id-query'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: successful retrieval of history
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountHistory'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+  /account/register:
+    post:
+      x-not-implemented: red
+      tags:
+      - account
+      summary: This allows a non-user to create an user
+      operationId: repo.endpoints.account.register
+      requestBody:
+        description: registered new user with provided payload
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: true
+  /account/register/{account_id}:
+    get:
+      x-not-implemented: red
+      tags:
+      - account
+      summary: Once a new user is registered they must confirm their registration via an email
+      description: When a new account is registered, it must first be confirmed before full access is granted. An email will be sent to the email address used during registration. There will be a link in that email that points to https://server.com/register/{accountid}
+      operationId: repo.endpoints.account.register_confirm
+      parameters:
+      - in: path
+        name: account_id
+        schema:
+          type: string
+        description: the uuid in the link of the confirmation email
+        required: true
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      deprecated: true
+  /account/unregister:
+    post:
+      x-not-implemented: red
+      tags:
+      - account
+      summary: This allows a user to unregister their account
+      description: If the user wants to unregister their account from repo, this endpoint uses the currently logged in user to unregister. A confirmation email will be sent to the registered address before unregistration is complete.
+      operationId: repo.endpoints.account.unregister
+      responses:
+        '200':
+          description: successfully triggered unregistration
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      deprecated: true
+  /account/unregister/{account_id}:
+    get:
+      x-not-implemented: red
+      tags:
+      - account
+      summary: This is confirm that the user does want to unregister their account from repo
+      description: This endpoint will normally be called due to the user confirming their unregistration from the confirmation email they received
+      operationId: repo.endpoints.account.unregister_confirm
+      parameters:
+      - in: path
+        name: account_id
+        schema:
+          type: string
+        description: the uuid in the link of the confirmation email
+        required: true
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      deprecated: true
+  /account:
+    get:
+      x-not-implemented: yellow
+      tags:
+      - account
+      summary: This gets the account data for the currently logged in user.
+      description: The platform will know what user to get data for by using the JWT token.There is no need to query parameters
+      operationId: repo.endpoints.account.get_account
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+    put:
+      x-not-implemented: red
+      tags:
+      - account
+      summary: Edit the currently logged in user's account
+      description: The user that is currently logged in is determined by the JWT token that is available
+      operationId: repo.endpoints.account.edit_account
+      requestBody:
+        description: pass the schema properties edited
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUpdateRequest'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      deprecated: true
+    delete:
+      x-not-implemented: red
+      tags:
+      - account
+      summary: Delete the account temporarily until confirmed
+      operationId: repo.endpoints.account.delete
+      responses:
+        '200':
+          description: successful deletion
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      deprecated: true
+  /account/tokens:
+    get:
+      tags:
+      - account
+      summary: Get user tokens for current account
+      description: Returns the list of created token by this user, either `scope` or `resource` type.
+      operationId: repo.endpoints.tokens.user_tokens.list_tokens
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTokenList'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+    post:
+      tags:
+      - account
+      summary: Create a new user token
+      description: Give access to allow user to do specific actions on one or more resources
+      operationId: repo.endpoints.tokens.user_tokens.post_token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTokenCreateRequest'
+      responses:
+        '200':
+          description: Created token object, which also contains the token itself and id of the token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTokenCreateResponse'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+  /account/token-info:
+    get:
+      tags:
+      - account
+      summary: Get information about the current user token, provided with X-Auth header
+      operationId: repo.endpoints.tokens.user_tokens.info
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTokenInfo'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - user_token: []
+  /account/tokens/{token_id}:
+    put:
+      tags:
+      - account
+      summary: Update user token information
+      operationId: repo.endpoints.tokens.user_tokens.put_token
+      description: 'By default reissues a new token and returns in `token` attribute. If `reissue_token` query parameter is false, then token is not reissued and old value is used. The api returns `null` as a token in this case.
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/token_id-parameter'
+      - $ref: '#/components/parameters/reissue_token-query'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTokenUpdateRequest'
+      responses:
+        '200':
+          description: Updated token object, which also contains the token itself
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTokenUpdateResponse'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+    delete:
+      tags:
+      - account
+      summary: Delete specific user token
+      operationId: repo.endpoints.tokens.user_tokens.delete_token
+      parameters:
+      - $ref: '#/components/parameters/token_id-parameter'
+      responses:
+        '204':
+          description: Token is deleted
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+  /account/history:
+    get:
+      tags:
+      - account
+      summary: Get the history logs for the account
+      operationId: repo.endpoints.account.history
+      parameters:
+      - $ref: '#/components/parameters/event-types-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: successful retrieval of history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    $ref: '#/components/schemas/AccountHistory'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+  /account/history/ws:
+    get:
+      tags:
+      - account
+      operationId: repo.endpoints.account.publish_events
+      parameters:
+      - name: timeout
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 5000
+      - $ref: '#/components/parameters/event-types-query'
+      responses:
+        '101':
+          description: Read-only websocket with new events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountHistory'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      security:
+      - jwt: []
+  /account/logs:
+    get:
+      x-not-implemented: red
+      tags:
+      - account
+      summary: Get the audit logs for the account
+      description: this gets the logs for the account and if the account is owned by an admin user then it retrieves the logs for everyone. maybe that's too much
+      operationId: repo.endpoints.account.logs
+      parameters:
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/created-query'
+      - $ref: '#/components/parameters/updated-query'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: successful retrieval of logs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountAuditLog'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      deprecated: true
+  /account/channels:
+    get:
+      tags:
+      - account
+      summary: Get channels the user has access to
+      operationId: repo.endpoints.channels.channels.list_my_channels
+      parameters:
+      - $ref: '#/components/parameters/permission-query'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/include-subchannels'
+      - $ref: '#/components/parameters/channel-sort-query'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Channel'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /account/permissions:
+    get:
+      tags:
+      - account
+      summary: Get the permissions for this user's account
+      operationId: repo.endpoints.account.get_user_permissions
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserPermission'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /account/scopes:
+    get:
+      tags:
+      - account
+      summary: Get the scopes for specific user account
+      operationId: repo.endpoints.account.get_user_scopes
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  scopes:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+components:
+  schemas:
+    ChannelType:
+      description: channel type
+      type: string
+      default: default
+      enum:
+      - default
+      - virtual
+    UserResourceToken:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the token in the system, not a token itself!
+        name:
+          type: string
+        created_at:
+          type: string
+        expires_at:
+          type: string
+        metadata:
+          type: object
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserTokenPermissionResourceItem'
+    Account:
+      type: object
+      description: Data pertaining to an account
+      required:
+      - user_id
+      - username
+      - default_channel_name
+      properties:
+        user_id:
+          description: the user_id of the account
+          type: string
+        username:
+          description: the username of the user
+          type: string
+        default_channel_name:
+          description: user's default channel name
+          type: string
+        roles:
+          type: array
+          description: user roles
+          items:
+            type: string
+    UserTokenCreateResourceRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - resources
+      properties:
+        name:
+          type: string
+          minLength: 1
+        metadata:
+          type: object
+        expires_at:
+          type: string
+          minLength: 1
+          pattern: ^\d{4}-\d{2}-\d{2}$
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserTokenPermissionResourceItem'
+          minItems: 1
+    User:
+      type: object
+      description: Use same structure for create and read
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+          description: could username be the email? its unique
+        firstName:
+          type: string
+          description: do we need this?
+        lastName:
+          type: string
+          description: do we need this?
+        email:
+          type: string
+        org:
+          type: string
+          description: the uid of the org this user might belong to
+        role:
+          type: array
+          items:
+            type: string
+            enum:
+            - user
+            - author
+            - admin
+          description: "permissions types for users\n  * \"user\" - Allows for searching and downloading\n  * \"author\" - Allows for searching, downloading, uploading, and updating packages\n"
+    ChannelFilters:
+      type: object
+      description: 'Filter directives for mirroring operation. Fields are optional. Can''t have include and exclude licenses together. This attribute is not returned by default in channels list
+
+        '
+      additionalProperties: false
+      properties:
+        conda:
+          type: object
+          additionalProperties: false
+          properties:
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+        cran:
+          type: object
+          additionalProperties: false
+          properties:
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+        python:
+          type: object
+          additionalProperties: false
+          properties:
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+    FilterExcludeSpecs:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+      description: 'A list of MatchSpec strings, for excluding specific packages. General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
+
+        '
+    FilterIncludeSpecs:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+      description: 'A list of MatchSpec strings, for including from excluded list General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
+
+        '
+    VirtualChannelSource:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        parent_name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+    UserTokenPermissionResourceItem:
+      type: object
+      description: Represents a resource element, which user can access, for example specific channel. This enforces the default user authorization level.
+      required:
+      - resource_type
+      - resource_id
+      - permission
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - channel
+          - subchannel
+          - artifact
+        resource_id:
+          type: string
+          description: resource name
+        permission:
+          type: string
+    ChannelPrivacy:
+      description: channel privacy channel
+      type: string
+      enum:
+      - private
+      - authenticated
+      - public
+    UserPermission:
+      type: object
+      properties:
+        resource_type:
+          type: string
+        action:
+          type: string
+        permissions:
+          type: string
+    UserTokenCreateResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Token Id, represents the token position for token management
+        token:
+          type: string
+          description: Token itself. It's one-time generated, couldn't be read with different api.
+    UserTokenList:
+      type: object
+      description: The list of user tokens, either `scope` or `resource` types.
+      properties:
+        items:
+          type: array
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/UserResourceToken'
+            - $ref: '#/components/schemas/UserScopeToken'
+    UserTokenCreateScopedRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - scopes
+      properties:
+        name:
+          type: string
+          minLength: 1
+        metadata:
+          type: object
+        expires_at:
+          type: string
+          minLength: 1
+          format: date
+        scopes:
+          type: array
+          items:
+            type: string
+          minItems: 1
+    ChannelIndexingBehavior:
+      description: channel indexing behavior
+      type: string
+      default: default
+      enum:
+      - default
+      - frozen
+    Channel:
+      type: object
+      description: Channel object
+      required:
+      - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        parent:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+          description: if present, the object is supposed to be a subchannel
+        description:
+          type: string
+        privacy:
+          $ref: '#/components/schemas/ChannelPrivacy'
+        channel_type:
+          $ref: '#/components/schemas/ChannelType'
+        indexing_behavior:
+          $ref: '#/components/schemas/ChannelIndexingBehavior'
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/VirtualChannelSource'
+        created:
+          description: date created
+          type: string
+        updated:
+          description: date of last update
+          type: string
+        artifact_count:
+          description: number of artifacts the channel currently has
+          type: number
+        download_count:
+          description: number of downloads
+          type: number
+        filters:
+          $ref: '#/components/schemas/ChannelFilters'
+    AccountHistory:
+      type: object
+      description: Account events history
+      additionalProperties: false
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              event_id:
+                type: string
+                description: Event identifier
+              event_type:
+                type: string
+                description: Event type
+                example: channel_created
+              data:
+                type: object
+                description: Event data
+                example: channel name, access level
+              meta:
+                type: object
+                description: the captured event context
+                example: user
+              created:
+                type: number
+                description: timestamp of log creation
+    UserTokenUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        expires_at:
+          type: string
+          minLength: 1
+          format: date
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserTokenPermissionResourceItem'
+          minItems: 1
+    UserTokenCreateRequest:
+      oneOf:
+      - $ref: '#/components/schemas/UserTokenCreateResourceRequest'
+      - $ref: '#/components/schemas/UserTokenCreateScopedRequest'
+      description: The token could be created either `scope` or `resource` based.
+      example:
+        name: channel view token
+        expires_at: '2021-01-01'
+        scopes:
+        - channel:view
+        - subchannel:view
+    FilterLicenses:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+        enum:
+        - agpl
+        - gpl2
+        - gpl3
+        - lgpl
+        - bsd
+        - mit
+        - apache
+        - psf
+        - public_domain
+        - proprietary
+        - other
+        - none
+      description: List of license familities to look for. Empty array means all licenses
+    UserTokenUpdateResponse:
+      type: object
+      properties:
+        token:
+          type: string
+    UserScopeToken:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the token in the system, not a token itself!
+        name:
+          type: string
+        metadata:
+          type: object
+        created_at:
+          type: string
+        expires_at:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: string
+            description: must be valid, which is available in the system
+    UserTokenInfo:
+      type: object
+      properties:
+        expires_at:
+          type: string
+        default_channel_name:
+          type: string
+        type:
+          type: string
+          enum:
+          - scope
+          - resource
+          description: scopes - when token was created scope-based, resource - when resources-based
+    AccountAuditLog:
+      type: object
+      description: Activity performed by the account
+    AccountUpdateRequest:
+      type: object
+      description: Data pertaining to an account
+      required:
+      - default_channel_name
+      properties:
+        default_channel_name:
+          description: user's default channel name
+          type: string
+  responses:
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  parameters:
+    offset-query:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+        default: 0
+      description: the offset of the result set
+    search-query:
+      in: query
+      name: q
+      description: the string to search on
+      schema:
+        type: string
+    reissue_token-query:
+      in: query
+      name: reissue_token
+      required: false
+      schema:
+        type: boolean
+        default: true
+      description: update token endpoint by default reissues a new token.
+    limit-query:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 100
+      description: the number of results in the result set
+    permission-query:
+      name: permission
+      in: query
+      schema:
+        type: string
+        enum:
+        - read
+        - write
+        - manage
+    channel-sort-query:
+      in: query
+      name: sort
+      description: property to sort channels (may be comma-separated)
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - name
+          - -name
+          - updated_at
+          - -updated_at
+    user-id-query:
+      in: query
+      name: user_id
+      required: false
+      description: id of a user to filter for
+      schema:
+        type: string
+    include-subchannels:
+      in: query
+      name: include_subchannels
+      description: option to include or exclude subchannels from the response
+      schema:
+        type: boolean
+        default: false
+    updated-query:
+      in: query
+      name: updated
+      description: timestamp end boundary
+      schema:
+        type: integer
+    event-types-query:
+      in: query
+      name: event_types
+      required: false
+      description: comma separated list of event types to filter
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - channel_created
+          - channel_updated
+          - channel_deleted
+          - mirror_registered
+          - mirror_deleted
+          - mirroring_completed
+          - mirroring_failed
+          - artifact_registered
+          - artifact_removed
+          - artifact_copied
+          - artifact_generated
+          - artifact_metadata_updated
+          - artifact_downloaded
+    created-query:
+      in: query
+      name: created
+      description: timestamp start boundary for when created. I guess this could be either "only artifacts created on this exact date" or "artifacts created on this date and newer"
+      schema:
+        type: integer
+    token_id-parameter:
+      name: token_id
+      description: Id of the token position, not an X-Auth or JWT token itself!
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 1
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: repo.auth.token_provider.decode_token
+    user_token:
+      type: apiKey
+      name: X-Auth
+      in: header
+      x-apikeyInfoFunc: repo.auth.token_provider.decode_user_private_token

@@ -1,0 +1,351 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Organization Management Organizations API",
+    "version": "1.0.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "organizations",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Service Accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://anaconda.com/api/v1/organizations/:org_id/service-accounts",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+              }
+            ]
+          },
+          "docs": "Returns a list of all service accounts in the organization."
+        },
+        {
+          "info": {
+            "name": "Create Service Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://anaconda.com/api/v1/organizations/:org_id/service-accounts",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a service account for the specified organization."
+        },
+        {
+          "info": {
+            "name": "Delete Service Account",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://anaconda.com/api/v1/organizations/:org_id/service-accounts/:client_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+              },
+              {
+                "name": "client_id",
+                "value": "",
+                "type": "path",
+                "description": "The client ID of the service account to delete."
+              }
+            ]
+          },
+          "docs": "Deletes the service account associated with the specified client ID."
+        },
+        {
+          "info": {
+            "name": "Onboard Users",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://anaconda.com/api/v1/organizations/:org_id/users_auto_registration",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Onboards users by adding them to your organization, assigning seats, and generating organization access tokens."
+        },
+        {
+          "info": {
+            "name": "List Users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://anaconda.com/api/v1/organizations/:org_id/users",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+              },
+              {
+                "name": "include_groups",
+                "value": "",
+                "type": "query",
+                "description": "Set to `true` to include each user's group memberships in the response."
+              }
+            ]
+          },
+          "docs": "Returns a list of all users in the organization."
+        },
+        {
+          "info": {
+            "name": "Add User",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://anaconda.com/api/v1/organizations/:org_id/users",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds a user to the organization."
+        },
+        {
+          "info": {
+            "name": "Remove User",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://anaconda.com/api/v1/organizations/:org_id/users/:user_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the user to remove."
+              }
+            ]
+          },
+          "docs": "Removes a user from the organization."
+        },
+        {
+          "info": {
+            "name": "Assign Seat",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://anaconda.com/api/v1/organizations/:org_id/users/:user_id/seats",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the user to assign a seat to."
+              },
+              {
+                "name": "send_seat_assigned_email",
+                "value": "",
+                "type": "query",
+                "description": "Whether to send the user an email notification about the seat assignment."
+              }
+            ]
+          },
+          "docs": "Assigns a subscription seat to the specified user."
+        },
+        {
+          "info": {
+            "name": "Revoke Seat",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://anaconda.com/api/v1/organizations/:org_id/users/:user_id/seats",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the user whose seat to revoke."
+              }
+            ]
+          },
+          "docs": "Removes a subscription seat from the specified user. The seat becomes available for assignment to another user."
+        },
+        {
+          "info": {
+            "name": "Create User Token",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://anaconda.com/api/v1/organizations/:org_id/users/:user_id/token",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the user to assign a token to."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Generates an organization access token for the specified user."
+        },
+        {
+          "info": {
+            "name": "Update User Token",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://anaconda.com/api/v1/organizations/:org_id/users/:user_id/token",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the user whose token to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the expiration date of a user's organization access token."
+        },
+        {
+          "info": {
+            "name": "List User Tokens",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://anaconda.com/api/v1/organizations/:org_id/users/:user_id/tokens",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the user whose tokens to retrieve."
+              }
+            ]
+          },
+          "docs": "Returns all tokens assigned to the specified user, including their IDs, expiration dates, and revocation status."
+        },
+        {
+          "info": {
+            "name": "Revoke User Token",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://anaconda.com/api/v1/organizations/:org_id/users/:user_id/tokens/:token_id",
+            "params": [
+              {
+                "name": "org_id",
+                "value": "",
+                "type": "path",
+                "description": "Your organization ID, found in your organization's URL: `anaconda.com/app/organizations/<ORG_ID>/`."
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the user whose token to revoke."
+              },
+              {
+                "name": "token_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the token to revoke."
+              }
+            ]
+          },
+          "docs": "Revokes a user's organization access token."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

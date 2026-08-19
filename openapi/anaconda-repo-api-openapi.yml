@@ -1,0 +1,93 @@
+openapi: 3.2.0
+info:
+  version: '6.5'
+  title: Anaconda Server Repo API
+servers:
+- url: https://api.anaconda.cloud/api
+tags:
+- name: Repo
+paths:
+  /repo/docker/events:
+    post:
+      x-internal: true
+      operationId: repo.endpoints.docker.publish_events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '204':
+          description: No content
+      tags:
+      - Repo
+  /repo/docker/repositories/{channel_id}/{image_name}:
+    get:
+      x-internal: true
+      operationId: repo.endpoints.docker.get_repository
+      parameters:
+      - name: channel_id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: image_name
+        in: path
+        required: true
+        schema:
+          type: string
+          format: path
+      responses:
+        '200':
+          description: OK
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - user_token: []
+      tags:
+      - Repo
+components:
+  responses:
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: repo.auth.token_provider.decode_token
+    user_token:
+      type: apiKey
+      name: X-Auth
+      in: header
+      x-apikeyInfoFunc: repo.auth.token_provider.decode_user_private_token

@@ -1,0 +1,207 @@
+openapi: 3.2.0
+info:
+  version: '6.5'
+  title: Anaconda Server Reports API
+servers:
+- url: https://api.anaconda.cloud/api
+tags:
+- name: reports
+paths:
+  /reports/artifact_downloads:
+    post:
+      tags:
+      - reports
+      summary: Endpoint to get artifact downloaded event reports
+      operationId: repo.endpoints.audit_logs.artifact_download.generate_artifact_downloads_report
+      description: "## Generates artifact downloaded report for records satisfying given filter conditions.\n* This feature is only available for admin users.\n* from_date, to_date and download_as are mandatory fields.\n* usernames list and channel names list are optional fields.\n* Example: If you enter a date duration, give list of channel names, list of user names in the request, \n you get a report of artifact downloaded details downloaded during that duration AND (from the channel names\n given OR downloaded by what users specified).\n"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArtifactDownloadReportRequest'
+      responses:
+        '200':
+          description: Returns artifact download report file successfully  based on download_as option selected
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArtifactDownloadReportResponse'
+            text/csv: {}
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+components:
+  responses:
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    ArtifactDownloadReportResponse:
+      type: object
+      description: Artifact Download Report response
+      properties:
+        artifact_downloaded_at:
+          type: string
+        user_id:
+          type: string
+        user_ip_address:
+          type: string
+        username:
+          type: string
+        host_username:
+          type: string
+        channel_id:
+          type: string
+        channel_name:
+          type: string
+        artifact_family:
+          type: string
+        artifact_ckey:
+          type: string
+        artifact_sha256:
+          type: string
+        environment:
+          type: string
+        hostname:
+          type: string
+        cves_count:
+          type: integer
+        cve_score:
+          type: number
+        cve_status:
+          $ref: '#/components/schemas/CVE_status'
+        cve_information:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: CVE-2019-9948
+              score:
+                type: number
+                description: Maximum score of the CVE
+              status:
+                type: string
+                description: CVE status
+              curated:
+                type: boolean
+                description: Indicates whether CVE has curated status
+              published_at:
+                description: date when the CVE has been published in NVD
+                type: string
+              nvd_modified_at:
+                description: latest date when the CVE was updated in NVD
+                type: string
+              anaconda_modified_at:
+                description: latest date when the CVE was curated by Anaconda
+                type: string
+        user_agent_headers:
+          type: string
+    ArtifactDownloadReportRequest:
+      type: object
+      description: Artifact download report request to be downloaded from a  given start date to a given end date channel id and user id filters are optional
+      required:
+      - from_date
+      - to_date
+      - download_as
+      properties:
+        from_date:
+          type: string
+          format: date
+          description: "* Report start date. \n* Supported date formats:\n  - '%Y-%m-%d'\n"
+        to_date:
+          type: string
+          format: date
+          description: "* Report end date. \n* Supported date formats:\n  - '%Y-%m-%d'\n"
+        download_as:
+          type: string
+          description: "* Specifies the format of report download file. \n* The report name will follow the convention\n  ArtifactsReport_{timestamp('%Y%m%d_%H%M%S')}\n"
+          enum:
+          - json
+          - csv
+        channel_names:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of Channel names
+        user_names:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of user names
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+    CVE_status:
+      type: string
+      enum:
+      - reported
+      - active
+      - mitigated
+      - cleared
+      - disputed
+      - unknown
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: repo.auth.token_provider.decode_token
+    user_token:
+      type: apiKey
+      name: X-Auth
+      in: header
+      x-apikeyInfoFunc: repo.auth.token_provider.decode_user_private_token

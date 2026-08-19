@@ -1,0 +1,554 @@
+openapi: 3.2.0
+info:
+  version: '6.5'
+  title: Anaconda Server System API
+  description: System endpoints - version, health, etc.
+servers:
+- url: https://api.anaconda.cloud/api
+tags:
+- name: system
+  description: System endpoints - version, health, etc.
+paths:
+  /system:
+    get:
+      tags:
+      - system
+      summary: Get system information such as health, version, etc.
+      operationId: repo.endpoints.system.health
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/System'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /system/stats:
+    get:
+      tags:
+      - system
+      summary: Get system stats such as disk usage, etc.
+      operationId: repo.endpoints.system.stats
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemStats'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+  /system/metrics:
+    get:
+      tags:
+      - system
+      summary: Get system metrics in OpenMetrics format
+      operationId: repo.endpoints.system.metrics
+      parameters:
+      - in: query
+        name: name[]
+        required: false
+        description: metrics name filter
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Exported metrics
+          content:
+            application/openmetrics-text:
+              schema:
+                type: string
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenMetrics'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /system/scopes:
+    get:
+      tags:
+      - system
+      summary: Get all possible scopes in system
+      operationId: repo.endpoints.system.scopes
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /system/resource_types:
+    get:
+      tags:
+      - system
+      summary: Get all possible resource types, used for role management
+      operationId: repo.endpoints.system.resource_types
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+  /system/license:
+    get:
+      tags:
+      - system
+      summary: Get current license information
+      operationId: repo.endpoints.system.get_license
+      responses:
+        '200':
+          description: Current license information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductLicense'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+    post:
+      tags:
+      - system
+      summary: Add license key
+      operationId: repo.endpoints.system.post_license
+      requestBody:
+        description: Activate the license
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductLicenseRequest'
+      responses:
+        '200':
+          description: Current license information
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+    put:
+      tags:
+      - system
+      summary: Update or re-activate license key
+      operationId: repo.endpoints.system.put_license
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+  /system/settings:
+    get:
+      tags:
+      - system
+      summary: Get current system settings
+      operationId: repo.endpoints.system.get_settings
+      responses:
+        '200':
+          description: System settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemSettings'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+    put:
+      tags:
+      - system
+      summary: Update system settings
+      operationId: repo.endpoints.system.update_settings
+      requestBody:
+        description: System settings
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SystemSettings'
+      responses:
+        '200':
+          description: Current system settings
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /system/blob_cleanup:
+    delete:
+      tags:
+      - system
+      x-internal: true
+      operationId: repo.endpoints.system.blob_cleanup
+      summary: Action to cleanup orphan blobs for users with system management roles
+      description: '## Finds and clears all orphan blobs that are not index artifacts
+
+        '
+      responses:
+        '200':
+          description: cleanup stats
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CleanupStats'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - jwt: []
+      - user_token: []
+    post:
+      tags:
+      - system
+      x-internal: true
+      operationId: repo.endpoints.system.cleanup_specified_orphan_blobs
+      summary: Action to cleanup given list of blobs
+      description: '## Clears the blobs based on the details (sha256) provided by admin
+
+        '
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              description: list of blobs with sha256
+              items:
+                type: string
+      responses:
+        '200':
+          description: cleanup stats
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CleanupStats'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+      - jwt: []
+      - user_token: []
+components:
+  responses:
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    ProductLicenseMetrics:
+      type: object
+      description: Is used in definining limits as well as current compliance metrics
+      properties:
+        instances:
+          type: object
+          properties:
+            api:
+              type: integer
+            worker:
+              type: integer
+            dispatcher:
+              type: integer
+        users:
+          type: integer
+        channels:
+          type: integer
+        mirrors:
+          type: integer
+    SystemStats:
+      type: object
+      properties:
+        blob_size:
+          type: object
+          properties:
+            total:
+              type: integer
+            by_artifact_family:
+              type: array
+              items:
+                type: object
+                properties:
+                  artifact_family:
+                    type: string
+                  blob_size:
+                    type: integer
+    OpenMetrics:
+      type: array
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+          documentation:
+            type: string
+          type:
+            type: string
+            enum:
+            - counter
+            - gauge
+            - summary
+            - histogram
+            - info
+            - stateset
+          samples:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                labels:
+                  type: object
+                value:
+                  oneOf:
+                  - type: string
+                  - type: number
+    CleanupStats:
+      type: object
+      description: Cleanup stats
+      properties:
+        blob_count:
+          type: number
+        space_reclaimed:
+          type: number
+          description: Space reclaimed in bytes after cleanup
+    ProductLicenseCompliance:
+      type: object
+      description: Is used in definining compliance checks for different group. warn_limit is triggered when reached 80% of the quota
+      properties:
+        ok:
+          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
+        warn_limit:
+          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
+        over_quota:
+          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
+        no_data:
+          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
+    ProductLicense:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+          enum:
+          - active
+          - expired
+          - empty
+          - revoked
+          description: Describes the status of the license. "active" - active "expired" - expired "empty" - no license is provided yet "revoked" - license was revoked
+        compliance_status:
+          type: string
+          enum:
+          - good
+          - warning
+          - blocked
+          description: Described the compliance status of the license. "good" - good "warning" - compliance warning should be shown "blocked" - the access to the system is block. License must be updated
+        license_type:
+          type: string
+          enum:
+          - restricted
+          - permissive
+          description: '"restricted" - once limits are hit or expired, the system is blocked "permissive" - once limits are hit or license is expired, the system displays message.'
+        issued_at:
+          type: string
+        expires_at:
+          type: string
+        plan:
+          type: object
+          properties:
+            limits:
+              $ref: '#/components/schemas/ProductLicenseMetrics'
+            features:
+              type: object
+              properties:
+                cve:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                    settings:
+                      type: object
+            extra:
+              type: object
+              properties:
+                plan_name:
+                  type: string
+                company_name:
+                  type: string
+        metrics:
+          $ref: '#/components/schemas/ProductLicenseMetrics'
+        compliance:
+          $ref: '#/components/schemas/ProductLicenseCompliance'
+    System:
+      type: object
+      properties:
+        status:
+          type: string
+        service_name:
+          type: string
+        version:
+          type: string
+        product_version:
+          type: string
+        errors:
+          type: array
+          items:
+            type: string
+        queue_status:
+          type: object
+          properties:
+            queue_name:
+              type: integer
+              description: Number of messages in the queue
+              example: 12
+    ProductLicenseRequest:
+      type: object
+      required:
+      - license_key
+      properties:
+        license_key:
+          type: string
+          minLength: 1
+    ProductLicenseComplianceGroup:
+      type: array
+      items:
+        type: string
+        enum:
+        - users
+        - channels
+        - instances.api
+        - instances.dispatcher
+        - instances.worker
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+    SystemSettings:
+      type: object
+      additionalProperties: false
+      properties:
+        user_channel_autocreate:
+          type: boolean
+          description: create a default user channel on first login
+        show_intro:
+          type: boolean
+          description: show intro screen after first installation or settings reset
+        cve_channel_id:
+          type:
+          - string
+          - 'null'
+          description: ID of global CVE channel
+        anaconda_ident_settings:
+          type:
+          - object
+          - 'null'
+          properties:
+            enabled:
+              type: boolean
+              description: Should anaconda-ident be enabled? If yes, then true, else false
+            enable_from:
+              type: string
+              format: date-time
+              description: From when should anaconda-ident be made mandatory
+            updated_by:
+              type: string
+              description: Username of admin updating this setting
+            selected_tokens:
+              type: array
+              description: List of tokens selected by admin for anaconda-ident
+              items:
+                type: string
+                enum:
+                - client_token
+                - session_token
+                - environment_token
+                - username
+                - hostname
+                - environment
+                - organization
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: repo.auth.token_provider.decode_token
+    user_token:
+      type: apiKey
+      name: X-Auth
+      in: header
+      x-apikeyInfoFunc: repo.auth.token_provider.decode_user_private_token

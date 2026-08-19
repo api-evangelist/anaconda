@@ -1,0 +1,195 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Audit Logs API",
+    "version": "0.1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Audit Logs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Audit Logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://anaconda.com/api/audit-logs",
+            "headers": [
+              {
+                "name": "X-Org-Name",
+                "value": ""
+              },
+              {
+                "name": "X-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "Filter audit logs by field values. Use the format `column_name:value1,value2` to match entries where the column contains any of the specified values.\n\nYou can pass multiple `q` parameters to build complex filters. They are combined using the `search_operator` parameter."
+              },
+              {
+                "name": "search_operator",
+                "value": "",
+                "type": "query",
+                "description": "The logical operator used to combine multiple `q` filters.\n\nUse `or` to return logs matching any filter. Use `and` to return only logs matching all filters."
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "Sort the results by one or more columns. Use the format `column_name` for ascending order or `-column_name` for descending order.\n\nFor example, `-occurred_at` sorts by most recent first."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "The maximum number of audit log entries to return per page."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "The number of entries to skip before returning results. Use with `limit` to paginate through large result sets."
+              },
+              {
+                "name": "from_date",
+                "value": "",
+                "type": "query",
+                "description": "Only return audit logs that occurred on or after this timestamp. Use ISO 8601 format with timezone."
+              },
+              {
+                "name": "to_date",
+                "value": "",
+                "type": "query",
+                "description": "Only return audit logs that occurred on or before this timestamp. Use ISO 8601 format with timezone."
+              }
+            ]
+          },
+          "docs": "Retrieve audit logs for your organization with support for search, sorting, pagination, and date filtering."
+        },
+        {
+          "info": {
+            "name": "Get Audit Log",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://anaconda.com/api/audit-logs/:audit_log_id",
+            "headers": [
+              {
+                "name": "X-Org-Name",
+                "value": ""
+              },
+              {
+                "name": "X-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "audit_log_id",
+                "value": "",
+                "type": "path",
+                "description": "UUID of the audit log entry to retrieve.\n"
+              }
+            ]
+          },
+          "docs": "Retrieve a single audit log entry by its unique identifier."
+        },
+        {
+          "info": {
+            "name": "Create Export Job",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://anaconda.com/api/audit-logs/export",
+            "headers": [
+              {
+                "name": "X-Org-Name",
+                "value": ""
+              },
+              {
+                "name": "X-API-Version",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a bulk export job that writes audit logs in JSON Lines format. The export is processed asynchronously — use the returned job ID to check status and download the results."
+        },
+        {
+          "info": {
+            "name": "Get Export Job Status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://anaconda.com/api/audit-logs/export/:job_id",
+            "headers": [
+              {
+                "name": "X-Org-Name",
+                "value": ""
+              },
+              {
+                "name": "X-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "job_id",
+                "value": "",
+                "type": "path",
+                "description": "UUID of the export job to query.\n"
+              }
+            ]
+          },
+          "docs": "Retrieve the current status of an export job and, when complete, the download URL for the exported data."
+        },
+        {
+          "info": {
+            "name": "Download Export",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://anaconda.com/api/audit-logs/export/:job_id/download",
+            "headers": [
+              {
+                "name": "X-Org-Name",
+                "value": ""
+              },
+              {
+                "name": "X-API-Version",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "job_id",
+                "value": "",
+                "type": "path",
+                "description": "UUID of the export job whose data should be downloaded.\n"
+              }
+            ]
+          },
+          "docs": "Download the exported audit log data for a completed export job in JSON Lines format."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,337 @@
+{
+  "item": [
+    {
+      "id": "2cf0c91f-26c7-4989-b4b9-2c10c22ff70a",
+      "name": "mirrors",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "7bf2cb78-5300-4ea5-b345-71a4067cc1ab",
+          "name": "Get list of mirrors",
+          "request": {
+            "name": "Get list of mirrors",
+            "description": {},
+            "url": {
+              "path": [
+                "mirrors"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "0",
+                  "description": "the offset of the result set"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "100",
+                  "description": "the number of results in the result set"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort",
+                  "value": "<string>",
+                  "description": "property to sort mirrors (may be comma-separated)"
+                },
+                {
+                  "disabled": false,
+                  "key": "sort",
+                  "value": "<string>",
+                  "description": "property to sort mirrors (may be comma-separated)"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "893eb50f-ccda-4254-888a-11b525de1bff",
+              "name": "ok",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mirrors"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"total_count\": 2145.9062007511066,\n  \"mirrors\": [\n    {\n      \"id\": \"string\",\n      \"name\": \"Pm\",\n      \"source_root\": \"https://conda.anaconda.org/mewtwo\",\n      \"type\": \"python_simple\",\n      \"mode\": \"passive\",\n      \"state\": \"failed\",\n      \"last_run_at\": \"string\",\n      \"created_at\": \"string\",\n      \"updated_at\": \"string\",\n      \"channel\": {\n        \"name\": \"bxk_mr\",\n        \"privacy\": \"public\"\n      },\n      \"sync_state\": {\n        \"count\": {\n          \"removed\": 9217,\n          \"passive\": 9217,\n          \"active\": 3818,\n          \"active_planned\": 2077,\n          \"failed\": 2781,\n          \"package_stat\": {\n            \"primary\": 8301,\n            \"dependencies\": 1666\n          },\n          \"mirror_filtered\": {\n            \"cve\": 5150,\n            \"date\": 8764,\n            \"signed\": 1626,\n            \"license\": 2478,\n            \"only_specs\": 6639,\n            \"exclude_specs\": 1873,\n            \"duplicated_legacy_conda\": 8987\n          },\n          \"channel_filtered\": {\n            \"license\": 7404,\n            \"exclude_specs\": 8769\n          }\n        },\n        \"last_ckey\": \"string\",\n        \"last_exception\": \"string\",\n        \"total_steps_count\": 6244,\n        \"current_step_number\": 6751,\n        \"current_step_description\": \"string\",\n        \"current_step_percentage\": 2788,\n        \"bytes_transfered\": 62\n      },\n      \"subchannel\": {\n        \"name\": \"tu90429vhg\",\n        \"privacy\": \"authenticated\"\n      }\n    },\n    {\n      \"id\": \"string\",\n      \"name\": \"bd-V\",\n      \"source_root\": \"https://conda.anaconda.org/mewtwo\",\n      \"type\": \"sbom\",\n      \"mode\": \"passive\",\n      \"state\": \"pending\",\n      \"last_run_at\": \"string\",\n      \"created_at\": \"string\",\n      \"updated_at\": \"string\",\n      \"channel\": {\n        \"name\": \"c_y4udmep1\",\n        \"privacy\": \"public\"\n      },\n      \"sync_state\": {\n        \"count\": {\n          \"removed\": 8062,\n          \"passive\": 7830,\n          \"active\": 3552,\n          \"active_planned\": 8060,\n          \"failed\": 2094,\n          \"package_stat\": {\n            \"primary\": 6185,\n            \"dependencies\": 4459\n          },\n          \"mirror_filtered\": {\n            \"cve\": 1604,\n            \"date\": 2503,\n            \"signed\": 5730,\n            \"license\": 1216,\n            \"only_specs\": 6836,\n            \"exclude_specs\": 4492,\n            \"duplicated_legacy_conda\": 6164\n          },\n          \"channel_filtered\": {\n            \"license\": 3625,\n            \"exclude_specs\": 8542\n          }\n        },\n        \"last_ckey\": \"string\",\n        \"last_exception\": \"string\",\n        \"total_steps_count\": 2070,\n        \"current_step_number\": 5300,\n        \"current_step_description\": \"string\",\n        \"current_step_percentage\": 50,\n        \"bytes_transfered\": 7508\n      },\n      \"subchannel\": {\n        \"name\": \"b\",\n        \"privacy\": \"authenticated\"\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "58e9a632-94a4-49c1-90da-a0202c47f891",
+              "name": "Unauthenticated, no token is provided or token is invalid",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mirrors"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad-parameter\",\n  \"message\": \"Bad request parameter for 'sort'\",\n  \"status\": 401\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1f112482-85ea-4618-9074-fb7f39291321",
+              "name": "Access is forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mirrors"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad-parameter\",\n  \"message\": \"Bad request parameter for 'sort'\",\n  \"status\": 401\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e8862fbf-7bb5-42cf-a587-6b88eab639e4",
+              "name": "Internal server error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mirrors"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad-parameter\",\n  \"message\": \"Bad request parameter for 'sort'\",\n  \"status\": 401\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.anaconda.cloud/api",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "f1a46328-0941-4963-9cd2-aadb665997e1",
+    "name": "Anaconda Server Mirrors API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

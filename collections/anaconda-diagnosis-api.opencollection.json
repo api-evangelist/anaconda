@@ -1,0 +1,37 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Server Diagnosis API",
+    "version": "6.5"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "diagnosis",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Diagnose",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/diagnose/blobs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "## Troubleshoots routes and blobs in the database.\n* If the blobs of active routes of given channel name(s) are not available, mark the active routes as passive. \nIf the channel name list is not given, then do the process for all channel artifacts.\n* Return the list of routes updated\n* Identify the index blobs in the database as per the channel names given or for all \nchannels (if list is not given) so that admin can analyse it and decide about removing the index blobs\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

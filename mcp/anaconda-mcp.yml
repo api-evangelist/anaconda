@@ -3,9 +3,9 @@ method: searched
 status: published
 source: https://anaconda.com/docs/cli-reference/anaconda-mcp/getting-started, https://anaconda.com/docs/cli-reference/anaconda-ai/anaconda-ai-mcp,
   https://www.anaconda.com/blog/anaconda-mcp
-notes: Anaconda ships two first-party MCP servers, both run locally. There is no hosted
-  or remote MCP endpoint, so `tools/list` could not be introspected over HTTP; the
-  tool set below is what Anaconda publishes in its own documentation.
+notes: Anaconda ships two first-party MCP servers, both run locally. There is no hosted or remote MCP
+  endpoint, so `tools/list` could not be introspected over HTTP; the tool set below is what Anaconda publishes
+  in its own documentation.
 servers:
 - name: anaconda-mcp
   title: Anaconda MCP
@@ -30,22 +30,20 @@ servers:
   - anaconda mcp clients
   - anaconda mcp remove
   docs: https://anaconda.com/docs/cli-reference/anaconda-mcp/getting-started
-  description: A unified MCP gateway that composes multiple underlying conda-aware
-    MCP servers into a single endpoint, giving an AI assistant access to the local
-    conda environment state, `.condarc` channel configuration, installed packages,
-    structured package metadata for real dependency resolution, PyPI-to-conda name
-    mapping, and environment creation/cleanup.
+  description: A unified MCP gateway that composes multiple underlying conda-aware MCP servers into a
+    single endpoint, giving an AI assistant access to the local conda environment state, `.condarc` channel
+    configuration, installed packages, structured package metadata for real dependency resolution, PyPI-to-conda
+    name mapping, and environment creation/cleanup.
   capabilities:
   - Query conda environments and enumerate installed packages
-  - Create environments using the correct conda packages from the configured channels
-    with proper dependency resolution
+  - Create environments using the correct conda packages from the configured channels with proper dependency
+    resolution
   - Respect the user's .condarc channel policy
   - Map PyPI package names to conda package names
   - Enumerate and clean up environments
-  x-note: Anaconda's published documentation describes these capabilities in prose
-    and does not enumerate verbatim MCP tool names for the gateway; no tool names are
-    asserted here rather than inventing them. Authenticated `tools/list` introspection
-    against a locally running gateway would resolve them.
+  x-note: Anaconda's published documentation describes these capabilities in prose and does not enumerate
+    verbatim MCP tool names for the gateway; no tool names are asserted here rather than inventing them.
+    Authenticated `tools/list` introspection against a locally running gateway would resolve them.
 - name: anaconda-ai-mcp
   title: Anaconda AI MCP
   kind: product
@@ -63,8 +61,8 @@ servers:
   example: anaconda ai mcp --transport streamable-http --port 9000
   docs: https://anaconda.com/docs/cli-reference/anaconda-ai/anaconda-ai-mcp
   backing_api: anaconda:ai-navigator-api
-  description: Exposes the Anaconda AI Navigator model catalog and local inference-server
-    lifecycle as MCP tools.
+  description: Exposes the Anaconda AI Navigator model catalog and local inference-server lifecycle as
+    MCP tools.
   tools:
   - name: list_models
     description: List the curated model catalog / locally downloaded models
@@ -85,17 +83,22 @@ servers:
   - name: remove_server
     description: Delete a local inference server
     source_operation: openapi/anaconda-ai-navigator-openapi-original.json#DELETE /api/servers/{serverId}
-  x-note: 'Tool names are quoted verbatim from Anaconda''s command reference: "MCP
-    tool names use underscores (Python convention) and may differ from CLI command
-    names."'
+  x-note: 'Tool names are quoted verbatim from Anaconda''s command reference: "MCP tool names use underscores
+    (Python convention) and may differ from CLI command names."'
 related:
 - name: Agent Studio MCP servers
   docs: https://anaconda.com/docs/anaconda-desktop/agent-studio/mcp-servers
-  note: Anaconda Desktop's Agent Studio is also an MCP *client* — it can attach third-party
-    MCP tool servers to its agents.
+  note: Anaconda Desktop's Agent Studio is also an MCP *client* — it can attach third-party MCP tool servers
+    to its agents.
 x-evidence:
   fetched: '2026-08-02'
   hosted_endpoint: none published
   tools_list_introspected: false
-  reason: both servers are local (stdio by default); no remote URL to POST tools/list
-    against
+  reason: both servers are local (stdio by default); no remote URL to POST tools/list against
+deployment:
+  mode: remote
+  endpoint: https://anaconda.com/docs/cli-reference/anaconda-mcp/getting-started
+  verified: probed
+  probe: not-mcp
+  checked: '2026-08-12'
+  source: catalog MCP census

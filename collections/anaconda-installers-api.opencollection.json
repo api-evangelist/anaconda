@@ -1,0 +1,48 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Server Installers API",
+    "version": "6.5"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "installers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get list of miniconda installers available for download.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/installers"
+          },
+          "docs": "Get list of miniconda installers available for download."
+        },
+        {
+          "info": {
+            "name": "Donwload miniconda installer from mounted installers.zip",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/installers/:installer_name",
+            "params": [
+              {
+                "name": "installer_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of installer file"
+              }
+            ]
+          },
+          "docs": "Donwload miniconda installer from mounted installers.zip"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

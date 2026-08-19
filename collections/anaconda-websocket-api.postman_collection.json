@@ -1,0 +1,871 @@
+{
+  "item": [
+    {
+      "id": "e5397b37-8db3-4c7c-8903-83b976371ccf",
+      "name": "websocket",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "63892f0d-36a5-4c1a-87a9-3c419bc9fe0e",
+          "name": "repo.endpoints.account.publish events",
+          "request": {
+            "name": "repo.endpoints.account.publish events",
+            "description": {},
+            "url": {
+              "path": [
+                "account",
+                "history",
+                "ws"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "timeout",
+                  "value": "5000"
+                },
+                {
+                  "disabled": false,
+                  "key": "event_types",
+                  "value": "<string>",
+                  "description": "comma separated list of event types to filter"
+                },
+                {
+                  "disabled": false,
+                  "key": "event_types",
+                  "value": "<string>",
+                  "description": "comma separated list of event types to filter"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "cdb4e9d4-a433-4e08-82c0-95c348437558",
+              "name": "Read-only websocket with new events",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "account",
+                    "history",
+                    "ws"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "timeout",
+                      "value": "5000"
+                    },
+                    {
+                      "key": "event_types",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "event_types",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Switching Protocols",
+              "code": 101,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"items\": [\n    {\n      \"event_id\": \"string\",\n      \"event_type\": \"channel_created\",\n      \"data\": {},\n      \"meta\": {},\n      \"created\": 8859.223051926541\n    },\n    {\n      \"event_id\": \"string\",\n      \"event_type\": \"channel_created\",\n      \"data\": {},\n      \"meta\": {},\n      \"created\": 8743.276475319113\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "634a8259-e57e-4e9d-8fec-3f2772cebc60",
+              "name": "Server cannot execute request due to something that is perceived to be a client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "account",
+                    "history",
+                    "ws"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "timeout",
+                      "value": "5000"
+                    },
+                    {
+                      "key": "event_types",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "event_types",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad-parameter\",\n  \"message\": \"Bad request parameter for 'sort'\",\n  \"status\": 401\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "adf9ae30-9c62-4a68-9580-2e8de6d86cac",
+          "name": "repo.endpoints.channels.channel artifacts.cve report batched",
+          "request": {
+            "name": "repo.endpoints.channels.channel artifacts.cve report batched",
+            "description": {},
+            "url": {
+              "path": [
+                "channels",
+                ":channel_name",
+                "cves",
+                "ws"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "CVE artifact status (may be comma-separated)"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "CVE artifact status (may be comma-separated)"
+                },
+                {
+                  "disabled": false,
+                  "key": "min_score",
+                  "value": "<number>",
+                  "description": "Returns the CVE with at least provided minimum score"
+                },
+                {
+                  "disabled": false,
+                  "key": "q",
+                  "value": "<string>",
+                  "description": "the string to search on"
+                },
+                {
+                  "disabled": false,
+                  "key": "max_score",
+                  "value": "<number>",
+                  "description": "Returns files below requesed max_cve_score"
+                },
+                {
+                  "disabled": false,
+                  "key": "architectures",
+                  "value": "<string>",
+                  "description": "the package architectures list to search on"
+                },
+                {
+                  "disabled": false,
+                  "key": "architectures",
+                  "value": "<string>",
+                  "description": "the package architectures list to search on"
+                },
+                {
+                  "disabled": false,
+                  "key": "cve_name",
+                  "value": "<string>",
+                  "description": "the exact CVE id to search on"
+                },
+                {
+                  "disabled": false,
+                  "key": "version",
+                  "value": "<string>",
+                  "description": "Package Version"
+                },
+                {
+                  "disabled": false,
+                  "key": "artifact",
+                  "value": "<string>",
+                  "description": "package name to search on"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "channel_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "169645b4-d9b1-4254-be92-f54f2058f497",
+              "name": "Read-only websocket with new events",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "channels",
+                    ":channel_name",
+                    "cves",
+                    "ws"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "min_score",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "q",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "max_score",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "architectures",
+                      "value": "linux-64"
+                    },
+                    {
+                      "key": "architectures",
+                      "value": "osx-64"
+                    },
+                    {
+                      "key": "architectures",
+                      "value": "win-32"
+                    },
+                    {
+                      "key": "architectures",
+                      "value": "win-64"
+                    },
+                    {
+                      "key": "cve_name",
+                      "value": "CVE-2018-1000805"
+                    },
+                    {
+                      "key": "version",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "artifact",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "channel_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Switching Protocols",
+              "code": 101,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"CVE-2019-9948\",\n  \"description\": \"string\",\n  \"score\": 1167.0207389669563,\n  \"cvssv2_score\": 796.3759160740148,\n  \"cvssv3_score\": 9546.868179580964,\n  \"curated\": false,\n  \"packages_count\": 4437.757480588753,\n  \"packages\": [\n    {\n      \"channel_name\": \"The Channel\",\n      \"parent_channel_name\": \"The Root Channel\",\n      \"cve_status\": \"<string>\",\n      \"artifact_family\": \"cran\",\n      \"artifact_type\": \"conda1\",\n      \"ckey\": \"osx-64/numpy-1.1.1.conda\",\n      \"common_name\": \"numpy\",\n      \"blob_sha256\": \"82cf9c932145565158eb8ee67dba369851210aab\",\n      \"blob_size\": \"string\"\n    },\n    {\n      \"channel_name\": \"The Channel\",\n      \"parent_channel_name\": \"The Root Channel\",\n      \"cve_status\": \"<string>\",\n      \"artifact_family\": \"cran\",\n      \"artifact_type\": \"conda1\",\n      \"ckey\": \"osx-64/numpy-1.1.1.conda\",\n      \"common_name\": \"numpy\",\n      \"blob_sha256\": \"82cf9c932145565158eb8ee67dba369851210aab\",\n      \"blob_size\": \"string\"\n    }\n  ],\n  \"published_at\": \"string\",\n  \"nvd_modified_at\": \"string\",\n  \"anaconda_modified_at\": \"string\",\n  \"cvssv2\": {\n    \"cvssV2\": {\n      \"version\": \"string\",\n      \"vectorString\": \"AV:N/AC:L/Au:N/C:P/I:P/A:N\",\n      \"accessComplexity\": \"LOW\",\n      \"accessVector\": \"NETWORK\",\n      \"authentication\": \"NONE\",\n      \"availabilityImpact\": \"NONE\",\n      \"baseScore\": \"string\",\n      \"confidentialityImpact\": \"PARTIAL\",\n      \"integrityImpact\": \"PARTIAL\"\n    },\n    \"exploitabilityScore\": 10,\n    \"impactScore\": 6.5,\n    \"severity\": \"MEDIUM\",\n    \"obtainAllPrivilege\": false,\n    \"obtainOtherPrivilege\": true,\n    \"obtainUserPrivilege\": false,\n    \"userInteractionRequired\": false\n  },\n  \"cvssv3\": {\n    \"cvssV3\": {\n      \"attackComplexity\": \"LOW\",\n      \"attackVector\": \"NETWORK\",\n      \"availabilityImpact\": \"NONE\",\n      \"baseScore\": \"string\",\n      \"baseSeverity\": \"CRITICAL\",\n      \"confidentialityImpact\": \"HIGH\",\n      \"integrityImpact\": \"HIGH\",\n      \"privilegesRequired\": \"NONE\",\n      \"scope\": \"UNCHANGED\",\n      \"userInteraction\": \"NONE\",\n      \"vectorString\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N\",\n      \"version\": \"string\"\n    },\n    \"exploitabilityScore\": 10,\n    \"impactScore\": 6.5\n  },\n  \"nvdv2\": {\n    \"key_0\": 4414.081465519231,\n    \"key_1\": 8472,\n    \"key_2\": 2974.098830023455,\n    \"key_3\": 8896.338470676925\n  },\n  \"reviews\": [\n    {\n      \"key_0\": 4197,\n      \"key_1\": \"string\",\n      \"key_2\": false\n    },\n    {\n      \"key_0\": 6084.998744956735,\n      \"key_1\": 7154.326031771148\n    }\n  ],\n  \"cwes\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "594e87eb-7fa7-48e2-bc6e-e5db935f1c20",
+              "name": "Server cannot execute request due to something that is perceived to be a client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "channels",
+                    ":channel_name",
+                    "cves",
+                    "ws"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "min_score",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "q",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "max_score",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "architectures",
+                      "value": "linux-64"
+                    },
+                    {
+                      "key": "architectures",
+                      "value": "osx-64"
+                    },
+                    {
+                      "key": "architectures",
+                      "value": "win-32"
+                    },
+                    {
+                      "key": "architectures",
+                      "value": "win-64"
+                    },
+                    {
+                      "key": "cve_name",
+                      "value": "CVE-2018-1000805"
+                    },
+                    {
+                      "key": "version",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "artifact",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "channel_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad-parameter\",\n  \"message\": \"Bad request parameter for 'sort'\",\n  \"status\": 401\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "765bc9b0-c456-4a5b-ab41-d7d526c9213b",
+          "name": "repo.endpoints.channels.subchannel artifacts.cve report batched",
+          "request": {
+            "name": "repo.endpoints.channels.subchannel artifacts.cve report batched",
+            "description": {},
+            "url": {
+              "path": [
+                "channels",
+                ":channel_name",
+                "subchannels",
+                ":subchannel_name",
+                "cves",
+                "ws"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "CVE artifact status (may be comma-separated)"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "CVE artifact status (may be comma-separated)"
+                },
+                {
+                  "disabled": false,
+                  "key": "min_score",
+                  "value": "<number>",
+                  "description": "Returns the CVE with at least provided minimum score"
+                },
+                {
+                  "disabled": false,
+                  "key": "q",
+                  "value": "<string>",
+                  "description": "the string to search on"
+                },
+                {
+                  "disabled": false,
+                  "key": "max_score",
+                  "value": "<number>",
+                  "description": "Returns files below requesed max_cve_score"
+                },
+                {
+                  "disabled": false,
+                  "key": "architectures",
+                  "value": "<string>",
+                  "description": "the package architectures list to search on"
+                },
+                {
+                  "disabled": false,
+                  "key": "architectures",
+                  "value": "<string>",
+                  "description": "the package architectures list to search on"
+                },
+                {
+                  "disabled": false,
+                  "key": "cve_name",
+                  "value": "<string>",
+                  "description": "the exact CVE id to search on"
+                },
+                {
+                  "disabled": false,
+                  "key": "version",
+                  "value": "<string>",
+                  "description": "Package Version"
+                },
+                {
+                  "disabled": false,
+                  "key": "artifact",
+                  "value": "<string>",
+                  "description": "package name to search on"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "channel_name",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "subchannel_name",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "cf839b05-8551-4386-ab91-b04109973ebf",
+              "name": "Read-only websocket with new events",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "channels",
+                    ":channel_name",
+                    "subchannels",
+                    ":subchannel_name",
+                    "cves",
+                    "ws"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "min_score",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "q",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "max_score",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "architectures",
+                      "value": "linux-64"
+                    },
+                    {
+                      "key": "architectures",
+                      "value": "osx-64"
+                    },
+                    {
+                      "key": "architectures",
+                      "value": "win-32"
+                    },
+                    {
+                      "key": "architectures",
+                      "value": "win-64"
+                    },
+                    {
+                      "key": "cve_name",
+                      "value": "CVE-2018-1000805"
+                    },
+                    {
+                      "key": "version",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "artifact",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "channel_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "subchannel_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Switching Protocols",
+              "code": 101,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"CVE-2019-9948\",\n  \"description\": \"string\",\n  \"score\": 1942.9122445235946,\n  \"cvssv2_score\": 1109.9072775889517,\n  \"cvssv3_score\": 3253.420637220731,\n  \"curated\": true,\n  \"packages_count\": 2374.2674198150103,\n  \"packages\": [\n    {\n      \"channel_name\": \"The Channel\",\n      \"parent_channel_name\": \"The Root Channel\",\n      \"cve_status\": \"<string>\",\n      \"artifact_family\": \"anaconda_project\",\n      \"artifact_type\": \"conda1\",\n      \"ckey\": \"osx-64/numpy-1.1.1.conda\",\n      \"common_name\": \"numpy\",\n      \"blob_sha256\": \"82cf9c932145565158eb8ee67dba369851210aab\",\n      \"blob_size\": \"string\"\n    },\n    {\n      \"channel_name\": \"The Channel\",\n      \"parent_channel_name\": \"The Root Channel\",\n      \"cve_status\": \"<string>\",\n      \"artifact_family\": \"docker\",\n      \"artifact_type\": \"conda1\",\n      \"ckey\": \"osx-64/numpy-1.1.1.conda\",\n      \"common_name\": \"numpy\",\n      \"blob_sha256\": \"82cf9c932145565158eb8ee67dba369851210aab\",\n      \"blob_size\": \"string\"\n    }\n  ],\n  \"published_at\": \"string\",\n  \"nvd_modified_at\": \"string\",\n  \"anaconda_modified_at\": \"string\",\n  \"cvssv2\": {\n    \"cvssV2\": {\n      \"version\": \"string\",\n      \"vectorString\": \"AV:N/AC:L/Au:N/C:P/I:P/A:N\",\n      \"accessComplexity\": \"LOW\",\n      \"accessVector\": \"NETWORK\",\n      \"authentication\": \"NONE\",\n      \"availabilityImpact\": \"NONE\",\n      \"baseScore\": \"string\",\n      \"confidentialityImpact\": \"PARTIAL\",\n      \"integrityImpact\": \"PARTIAL\"\n    },\n    \"exploitabilityScore\": 10,\n    \"impactScore\": 6.5,\n    \"severity\": \"MEDIUM\",\n    \"obtainAllPrivilege\": false,\n    \"obtainOtherPrivilege\": true,\n    \"obtainUserPrivilege\": false,\n    \"userInteractionRequired\": false\n  },\n  \"cvssv3\": {\n    \"cvssV3\": {\n      \"attackComplexity\": \"LOW\",\n      \"attackVector\": \"NETWORK\",\n      \"availabilityImpact\": \"NONE\",\n      \"baseScore\": \"string\",\n      \"baseSeverity\": \"CRITICAL\",\n      \"confidentialityImpact\": \"HIGH\",\n      \"integrityImpact\": \"HIGH\",\n      \"privilegesRequired\": \"NONE\",\n      \"scope\": \"UNCHANGED\",\n      \"userInteraction\": \"NONE\",\n      \"vectorString\": \"CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N\",\n      \"version\": \"string\"\n    },\n    \"exploitabilityScore\": 10,\n    \"impactScore\": 6.5\n  },\n  \"nvdv2\": {\n    \"key_0\": 4572.505884213364,\n    \"key_1\": 6749.321841239971\n  },\n  \"reviews\": [\n    {\n      \"key_0\": \"string\",\n      \"key_1\": 2999,\n      \"key_2\": \"string\"\n    },\n    {\n      \"key_0\": 1129.7815813848645\n    }\n  ],\n  \"cwes\": [\n    \"string\",\n    \"string\"\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "42c23037-dfd0-445f-b60e-2f56fbe3ed44",
+              "name": "Server cannot execute request due to something that is perceived to be a client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "channels",
+                    ":channel_name",
+                    "subchannels",
+                    ":subchannel_name",
+                    "cves",
+                    "ws"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "min_score",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "q",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "max_score",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "architectures",
+                      "value": "linux-64"
+                    },
+                    {
+                      "key": "architectures",
+                      "value": "osx-64"
+                    },
+                    {
+                      "key": "architectures",
+                      "value": "win-32"
+                    },
+                    {
+                      "key": "architectures",
+                      "value": "win-64"
+                    },
+                    {
+                      "key": "cve_name",
+                      "value": "CVE-2018-1000805"
+                    },
+                    {
+                      "key": "version",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "artifact",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "channel_name",
+                      "description": "(Required) "
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "subchannel_name",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad-parameter\",\n  \"message\": \"Bad request parameter for 'sort'\",\n  \"status\": 401\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.anaconda.cloud/api",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "de502fa3-4dbd-41ad-a9a8-8d6e2037a1d0",
+    "name": "Anaconda Server Websocket API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

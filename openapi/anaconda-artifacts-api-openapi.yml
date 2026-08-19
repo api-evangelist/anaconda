@@ -1,0 +1,570 @@
+openapi: 3.2.0
+info:
+  version: '6.5'
+  title: Anaconda Server Artifacts API
+  description: Artifact endpoints - search, retrieve, mirror
+servers:
+- url: https://api.anaconda.cloud/api
+tags:
+- name: artifacts
+  description: Artifact endpoints - search, retrieve, mirror
+paths:
+  /artifacts:
+    get:
+      x-not-implemented: yellow
+      tags:
+      - artifacts
+      summary: Get list of all artifacts
+      description: Gets all the artifacts regardless of type found within the entire standalone Repo
+      operationId: repo.endpoints.artifacts.search_artifacts
+      parameters:
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/only_names-query'
+      - $ref: '#/components/parameters/artifact-sort-query'
+      - $ref: '#/components/parameters/artifact_family-query'
+      - $ref: '#/components/parameters/platform-query'
+      - $ref: '#/components/parameters/created-query'
+      - $ref: '#/components/parameters/updated-query'
+      responses:
+        '200':
+          description: successfully retrieved all artifacts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Artifact'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /artifacts/{artifact_family}/:
+    get:
+      x-not-implemented: red
+      tags:
+      - artifacts
+      summary: Get list of all the artifacts of a specific type
+      description: Gets all artifacts that match the given type parameter
+      operationId: repo.endpoints.artifacts.get_all_by_type
+      parameters:
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/artifact-sort-query'
+      responses:
+        '200':
+          description: successfully retrieved all artifacts with the artifact_family
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Artifact'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      deprecated: true
+  /artifacts/{artifact_family}/{artifact_name}:
+    get:
+      x-not-implemented: red
+      tags:
+      - artifacts
+      summary: Get list of the artifacts by type and name
+      description: Search for artifacts matching the artifact_family and artifact_name
+      operationId: repo.endpoints.artifacts.get_all_by_type_and_name
+      parameters:
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: successfully retrieved all artifacts of type artifact_family
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Artifact'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: true
+  /artifacts/{artifact_family}/{artifact_name}/channels:
+    get:
+      x-not-implemented: red
+      tags:
+      - artifacts
+      summary: Get all channels that have this artifact in it
+      operationId: repo.endpoints.artifacts.artifact_channels
+      parameters:
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: successfully retrieved all channels using this artifact
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Artifact'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: true
+  /artifacts/{artifact_family}/{artifact_name}/{artifact_file}/download:
+    get:
+      x-not-implemented: red
+      tags:
+      - artifacts
+      summary: Download the artifact file
+      operationId: repo.endpoints.artifacts.download_artifact
+      parameters:
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - in: path
+        name: artifact_file
+        description: the url property of the ArtifactFile to download from
+        schema:
+          type: string
+        required: true
+      responses:
+        '200':
+          description: successfully downloaded the file
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: true
+  /artifacts/{artifact_family}/{artifact_name}/versions:
+    get:
+      x-not-implemented: red
+      tags:
+      - artifacts
+      summary: Get list of artifact versions available for this artifact
+      operationId: repo.endpoints.artifacts.versions
+      parameters:
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: returns an array of versions associated with this artifact
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArtifactVersion'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: true
+  /repo/upload:
+    post:
+      x-internal: true
+      summary: Used by repo-proxy to handle upload artifact flow
+      operationId: repo.endpoints.artifacts.upload_artifact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadRequest'
+      responses:
+        '200':
+          description: ok
+        '400':
+          description: metadata format is invalid
+      tags:
+      - artifacts
+  /repo/{channel_name}/{ckey:[^/].*?}:
+    summary: Interacting with artifacts within a channel
+    get:
+      summary: Get artifact contents or other information
+      operationId: repo.endpoints.artifacts.get_artifact
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/ckey-parameter'
+      - $ref: '#/components/parameters/sbom-query'
+      responses:
+        '200':
+          description: ok
+        '404':
+          description: not found
+        '422':
+          description: proxied file is broken
+      tags:
+      - artifacts
+    patch:
+      summary: Patch artifact metadata
+      operationId: repo.endpoints.artifacts.patch_artifact_metadata
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/ckey-parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArtifactMetadata'
+      responses:
+        '204':
+          description: ok
+        '400':
+          description: metadata format is invalid
+        '404':
+          description: file not found
+        '422':
+          description: proxied file is broken
+      tags:
+      - artifacts
+      security:
+      - jwt: []
+      - user_token: []
+  /repo/{root_version:\d+}.root.json:
+    get:
+      summary: Returns root.json for package signing
+      operationId: repo.endpoints.signatures.root_json
+      parameters:
+      - $ref: '#/components/parameters/root_version-parameter'
+      responses:
+        '200':
+          description: ok
+        '404':
+          description: root.json version not found
+      tags:
+      - artifacts
+      security: []
+  /repo/key_mgr.json:
+    get:
+      summary: Returns key_mgr.json for package signing
+      operationId: repo.endpoints.signatures.key_mgr_json
+      responses:
+        '200':
+          description: ok
+        '404':
+          description: key_mgr.json is not configured
+      tags:
+      - artifacts
+      security: []
+components:
+  responses:
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  parameters:
+    offset-query:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+        default: 0
+      description: the offset of the result set
+    search-query:
+      in: query
+      name: q
+      description: the string to search on
+      schema:
+        type: string
+    only_names-query:
+      in: query
+      name: only_names
+      description: list of packages, search for. exact names, separated by comma
+      schema:
+        type: array
+        items:
+          type: string
+    artifact_family-parameter:
+      name: artifact_family
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/ArtifactFamily'
+    limit-query:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 100
+      description: the number of results in the result set
+    root_version-parameter:
+      name: root_version
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 1000
+      description: the number of results in the result set
+    artifact-sort-query:
+      in: query
+      name: sort
+      description: property to sort artifacts (may be comma-separated)
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - common_name
+          - -common_name
+          - download_count
+          - -download_count
+          - updated_at
+          - -updated_at
+    updated-query:
+      in: query
+      name: updated
+      description: timestamp end boundary
+      schema:
+        type: integer
+    artifact_family-query:
+      name: artifact_family
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/ArtifactFamily'
+    ckey-parameter:
+      name: ckey
+      in: path
+      required: true
+      schema:
+        type: string
+        format: path
+    artifact_name-parameter:
+      name: artifact_name
+      in: path
+      required: true
+      description: the unique name of the artifact
+      schema:
+        type: string
+        example: numpy
+    channel-parameter:
+      name: channel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
+    platform-query:
+      name: platform
+      in: query
+      schema:
+        type: string
+      description: filter for the platform
+    created-query:
+      in: query
+      name: created
+      description: timestamp start boundary for when created. I guess this could be either "only artifacts created on this exact date" or "artifacts created on this date and newer"
+      schema:
+        type: integer
+    sbom-query:
+      in: query
+      name: sbom
+      required: false
+      schema:
+        type: string
+        enum:
+        - view
+        - download
+  schemas:
+    ArtifactFamily:
+      type: string
+      enum:
+      - anaconda_project
+      - anaconda_env
+      - cve
+      - conda
+      - python
+      - cran
+      - notebook
+      - docker
+      - sbom
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+    ChannelPrivacy:
+      description: channel privacy channel
+      type: string
+      enum:
+      - private
+      - authenticated
+      - public
+    Artifact:
+      type: object
+      description: The object stored in Repo in as few properties as possible
+      properties:
+        name:
+          type: string
+        family:
+          $ref: '#/components/schemas/ArtifactFamily'
+        channel:
+          type: string
+        subchannel:
+          type: string
+        download_count:
+          type: number
+        privacy:
+          $ref: '#/components/schemas/ChannelPrivacy'
+        file_count:
+          description: number of files (routes) in the artifact
+          type: number
+        cve_count:
+          description: number of CVE in the artifact files
+          type: number
+        metadata:
+          type: object
+          description: family specific fields such as base and version
+        updated_at:
+          type: string
+    ArtifactMetadata:
+      type: object
+      description: Artifact's metadata
+    ArtifactVersion:
+      type: object
+      description: The version or point-in-time that this artifact existed and all it's associated metadata
+      properties:
+        id:
+          type: string
+        version:
+          type: integer
+        name:
+          type: string
+        file_type:
+          description: type of file
+          example: conda
+          type: string
+        created_at:
+          description: the date the file was created
+          type: string
+        updated_at:
+          description: date of last update
+          type: string
+        uploader:
+          description: where was this uploaded (channel?)
+          type: string
+        download_count:
+          description: the number of downloads
+          type: integer
+    UploadRequest:
+      type: object
+      description: The information that proxy sends us after successful upload
+      required:
+      - channel
+      - name
+      - server_temp_path
+      - server_sha256
+      - server_md5
+      - server_size
+      - client_fields
+      properties:
+        channel:
+          type: string
+        name:
+          type: string
+        server_temp_path:
+          type: string
+        server_sha256:
+          type: string
+        server_md5:
+          type: string
+        server_size:
+          type: integer
+        client_fields:
+          type: object
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: repo.auth.token_provider.decode_token
+    user_token:
+      type: apiKey
+      name: X-Auth
+      in: header
+      x-apikeyInfoFunc: repo.auth.token_provider.decode_user_private_token

@@ -1,0 +1,29 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Server Docs API",
+    "version": "6.5"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "docs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Redirect a user to the right documentation location",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/external-docs"
+          },
+          "docs": "Redirect a user to the right documentation location"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

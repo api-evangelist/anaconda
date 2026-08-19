@@ -1,0 +1,37 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Server Reports API",
+    "version": "6.5"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "reports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Endpoint to get artifact downloaded event reports",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/reports/artifact_downloads",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "## Generates artifact downloaded report for records satisfying given filter conditions.\n* This feature is only available for admin users.\n* from_date, to_date and download_as are mandatory fields.\n* usernames list and channel names list are optional fields.\n* Example: If you enter a date duration, give list of channel names, list of user names in the request, \n you get a report of artifact downloaded details downloaded during that duration AND (from the channel names\n given OR downloaded by what"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,448 @@
+openapi: 3.2.0
+info:
+  version: '6.5'
+  title: Anaconda Server Websocket API
+servers:
+- url: https://api.anaconda.cloud/api
+tags:
+- name: websocket
+paths:
+  /account/history/ws:
+    get:
+      tags:
+      - websocket
+      operationId: repo.endpoints.account.publish_events
+      parameters:
+      - name: timeout
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 5000
+      - $ref: '#/components/parameters/event-types-query'
+      responses:
+        '101':
+          description: Read-only websocket with new events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountHistory'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      security:
+      - jwt: []
+  /channels/{channel_name}/cves/ws:
+    get:
+      tags:
+      - websocket
+      operationId: repo.endpoints.channels.channel_artifacts.cve_report_batched
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/max_cve_score-query'
+      - $ref: '#/components/parameters/architectures-query'
+      - $ref: '#/components/parameters/cve-name-query'
+      - $ref: '#/components/parameters/version-query'
+      - $ref: '#/components/parameters/artifact_name-query'
+      responses:
+        '101':
+          description: Read-only websocket with new events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVE'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      security:
+      - jwt: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/cves/ws:
+    get:
+      tags:
+      - websocket
+      operationId: repo.endpoints.channels.subchannel_artifacts.cve_report_batched
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/max_cve_score-query'
+      - $ref: '#/components/parameters/architectures-query'
+      - $ref: '#/components/parameters/cve-name-query'
+      - $ref: '#/components/parameters/version-query'
+      - $ref: '#/components/parameters/artifact_name-query'
+      responses:
+        '101':
+          description: Read-only websocket with new events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVE'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      security:
+      - jwt: []
+components:
+  schemas:
+    CVE:
+      type: object
+      description: CVE information
+      properties:
+        id:
+          type: string
+          example: CVE-2019-9948
+        description:
+          type: string
+          description: Text description of the vulnerability from the database
+        score:
+          type: number
+          description: Maximum score of the CVE
+        cvssv2_score:
+          type: number
+          description: CVSSv2 score of the CVE
+        cvssv3_score:
+          type: number
+          description: CVSSv3 score of the CVE
+        curated:
+          type: boolean
+          description: Indicates whether CVE has curated status
+        packages_count:
+          type: number
+          description: Number of associated packages with this CVE
+        packages:
+          description: optionals
+          type: array
+          items:
+            type: object
+            properties:
+              channel_name:
+                type: string
+                example: The Channel
+              parent_channel_name:
+                type: string
+                example: The Root Channel
+              cve_status:
+                $ref: '#/components/schemas/CVE_status'
+              artifact_family:
+                $ref: '#/components/schemas/ArtifactFamily'
+              artifact_type:
+                type: string
+                example: conda1
+              ckey:
+                type: string
+                example: osx-64/numpy-1.1.1.conda
+              common_name:
+                type: string
+                example: numpy
+              blob_sha256:
+                type: string
+                example: 82cf9c932145565158eb8ee67dba369851210aab
+              blob_size:
+                type: string
+                example: 1234
+        published_at:
+          description: date when the CVE has been published in NVD
+          type: string
+        nvd_modified_at:
+          description: latest date when the CVE was updated in NVD
+          type: string
+        anaconda_modified_at:
+          description: latest date when the CVE was curated by Anaconda
+          type: string
+        cvssv2:
+          type: object
+          properties:
+            cvssV2:
+              type: object
+              properties:
+                version:
+                  type: string
+                  example: 2.0
+                vectorString:
+                  type: string
+                  example: AV:N/AC:L/Au:N/C:P/I:P/A:N
+                accessComplexity:
+                  type: string
+                  example: LOW
+                accessVector:
+                  type: string
+                  example: NETWORK
+                authentication:
+                  type: string
+                  example: NONE
+                availabilityImpact:
+                  type: string
+                  example: NONE
+                baseScore:
+                  type: string
+                  example: 6.4
+                confidentialityImpact:
+                  type: string
+                  example: PARTIAL
+                integrityImpact:
+                  type: string
+                  example: PARTIAL
+            exploitabilityScore:
+              type: number
+              example: 10.0
+            impactScore:
+              type: number
+              example: 6.5
+            severity:
+              type: string
+              example: MEDIUM
+            obtainAllPrivilege:
+              type: boolean
+            obtainOtherPrivilege:
+              type: boolean
+            obtainUserPrivilege:
+              type: boolean
+            userInteractionRequired:
+              type: boolean
+        cvssv3:
+          type: object
+          properties:
+            cvssV3:
+              type: object
+              properties:
+                attackComplexity:
+                  type: string
+                  example: LOW
+                attackVector:
+                  type: string
+                  example: NETWORK
+                availabilityImpact:
+                  type: string
+                  example: NONE
+                baseScore:
+                  type: string
+                  example: 9.1
+                baseSeverity:
+                  type: string
+                  example: CRITICAL
+                confidentialityImpact:
+                  type: string
+                  example: HIGH
+                integrityImpact:
+                  type: string
+                  example: HIGH
+                privilegesRequired:
+                  type: string
+                  example: NONE
+                scope:
+                  type: string
+                  example: UNCHANGED
+                userInteraction:
+                  type: string
+                  example: NONE
+                vectorString:
+                  type: string
+                  example: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N
+                version:
+                  type: string
+                  example: 3.0
+            exploitabilityScore:
+              type: number
+              example: 10.0
+            impactScore:
+              type: number
+              example: 6.5
+        nvdv2:
+          type: object
+          additionalProperties: true
+        reviews:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        cwes:
+          type: array
+          items:
+            type: string
+    ArtifactFamily:
+      type: string
+      enum:
+      - anaconda_project
+      - anaconda_env
+      - cve
+      - conda
+      - python
+      - cran
+      - notebook
+      - docker
+      - sbom
+    AccountHistory:
+      type: object
+      description: Account events history
+      additionalProperties: false
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              event_id:
+                type: string
+                description: Event identifier
+              event_type:
+                type: string
+                description: Event type
+                example: channel_created
+              data:
+                type: object
+                description: Event data
+                example: channel name, access level
+              meta:
+                type: object
+                description: the captured event context
+                example: user
+              created:
+                type: number
+                description: timestamp of log creation
+    CVE_status:
+      type: string
+      enum:
+      - reported
+      - active
+      - mitigated
+      - cleared
+      - disputed
+      - unknown
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+  parameters:
+    version-query:
+      in: query
+      name: version
+      description: Package Version
+      schema:
+        type: string
+    min_cve_score-query:
+      in: query
+      name: min_score
+      description: Returns the CVE with at least provided minimum score
+      schema:
+        type: number
+        minimum: 0
+        maximum: 10
+    search-query:
+      in: query
+      name: q
+      description: the string to search on
+      schema:
+        type: string
+    cve-name-query:
+      in: query
+      name: cve_name
+      description: the exact CVE id to search on
+      example: CVE-2018-1000805
+      schema:
+        type: string
+    max_cve_score-query:
+      in: query
+      name: max_score
+      description: Returns files below requesed max_cve_score
+      schema:
+        type: number
+        minimum: 0
+        maximum: 10
+    channel-parameter:
+      name: channel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
+    cve_status-query:
+      in: query
+      name: status
+      description: CVE artifact status (may be comma-separated)
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/CVE_status'
+    event-types-query:
+      in: query
+      name: event_types
+      required: false
+      description: comma separated list of event types to filter
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - channel_created
+          - channel_updated
+          - channel_deleted
+          - mirror_registered
+          - mirror_deleted
+          - mirroring_completed
+          - mirroring_failed
+          - artifact_registered
+          - artifact_removed
+          - artifact_copied
+          - artifact_generated
+          - artifact_metadata_updated
+          - artifact_downloaded
+    subchannel-parameter:
+      name: subchannel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
+    artifact_name-query:
+      in: query
+      name: artifact
+      description: package name to search on
+      schema:
+        type: string
+    architectures-query:
+      in: query
+      name: architectures
+      description: the package architectures list to search on
+      schema:
+        type: array
+        example:
+        - linux-64
+        - osx-64
+        - win-32
+        - win-64
+        items:
+          type: string
+  responses:
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: repo.auth.token_provider.decode_token
+    user_token:
+      type: apiKey
+      name: X-Auth
+      in: header
+      x-apikeyInfoFunc: repo.auth.token_provider.decode_user_private_token

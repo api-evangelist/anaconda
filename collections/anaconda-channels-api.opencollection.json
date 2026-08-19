@@ -1,0 +1,3485 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Server Channels API",
+    "version": "6.5"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "channels",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all channels with filtering possibilities",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels",
+            "params": [
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "ids",
+                "value": "",
+                "type": "query",
+                "description": "the channel ids to filter for"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort channels (may be comma-separated)"
+              },
+              {
+                "name": "include_subchannels",
+                "value": "",
+                "type": "query",
+                "description": "option to include or exclude subchannels from the response"
+              },
+              {
+                "name": "include_reserved",
+                "value": "",
+                "type": "query",
+                "description": "option to include reserved channels in response"
+              }
+            ]
+          },
+          "docs": "Get all channels with filtering possibilities"
+        },
+        {
+          "info": {
+            "name": "Create a new channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/channels",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "create a new channel"
+        },
+        {
+          "info": {
+            "name": "Get data for a specific channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get data for a specific channel"
+        },
+        {
+          "info": {
+            "name": "Edit the data for the specified channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Edit the data for the specified channel"
+        },
+        {
+          "info": {
+            "name": "Delete channel and all its contents",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete channel and all its contents"
+        },
+        {
+          "info": {
+            "name": "Get the user permission level on the channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/permissions",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get the user permission level on the channel"
+        },
+        {
+          "info": {
+            "name": "Get the history logs of the channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/history",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "event_types",
+                "value": "",
+                "type": "query",
+                "description": "comma separated list of event types to filter"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the history logs of the channel"
+        },
+        {
+          "info": {
+            "name": "Get the cve history logs of the channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/cves_history",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "from_date",
+                "value": "",
+                "type": "query",
+                "description": "starting timestamp for filtering data"
+              },
+              {
+                "name": "to_date",
+                "value": "",
+                "type": "query",
+                "description": "ending timestamp for filtering data"
+              },
+              {
+                "name": "min_download_count",
+                "value": "",
+                "type": "query",
+                "description": "Displays notifications only for packages with provided minimum number of downloads"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "event_types",
+                "value": "",
+                "type": "query",
+                "description": "filter CVE Notifications by event types"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "max_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE Notifications below provided maximum impact score"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE Notifications with at least provided minimum impact score"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the cve history logs of the channel"
+        },
+        {
+          "info": {
+            "name": "generate min-download-count-parametertory for a specific timestamp for example for existing cves history",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/cves_history",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "generate min-download-count-parametertory for a specific timestamp for example for existing cves history"
+        },
+        {
+          "info": {
+            "name": "Get stats and counters for the channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/stats",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get stats and counters for the channel"
+        },
+        {
+          "info": {
+            "name": "Get list of all virtual channels created from current channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/virtual-channels",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort channels (may be comma-separated)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get list of all virtual channels created from current channel"
+        },
+        {
+          "info": {
+            "name": "Get list of artifacts for specific channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "only_names",
+                "value": "",
+                "type": "query",
+                "description": "list of packages, search for. exact names, separated by comma"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort artifacts (may be comma-separated)"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "platform",
+                "value": "",
+                "type": "query",
+                "description": "filter for the platform"
+              }
+            ]
+          },
+          "docs": "Retrieve all artifacts for the current channel and passing the ?filter= query will only returns those artifacts in the current channel that match that filter string"
+        },
+        {
+          "info": {
+            "name": "Upload an artifact to the channel (implemented by repo-proxy, can't be called directly)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "filetype",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "r_version",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "distribution",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "content",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Upload an artifact to the channel (implemented by repo-proxy, can't be called directly)"
+        },
+        {
+          "info": {
+            "name": "Perform a bulk action for artifacts in channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/bulk",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Perform a bulk action for artifacts in channel"
+        },
+        {
+          "info": {
+            "name": "Refreshes the index for specific artifact family in the channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Refreshes the index for specific artifact family in the channel"
+        },
+        {
+          "info": {
+            "name": "Get specific artifact in current channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family/:artifact_name",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              }
+            ]
+          },
+          "docs": "Get specific artifact in current channel"
+        },
+        {
+          "info": {
+            "name": "Delete the specific artifact in the current channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family/:artifact_name",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete the specific artifact in the current channel"
+        },
+        {
+          "info": {
+            "name": "Get the README file for this artifact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family/:artifact_name/readme",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              }
+            ]
+          },
+          "docs": "Get the README file for this artifact"
+        },
+        {
+          "info": {
+            "name": "Get all the CVE's associated with this channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/cves",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "max_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns files below requesed max_cve_score"
+              },
+              {
+                "name": "architectures",
+                "value": "",
+                "type": "query",
+                "description": "the package architectures list to search on"
+              },
+              {
+                "name": "cve_name",
+                "value": "CVE-2018-1000805",
+                "type": "query",
+                "description": "the exact CVE id to search on"
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "query",
+                "description": "Package Version"
+              },
+              {
+                "name": "min_packages_count",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "artifact",
+                "value": "",
+                "type": "query",
+                "description": "package name to search on"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort CVEs (may be comma-separated)"
+              },
+              {
+                "name": "with_cve_counts_by_severity",
+                "value": "",
+                "type": "query",
+                "description": "return cve counts by severity."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all the CVE's associated with this channel"
+        },
+        {
+          "info": {
+            "name": "repo.endpoints.channels.channel_artifacts.cve_report_batched",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/cves/ws",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "max_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns files below requesed max_cve_score"
+              },
+              {
+                "name": "architectures",
+                "value": "",
+                "type": "query",
+                "description": "the package architectures list to search on"
+              },
+              {
+                "name": "cve_name",
+                "value": "CVE-2018-1000805",
+                "type": "query",
+                "description": "the exact CVE id to search on"
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "query",
+                "description": "Package Version"
+              },
+              {
+                "name": "artifact",
+                "value": "",
+                "type": "query",
+                "description": "package name to search on"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "Get channel CVE details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/cves/:cve_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get channel CVE details"
+        },
+        {
+          "info": {
+            "name": "Get all package files, associated with specific CVE in the channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/cves/:cve_id/files",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all package files, associated with specific CVE in the channel"
+        },
+        {
+          "info": {
+            "name": "Get all the CVE's associated with this channel and artifact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family/:artifact_name/cves",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "with_cve_counts_by_severity",
+                "value": "",
+                "type": "query",
+                "description": "return cve counts by severity."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all the CVE's associated with this channel and artifact"
+        },
+        {
+          "info": {
+            "name": "Get artifact CVE details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family/:artifact_name/cves/:cve_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get artifact CVE details"
+        },
+        {
+          "info": {
+            "name": "successfully returns routes, related to this CVE in the artifact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family/:artifact_name/cves/:cve_id/files",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "successfully returns routes, related to this CVE in the artifact"
+        },
+        {
+          "info": {
+            "name": "Get all files of the artifact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family/:artifact_name/files",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort artifact files (may be comma-separated)"
+              },
+              {
+                "name": "omit_cve",
+                "value": "",
+                "type": "query",
+                "description": "Explicitly don't return CVE data"
+              },
+              {
+                "name": "include_nonsearchable",
+                "value": "",
+                "type": "query",
+                "description": "Include also nonsearchable files"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "max_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns files below requesed max_cve_score"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "architectures",
+                "value": "",
+                "type": "query",
+                "description": "the package architectures list to search on"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "active or passive state"
+              },
+              {
+                "name": "created_min",
+                "value": "",
+                "type": "query",
+                "description": "date of creation in string"
+              },
+              {
+                "name": "created_max",
+                "value": "",
+                "type": "query",
+                "description": "date of creation (in combination with created_min field as start date)"
+              },
+              {
+                "name": "ckey",
+                "value": "",
+                "type": "query",
+                "description": "ckey"
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "query",
+                "description": "Package Version"
+              },
+              {
+                "name": "cve_extra_info",
+                "value": "",
+                "type": "query",
+                "description": "In addition to relevant cve_id, score and status provide description, etc."
+              }
+            ]
+          },
+          "docs": "Get all files of the artifact"
+        },
+        {
+          "info": {
+            "name": "Get artifact file",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family/:artifact_name/files/:ckey:[^/].*?",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "ckey",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "omit_cve",
+                "value": "",
+                "type": "query",
+                "description": "Explicitly don't return CVE data"
+              }
+            ]
+          },
+          "docs": "Get artifact file"
+        },
+        {
+          "info": {
+            "name": "Get a list of CVEs for the file (ckey)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family/:artifact_name/file-cves/:ckey:[^/].*?",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "ckey",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a list of CVEs for the file (ckey)"
+        },
+        {
+          "info": {
+            "name": "Verify a single package metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/signature-verification/:artifact_family",
+            "params": [
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Verify a single package metadata"
+        },
+        {
+          "info": {
+            "name": "Get all dependencies of artifact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family/:artifact_name/dependencies",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ]
+          },
+          "docs": "Get all dependencies of artifact"
+        },
+        {
+          "info": {
+            "name": "Get all dependant packages from the artifact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family/:artifact_name/dependants",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ]
+          },
+          "docs": "Get all dependant packages from the artifact"
+        },
+        {
+          "info": {
+            "name": "Move the artifact to another channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family/:artifact_name/move",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Move the artifact to another channel"
+        },
+        {
+          "info": {
+            "name": "Copy the artifact to another channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family/:artifact_name/copy",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Copy the artifact to another channel"
+        },
+        {
+          "info": {
+            "name": "Get list of mirror configurations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/mirrors",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort mirrors (may be comma-separated)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get list of mirror configurations"
+        },
+        {
+          "info": {
+            "name": "Create a mirror",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/mirrors",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "task_manager_schedule",
+                "value": "",
+                "type": "query",
+                "description": "if true, schedule mirroring in task manager component"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a mirror"
+        },
+        {
+          "info": {
+            "name": "Stop mirror sync task",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/mirrors/:mirror_id/stop_mirror_sync",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "mirror_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Stop mirror sync task"
+        },
+        {
+          "info": {
+            "name": "Get mirror details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/mirrors/:mirror_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "mirror_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get mirror details"
+        },
+        {
+          "info": {
+            "name": "Update a mirror",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/mirrors/:mirror_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "mirror_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "task_manager_schedule",
+                "value": "",
+                "type": "query",
+                "description": "if true, schedule mirroring in task manager component"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a mirror"
+        },
+        {
+          "info": {
+            "name": "Delete an existing mirror configuration",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/mirrors/:mirror_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "mirror_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete an existing mirror configuration"
+        },
+        {
+          "info": {
+            "name": "Get list of routes filtered by last mirror for specific channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/files-filtered",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Retrieve all routes filtered by last mirror for the specific channel"
+        },
+        {
+          "info": {
+            "name": "Get list of subchannels within the channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "ids",
+                "value": "",
+                "type": "query",
+                "description": "the channel ids to filter for"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort channels (may be comma-separated)"
+              }
+            ]
+          },
+          "docs": "Get list of subchannels within the channel"
+        },
+        {
+          "info": {
+            "name": "Create a subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a subchannel"
+        },
+        {
+          "info": {
+            "name": "Get the specific subchannel details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get the specific subchannel details"
+        },
+        {
+          "info": {
+            "name": "Update the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update the subchannel"
+        },
+        {
+          "info": {
+            "name": "Delete the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete the subchannel"
+        },
+        {
+          "info": {
+            "name": "Get the cve history logs of the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/cves_history",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "to_date",
+                "value": "",
+                "type": "query",
+                "description": "ending timestamp for filtering data"
+              },
+              {
+                "name": "from_date",
+                "value": "",
+                "type": "query",
+                "description": "starting timestamp for filtering data"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "event_types",
+                "value": "",
+                "type": "query",
+                "description": "filter CVE Notifications by event types"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "min_download_count",
+                "value": "",
+                "type": "query",
+                "description": "Displays notifications only for packages with provided minimum number of downloads"
+              },
+              {
+                "name": "max_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE Notifications below provided maximum impact score"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE Notifications with at least provided minimum impact score"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the cve history logs of the subchannel"
+        },
+        {
+          "info": {
+            "name": "generate cves_history for a specific timestamp for example for existing cves history",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/cves_history",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "timestamp",
+                "value": "",
+                "type": "query",
+                "description": "exact timestamp for filtering data"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "generate cves_history for a specific timestamp for example for existing cves history"
+        },
+        {
+          "info": {
+            "name": "Stop mirror sync task",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/mirrors/:mirror_id/stop_mirror_sync",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "mirror_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Stop mirror sync task"
+        },
+        {
+          "info": {
+            "name": "Get the user permission level on the channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/permissions",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get the user permission level on the channel"
+        },
+        {
+          "info": {
+            "name": "Get the artifacts of the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "only_names",
+                "value": "",
+                "type": "query",
+                "description": "list of packages, search for. exact names, separated by comma"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort artifacts (may be comma-separated)"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "platform",
+                "value": "",
+                "type": "query",
+                "description": "filter for the platform"
+              }
+            ]
+          },
+          "docs": "Get the artifacts of the subchannel"
+        },
+        {
+          "info": {
+            "name": "Upload an artifact to the subchannel (implemented by repo-proxy, can't be called directly)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "filetype",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "description",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "content",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Upload an artifact to the subchannel (implemented by repo-proxy, can't be called directly)"
+        },
+        {
+          "info": {
+            "name": "Get stats and counters for the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/stats",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get stats and counters for the subchannel"
+        },
+        {
+          "info": {
+            "name": "Get list of all virtual channels created from current subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/virtual-channels",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort channels (may be comma-separated)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get list of all virtual channels created from current subchannel"
+        },
+        {
+          "info": {
+            "name": "Perform a bulk action for artifacts in subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/bulk",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Perform a bulk action for artifacts in subchannel"
+        },
+        {
+          "info": {
+            "name": "Refreshes the index for specific artifact family in the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Refreshes the index for specific artifact family in the subchannel"
+        },
+        {
+          "info": {
+            "name": "Get the details of the specific artifact in the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              }
+            ]
+          },
+          "docs": "Get the details of the specific artifact in the subchannel"
+        },
+        {
+          "info": {
+            "name": "Delete the specific artifact in the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete the specific artifact in the subchannel"
+        },
+        {
+          "info": {
+            "name": "Get the readme of the specific artifact in the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name/readme",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              }
+            ]
+          },
+          "docs": "Get the readme of the specific artifact in the subchannel"
+        },
+        {
+          "info": {
+            "name": "Get all the CVE's associated with this subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/cves",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "max_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns files below requesed max_cve_score"
+              },
+              {
+                "name": "architectures",
+                "value": "",
+                "type": "query",
+                "description": "the package architectures list to search on"
+              },
+              {
+                "name": "cve_name",
+                "value": "CVE-2018-1000805",
+                "type": "query",
+                "description": "the exact CVE id to search on"
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "query",
+                "description": "Package Version"
+              },
+              {
+                "name": "min_packages_count",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "artifact",
+                "value": "",
+                "type": "query",
+                "description": "package name to search on"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort CVEs (may be comma-separated)"
+              },
+              {
+                "name": "with_cve_counts_by_severity",
+                "value": "",
+                "type": "query",
+                "description": "return cve counts by severity."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all the CVE's associated with this subchannel"
+        },
+        {
+          "info": {
+            "name": "repo.endpoints.channels.subchannel_artifacts.cve_report_batched",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/cves/ws",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "max_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns files below requesed max_cve_score"
+              },
+              {
+                "name": "architectures",
+                "value": "",
+                "type": "query",
+                "description": "the package architectures list to search on"
+              },
+              {
+                "name": "cve_name",
+                "value": "CVE-2018-1000805",
+                "type": "query",
+                "description": "the exact CVE id to search on"
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "query",
+                "description": "Package Version"
+              },
+              {
+                "name": "artifact",
+                "value": "",
+                "type": "query",
+                "description": "package name to search on"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "Get subchannel CVE details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/cves/:cve_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get subchannel CVE details"
+        },
+        {
+          "info": {
+            "name": "Get all package files, associated with specific CVE in the channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/cves/:cve_id/files",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all package files, associated with specific CVE in the channel"
+        },
+        {
+          "info": {
+            "name": "Get all the CVE's associated with this subchannel and artifact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name/cves",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "with_cve_counts_by_severity",
+                "value": "",
+                "type": "query",
+                "description": "return cve counts by severity."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all the CVE's associated with this subchannel and artifact"
+        },
+        {
+          "info": {
+            "name": "Get subchannel artifact CVE details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name/cves/:cve_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get subchannel artifact CVE details"
+        },
+        {
+          "info": {
+            "name": "successfully returns routes, related to this CVE in the artifact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name/cves/:cve_id/files",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "successfully returns routes, related to this CVE in the artifact"
+        },
+        {
+          "info": {
+            "name": "Get all files of artifact in subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name/files",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort artifact files (may be comma-separated)"
+              },
+              {
+                "name": "omit_cve",
+                "value": "",
+                "type": "query",
+                "description": "Explicitly don't return CVE data"
+              },
+              {
+                "name": "include_nonsearchable",
+                "value": "",
+                "type": "query",
+                "description": "Include also nonsearchable files"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "max_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns files below requesed max_cve_score"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "architectures",
+                "value": "",
+                "type": "query",
+                "description": "the package architectures list to search on"
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "active or passive state"
+              },
+              {
+                "name": "created_min",
+                "value": "",
+                "type": "query",
+                "description": "date of creation in string"
+              },
+              {
+                "name": "created_max",
+                "value": "",
+                "type": "query",
+                "description": "date of creation (in combination with created_min field as start date)"
+              },
+              {
+                "name": "ckey",
+                "value": "",
+                "type": "query",
+                "description": "ckey"
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "query",
+                "description": "Package Version"
+              },
+              {
+                "name": "cve_extra_info",
+                "value": "",
+                "type": "query",
+                "description": "In addition to relevant cve_id, score and status provide description, etc."
+              }
+            ]
+          },
+          "docs": "Get all files of artifact in subchannel"
+        },
+        {
+          "info": {
+            "name": "Get artifact file in subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name/files/:ckey:[^/].*?",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "ckey",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "omit_cve",
+                "value": "",
+                "type": "query",
+                "description": "Explicitly don't return CVE data"
+              }
+            ]
+          },
+          "docs": "Get artifact file in subchannel"
+        },
+        {
+          "info": {
+            "name": "Get a list of CVEs for the file (ckey)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name/file-cves/:ckey:[^/].*?",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "ckey",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get a list of CVEs for the file (ckey)"
+        },
+        {
+          "info": {
+            "name": "Get all dependencies of artifact in subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name/dependencies",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ]
+          },
+          "docs": "Get all dependencies of artifact in subchannel"
+        },
+        {
+          "info": {
+            "name": "Get all dependants of artifact in subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name/dependants",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ]
+          },
+          "docs": "Get all dependants of artifact in subchannel"
+        },
+        {
+          "info": {
+            "name": "Move the artifact between two subchannels",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name/move",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Move the artifact between two subchannels"
+        },
+        {
+          "info": {
+            "name": "Copy the artifact to another subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name/copy",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Copy the artifact to another subchannel"
+        },
+        {
+          "info": {
+            "name": "Donwload the artifact from the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name/download",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              }
+            ]
+          },
+          "docs": "download the artifact in the current subchannel specified by the artifact id"
+        },
+        {
+          "info": {
+            "name": "Get list of mirrors of the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/mirrors",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort mirrors (may be comma-separated)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get list of mirrors of the subchannel"
+        },
+        {
+          "info": {
+            "name": "Create a mirror in the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/mirrors",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "task_manager_schedule",
+                "value": "",
+                "type": "query",
+                "description": "if true, schedule mirroring in task manager component"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a mirror in the subchannel"
+        },
+        {
+          "info": {
+            "name": "Show mirror details in subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/mirrors/:mirror_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "mirror_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Show mirror details in subchannel"
+        },
+        {
+          "info": {
+            "name": "Update a mirror in subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/mirrors/:mirror_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "mirror_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "task_manager_schedule",
+                "value": "",
+                "type": "query",
+                "description": "if true, schedule mirroring in task manager component"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update a mirror in subchannel"
+        },
+        {
+          "info": {
+            "name": "Delete the mirror from the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/mirrors/:mirror_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "mirror_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete the mirror from the subchannel"
+        },
+        {
+          "info": {
+            "name": "Get the history logs of the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/history",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the history logs of the subchannel"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

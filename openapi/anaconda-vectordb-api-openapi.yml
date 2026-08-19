@@ -1,0 +1,311 @@
+openapi: 3.2.0
+info:
+  title: AI Navigator Vector DB API
+  version: 1.0.0
+  description: API documentation for AI Navigator
+security:
+- bearerAuth: []
+tags:
+- name: VectorDB
+paths:
+  /api/vector-db/health:
+    get:
+      summary: Check the health of the vector database API
+      tags:
+      - VectorDB
+      responses:
+        '200':
+          description: Vector database API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: /api/vector-db/health ok
+  /api/vector-db:
+    post:
+      summary: Initialize the vector database
+      tags:
+      - VectorDB
+      responses:
+        '201':
+          description: Vector database initialized successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/VectorDB'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      summary: Start or stop the vector database
+      tags:
+      - VectorDB
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VectorDBAction'
+      responses:
+        '200':
+          description: Vector database state changed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/VectorDB'
+        '400':
+          description: Invalid request or database not running
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/vector-db/tables:
+    get:
+      summary: Get all tables in the vector database
+      tags:
+      - VectorDB
+      responses:
+        '200':
+          description: Tables retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TableInfo'
+        '404':
+          description: Server is not running
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Create a new table in the vector database
+      tags:
+      - VectorDB
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTableRequest'
+      responses:
+        '200':
+          description: Table created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CreateTableResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Table already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/vector-db/tables/{tableName}:
+    delete:
+      summary: Delete a table from the vector database
+      tags:
+      - VectorDB
+      parameters:
+      - in: path
+        name: tableName
+        required: true
+        schema:
+          type: string
+        description: Name of the table to delete
+      responses:
+        '200':
+          description: Table deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+        '404':
+          description: Table not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    CreateTableResponse:
+      type: object
+      required:
+      - name
+      - schema
+      - numRows
+      properties:
+        name:
+          type: string
+          description: Name of the created table
+        schema:
+          type: object
+          description: Schema of the created table
+          properties:
+            columns:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Column name
+                  type:
+                    type: string
+                    description: Column data type
+                  constraints:
+                    type: array
+                    items:
+                      type: string
+                    description: Column constraints
+        numRows:
+          type: integer
+          description: Number of rows inserted
+    CreateTableRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: Name of the table to create
+        schema:
+          type: object
+          description: Schema definition for the table
+          properties:
+            columns:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Column name
+                  type:
+                    type: string
+                    description: Column data type
+                  constraints:
+                    type: array
+                    items:
+                      type: string
+                    description: Column constraints
+        data:
+          type: array
+          items:
+            type: object
+          description: Initial data to insert into the table
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              enum:
+              - INVALID_REQUEST
+              - DATABASE_NOT_RUNNING
+              - INTERNAL_SERVER_ERROR
+              - INVALID_SERVER_ID
+              - SERVER_NOT_RUNNING
+              - SERVER_RUNNING
+              - INTERNAL_SERVER_ERROR
+            message:
+              type: string
+    VectorDBAction:
+      type: object
+      required:
+      - running
+      properties:
+        running:
+          type: boolean
+          description: Whether to start (true) or stop (false) the vector database
+    VectorDB:
+      type: object
+      required:
+      - running
+      - host
+      - port
+      - database
+      - user
+      - password
+      properties:
+        running:
+          type: boolean
+          description: Whether the vector database is running
+        host:
+          type: string
+          description: Database host address
+        port:
+          type: integer
+          description: Database port number
+        database:
+          type: string
+          description: Database name
+        user:
+          type: string
+          description: Database username
+        password:
+          type: string
+          description: Database password
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: UUID
+      description: Enter your API key here

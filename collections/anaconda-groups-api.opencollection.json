@@ -1,0 +1,467 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Server Groups API",
+    "version": "6.5"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "groups",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the channel groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/groups",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the channel groups"
+        },
+        {
+          "info": {
+            "name": "Add new group to the channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/groups",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Add new group to the channel"
+        },
+        {
+          "info": {
+            "name": "Update group channel permission",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/groups/:group_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "group_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update group channel permission"
+        },
+        {
+          "info": {
+            "name": "Delete the group from the channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/groups/:group_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "group_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete the group from the channel"
+        },
+        {
+          "info": {
+            "name": "Get list of groups for the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/groups",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get list of groups for the subchannel"
+        },
+        {
+          "info": {
+            "name": "Add a new group to the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/groups",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Add a new group to the subchannel"
+        },
+        {
+          "info": {
+            "name": "Update group subchannel permission",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/groups/:group_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "group_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update group subchannel permission"
+        },
+        {
+          "info": {
+            "name": "Delete a group from the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/groups/:group_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "group_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete a group from the subchannel"
+        },
+        {
+          "info": {
+            "name": "Get list of all groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/groups",
+            "params": [
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "with_user_counts",
+                "value": "",
+                "type": "query",
+                "description": "Skips the user counts for groups all groups"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get list of all groups"
+        },
+        {
+          "info": {
+            "name": "Create a new group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/groups",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Create a new group"
+        },
+        {
+          "info": {
+            "name": "Get group details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/groups/:group_id",
+            "params": [
+              {
+                "name": "group_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "gets the data for a group specified by the name of the group"
+        },
+        {
+          "info": {
+            "name": "Edit a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/groups/:group_id",
+            "params": [
+              {
+                "name": "group_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Edits the group specified by the group name"
+        },
+        {
+          "info": {
+            "name": "Delete a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.anaconda.cloud/api/groups/:group_id",
+            "params": [
+              {
+                "name": "group_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Allows a user to delete the group specified by the group name"
+        },
+        {
+          "info": {
+            "name": "Add a user to the group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/groups/:group_id/users",
+            "params": [
+              {
+                "name": "group_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Adds a user to the group with specific permission"
+        },
+        {
+          "info": {
+            "name": "removes a user from the group",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.anaconda.cloud/api/groups/:group_id/users/:user_id",
+            "params": [
+              {
+                "name": "group_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "removes a user from the group"
+        },
+        {
+          "info": {
+            "name": "Get list of the group channels",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/groups/:group_id/channels",
+            "params": [
+              {
+                "name": "group_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort channels (may be comma-separated)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get list of the group channels"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

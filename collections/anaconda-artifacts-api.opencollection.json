@@ -1,0 +1,372 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Server Artifacts API",
+    "version": "6.5"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "artifacts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get list of all artifacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/artifacts",
+            "params": [
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "only_names",
+                "value": "",
+                "type": "query",
+                "description": "list of packages, search for. exact names, separated by comma"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort artifacts (may be comma-separated)"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "platform",
+                "value": "",
+                "type": "query",
+                "description": "filter for the platform"
+              },
+              {
+                "name": "created",
+                "value": "",
+                "type": "query",
+                "description": "timestamp start boundary for when created. I guess this could be either \"only artifacts created on this exact date\" or \"artifacts created on this date and newer\""
+              },
+              {
+                "name": "updated",
+                "value": "",
+                "type": "query",
+                "description": "timestamp end boundary"
+              }
+            ]
+          },
+          "docs": "Gets all the artifacts regardless of type found within the entire standalone Repo"
+        },
+        {
+          "info": {
+            "name": "Get list of all the artifacts of a specific type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/artifacts/:artifact_family/",
+            "params": [
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort artifacts (may be comma-separated)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Gets all artifacts that match the given type parameter"
+        },
+        {
+          "info": {
+            "name": "Get list of the artifacts by type and name",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/artifacts/:artifact_family/:artifact_name",
+            "params": [
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ]
+          },
+          "docs": "Search for artifacts matching the artifact_family and artifact_name"
+        },
+        {
+          "info": {
+            "name": "Get all channels that have this artifact in it",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/artifacts/:artifact_family/:artifact_name/channels",
+            "params": [
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ]
+          },
+          "docs": "Get all channels that have this artifact in it"
+        },
+        {
+          "info": {
+            "name": "Download the artifact file",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/artifacts/:artifact_family/:artifact_name/:artifact_file/download",
+            "params": [
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "artifact_file",
+                "value": "",
+                "type": "path",
+                "description": "the url property of the ArtifactFile to download from"
+              }
+            ]
+          },
+          "docs": "Download the artifact file"
+        },
+        {
+          "info": {
+            "name": "Get list of artifact versions available for this artifact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/artifacts/:artifact_family/:artifact_name/versions",
+            "params": [
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ]
+          },
+          "docs": "Get list of artifact versions available for this artifact"
+        },
+        {
+          "info": {
+            "name": "Used by repo-proxy to handle upload artifact flow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/repo/upload",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Used by repo-proxy to handle upload artifact flow"
+        },
+        {
+          "info": {
+            "name": "Get artifact contents or other information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/repo/:channel_name/:ckey:[^/].*?",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "ckey",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "sbom",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get artifact contents or other information"
+        },
+        {
+          "info": {
+            "name": "Patch artifact metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.anaconda.cloud/api/repo/:channel_name/:ckey:[^/].*?",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "ckey",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Patch artifact metadata"
+        },
+        {
+          "info": {
+            "name": "Returns root.json for package signing",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/repo/:root_version:\\d+.root.json",
+            "params": [
+              {
+                "name": "root_version",
+                "value": "",
+                "type": "path",
+                "description": "the number of results in the result set"
+              }
+            ]
+          },
+          "docs": "Returns root.json for package signing"
+        },
+        {
+          "info": {
+            "name": "Returns key_mgr.json for package signing",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/repo/key_mgr.json"
+          },
+          "docs": "Returns key_mgr.json for package signing"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

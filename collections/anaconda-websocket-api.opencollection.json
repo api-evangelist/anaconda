@@ -1,0 +1,188 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Server Websocket API",
+    "version": "6.5"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "websocket",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "repo.endpoints.account.publish_events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/account/history/ws",
+            "params": [
+              {
+                "name": "timeout",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "event_types",
+                "value": "",
+                "type": "query",
+                "description": "comma separated list of event types to filter"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "repo.endpoints.channels.channel_artifacts.cve_report_batched",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/cves/ws",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "max_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns files below requesed max_cve_score"
+              },
+              {
+                "name": "architectures",
+                "value": "",
+                "type": "query",
+                "description": "the package architectures list to search on"
+              },
+              {
+                "name": "cve_name",
+                "value": "CVE-2018-1000805",
+                "type": "query",
+                "description": "the exact CVE id to search on"
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "query",
+                "description": "Package Version"
+              },
+              {
+                "name": "artifact",
+                "value": "",
+                "type": "query",
+                "description": "package name to search on"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "repo.endpoints.channels.subchannel_artifacts.cve_report_batched",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/cves/ws",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "max_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns files below requesed max_cve_score"
+              },
+              {
+                "name": "architectures",
+                "value": "",
+                "type": "query",
+                "description": "the package architectures list to search on"
+              },
+              {
+                "name": "cve_name",
+                "value": "CVE-2018-1000805",
+                "type": "query",
+                "description": "the exact CVE id to search on"
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "query",
+                "description": "Package Version"
+              },
+              {
+                "name": "artifact",
+                "value": "",
+                "type": "query",
+                "description": "package name to search on"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

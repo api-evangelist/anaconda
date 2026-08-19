@@ -1,0 +1,106 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AI Navigator Vector DB API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "VectorDB",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Check the health of the vector database API",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/vector-db/health"
+          },
+          "docs": "Check the health of the vector database API"
+        },
+        {
+          "info": {
+            "name": "Initialize the vector database",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/vector-db"
+          },
+          "docs": "Initialize the vector database"
+        },
+        {
+          "info": {
+            "name": "Start or stop the vector database",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/vector-db",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Start or stop the vector database"
+        },
+        {
+          "info": {
+            "name": "Get all tables in the vector database",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/vector-db/tables"
+          },
+          "docs": "Get all tables in the vector database"
+        },
+        {
+          "info": {
+            "name": "Create a new table in the vector database",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/vector-db/tables",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new table in the vector database"
+        },
+        {
+          "info": {
+            "name": "Delete a table from the vector database",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/vector-db/tables/:tableName",
+            "params": [
+              {
+                "name": "tableName",
+                "value": "",
+                "type": "path",
+                "description": "Name of the table to delete"
+              }
+            ]
+          },
+          "docs": "Delete a table from the vector database"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

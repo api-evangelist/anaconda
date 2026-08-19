@@ -1,0 +1,177 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Models API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Models",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Check the health of the models API",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/models/health"
+          },
+          "docs": "Check the health of the models API"
+        },
+        {
+          "info": {
+            "name": "Get all models",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/models",
+            "params": [
+              {
+                "name": "downloaded",
+                "value": "",
+                "type": "query",
+                "description": "When true, returns only models that have at least one file downloaded locally"
+              }
+            ]
+          },
+          "docs": "Retrieves a list of models, either from the entire catalog or only those downloaded locally"
+        },
+        {
+          "info": {
+            "name": "Get model details by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/models/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the model to retrieve"
+              }
+            ]
+          },
+          "docs": "Retrieves detailed information about a specific model, including its metadata and files"
+        },
+        {
+          "info": {
+            "name": "List all files for a specific model",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/models/:modelId/files",
+            "params": [
+              {
+                "name": "modelId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the model"
+              },
+              {
+                "name": "downloaded",
+                "value": "",
+                "type": "query",
+                "description": "Filter to only show downloaded files"
+              }
+            ]
+          },
+          "docs": "List all files for a specific model"
+        },
+        {
+          "info": {
+            "name": "Get details of a specific model file",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/models/:modelId/files/:fileId",
+            "params": [
+              {
+                "name": "modelId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the model"
+              },
+              {
+                "name": "fileId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the file"
+              }
+            ]
+          },
+          "docs": "Get details of a specific model file"
+        },
+        {
+          "info": {
+            "name": "Update download status of a model file",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/models/:modelId/files/:fileId",
+            "params": [
+              {
+                "name": "modelId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the model"
+              },
+              {
+                "name": "fileId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the file"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update download status of a model file"
+        },
+        {
+          "info": {
+            "name": "Delete a model file",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/models/:modelId/files/:fileId",
+            "params": [
+              {
+                "name": "modelId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the model"
+              },
+              {
+                "name": "fileId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the file"
+              }
+            ]
+          },
+          "docs": "Delete a model file"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

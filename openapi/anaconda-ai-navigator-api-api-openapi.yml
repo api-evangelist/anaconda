@@ -1,0 +1,25 @@
+openapi: 3.2.0
+info:
+  title: AI Navigator AI Navigator API API
+  version: 1.0.0
+  description: API documentation for AI Navigator
+security:
+- bearerAuth: []
+tags:
+- name: AI Navigator API
+paths:
+  /api:
+    get:
+      description: Returns application information
+      responses:
+        '200':
+          description: Returns version details for AI Navigator, Mamba, and LlamaCPP
+      tags:
+      - AI Navigator API
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: UUID
+      description: Enter your API key here

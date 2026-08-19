@@ -1,0 +1,1294 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Server Cves API",
+    "version": "6.5"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "cves",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the cve history logs of the channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/cves_history",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "from_date",
+                "value": "",
+                "type": "query",
+                "description": "starting timestamp for filtering data"
+              },
+              {
+                "name": "to_date",
+                "value": "",
+                "type": "query",
+                "description": "ending timestamp for filtering data"
+              },
+              {
+                "name": "min_download_count",
+                "value": "",
+                "type": "query",
+                "description": "Displays notifications only for packages with provided minimum number of downloads"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "event_types",
+                "value": "",
+                "type": "query",
+                "description": "filter CVE Notifications by event types"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "max_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE Notifications below provided maximum impact score"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE Notifications with at least provided minimum impact score"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the cve history logs of the channel"
+        },
+        {
+          "info": {
+            "name": "generate min-download-count-parametertory for a specific timestamp for example for existing cves history",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/cves_history",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "generate min-download-count-parametertory for a specific timestamp for example for existing cves history"
+        },
+        {
+          "info": {
+            "name": "Get all the CVE's associated with this channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/cves",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "max_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns files below requesed max_cve_score"
+              },
+              {
+                "name": "architectures",
+                "value": "",
+                "type": "query",
+                "description": "the package architectures list to search on"
+              },
+              {
+                "name": "cve_name",
+                "value": "CVE-2018-1000805",
+                "type": "query",
+                "description": "the exact CVE id to search on"
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "query",
+                "description": "Package Version"
+              },
+              {
+                "name": "min_packages_count",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "artifact",
+                "value": "",
+                "type": "query",
+                "description": "package name to search on"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort CVEs (may be comma-separated)"
+              },
+              {
+                "name": "with_cve_counts_by_severity",
+                "value": "",
+                "type": "query",
+                "description": "return cve counts by severity."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all the CVE's associated with this channel"
+        },
+        {
+          "info": {
+            "name": "repo.endpoints.channels.channel_artifacts.cve_report_batched",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/cves/ws",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "max_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns files below requesed max_cve_score"
+              },
+              {
+                "name": "architectures",
+                "value": "",
+                "type": "query",
+                "description": "the package architectures list to search on"
+              },
+              {
+                "name": "cve_name",
+                "value": "CVE-2018-1000805",
+                "type": "query",
+                "description": "the exact CVE id to search on"
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "query",
+                "description": "Package Version"
+              },
+              {
+                "name": "artifact",
+                "value": "",
+                "type": "query",
+                "description": "package name to search on"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "Get channel CVE details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/cves/:cve_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get channel CVE details"
+        },
+        {
+          "info": {
+            "name": "Get all package files, associated with specific CVE in the channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/cves/:cve_id/files",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all package files, associated with specific CVE in the channel"
+        },
+        {
+          "info": {
+            "name": "Get all the CVE's associated with this channel and artifact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family/:artifact_name/cves",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "with_cve_counts_by_severity",
+                "value": "",
+                "type": "query",
+                "description": "return cve counts by severity."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all the CVE's associated with this channel and artifact"
+        },
+        {
+          "info": {
+            "name": "Get artifact CVE details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family/:artifact_name/cves/:cve_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get artifact CVE details"
+        },
+        {
+          "info": {
+            "name": "successfully returns routes, related to this CVE in the artifact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/artifacts/:artifact_family/:artifact_name/cves/:cve_id/files",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "successfully returns routes, related to this CVE in the artifact"
+        },
+        {
+          "info": {
+            "name": "Get the cve history logs of the subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/cves_history",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "to_date",
+                "value": "",
+                "type": "query",
+                "description": "ending timestamp for filtering data"
+              },
+              {
+                "name": "from_date",
+                "value": "",
+                "type": "query",
+                "description": "starting timestamp for filtering data"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "event_types",
+                "value": "",
+                "type": "query",
+                "description": "filter CVE Notifications by event types"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "min_download_count",
+                "value": "",
+                "type": "query",
+                "description": "Displays notifications only for packages with provided minimum number of downloads"
+              },
+              {
+                "name": "max_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE Notifications below provided maximum impact score"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE Notifications with at least provided minimum impact score"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the cve history logs of the subchannel"
+        },
+        {
+          "info": {
+            "name": "generate cves_history for a specific timestamp for example for existing cves history",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/cves_history",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "timestamp",
+                "value": "",
+                "type": "query",
+                "description": "exact timestamp for filtering data"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "generate cves_history for a specific timestamp for example for existing cves history"
+        },
+        {
+          "info": {
+            "name": "Get all the CVE's associated with this subchannel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/cves",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "max_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns files below requesed max_cve_score"
+              },
+              {
+                "name": "architectures",
+                "value": "",
+                "type": "query",
+                "description": "the package architectures list to search on"
+              },
+              {
+                "name": "cve_name",
+                "value": "CVE-2018-1000805",
+                "type": "query",
+                "description": "the exact CVE id to search on"
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "query",
+                "description": "Package Version"
+              },
+              {
+                "name": "min_packages_count",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "artifact",
+                "value": "",
+                "type": "query",
+                "description": "package name to search on"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort CVEs (may be comma-separated)"
+              },
+              {
+                "name": "with_cve_counts_by_severity",
+                "value": "",
+                "type": "query",
+                "description": "return cve counts by severity."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all the CVE's associated with this subchannel"
+        },
+        {
+          "info": {
+            "name": "repo.endpoints.channels.subchannel_artifacts.cve_report_batched",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/cves/ws",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "max_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns files below requesed max_cve_score"
+              },
+              {
+                "name": "architectures",
+                "value": "",
+                "type": "query",
+                "description": "the package architectures list to search on"
+              },
+              {
+                "name": "cve_name",
+                "value": "CVE-2018-1000805",
+                "type": "query",
+                "description": "the exact CVE id to search on"
+              },
+              {
+                "name": "version",
+                "value": "",
+                "type": "query",
+                "description": "Package Version"
+              },
+              {
+                "name": "artifact",
+                "value": "",
+                "type": "query",
+                "description": "package name to search on"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          }
+        },
+        {
+          "info": {
+            "name": "Get subchannel CVE details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/cves/:cve_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get subchannel CVE details"
+        },
+        {
+          "info": {
+            "name": "Get all package files, associated with specific CVE in the channel",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/cves/:cve_id/files",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all package files, associated with specific CVE in the channel"
+        },
+        {
+          "info": {
+            "name": "Get all the CVE's associated with this subchannel and artifact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name/cves",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "with_cve_counts_by_severity",
+                "value": "",
+                "type": "query",
+                "description": "return cve counts by severity."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all the CVE's associated with this subchannel and artifact"
+        },
+        {
+          "info": {
+            "name": "Get subchannel artifact CVE details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name/cves/:cve_id",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get subchannel artifact CVE details"
+        },
+        {
+          "info": {
+            "name": "successfully returns routes, related to this CVE in the artifact",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/channels/:channel_name/subchannels/:subchannel_name/artifacts/:artifact_family/:artifact_name/cves/:cve_id/files",
+            "params": [
+              {
+                "name": "channel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "subchannel_name",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_family",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "artifact_name",
+                "value": "",
+                "type": "path",
+                "description": "the unique name of the artifact"
+              },
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "successfully returns routes, related to this CVE in the artifact"
+        },
+        {
+          "info": {
+            "name": "Get list of the latest CVEs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/cves",
+            "params": [
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "min_packages_count",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              },
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "sort",
+                "value": "",
+                "type": "query",
+                "description": "property to sort CVEs (may be comma-separated)"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get list of the latest CVEs"
+        },
+        {
+          "info": {
+            "name": "Get the CVE by its ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/cves/:cve_id",
+            "params": [
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the CVE by its ID"
+        },
+        {
+          "info": {
+            "name": "Get the CVE by its ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/cves/:cve_id/files",
+            "params": [
+              {
+                "name": "cve_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "CVE artifact status (may be comma-separated)"
+              },
+              {
+                "name": "min_score",
+                "value": "",
+                "type": "query",
+                "description": "Returns the CVE with at least provided minimum score"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the CVE by its ID"
+        },
+        {
+          "info": {
+            "name": "Get list of the CVEs with status for provided list of packages",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/cves-report",
+            "params": [
+              {
+                "name": "sha256s",
+                "value": "",
+                "type": "query",
+                "description": "list of sha256 (may be comma-separated)"
+              },
+              {
+                "name": "use_blob",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get list of the CVEs with status for provided list of packages"
+        },
+        {
+          "info": {
+            "name": "Get list of the CVEs with status for provided list of packages. Using Post as Get",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/cves-report",
+            "params": [
+              {
+                "name": "use_blob",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get list of the CVEs with status for provided list of packages. Using Post as Get"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

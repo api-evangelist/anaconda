@@ -1,0 +1,349 @@
+{
+  "item": [
+    {
+      "id": "d95a9f05-e843-48a7-a46d-632027bb425b",
+      "name": "reports",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5aff312c-9800-4d5b-8253-cea60f34ecf3",
+          "name": "Endpoint to get artifact downloaded event reports",
+          "request": {
+            "name": "Endpoint to get artifact downloaded event reports",
+            "description": {
+              "content": "## Generates artifact downloaded report for records satisfying given filter conditions.\n* This feature is only available for admin users.\n* from_date, to_date and download_as are mandatory fields.\n* usernames list and channel names list are optional fields.\n* Example: If you enter a date duration, give list of channel names, list of user names in the request, \n you get a report of artifact downloaded details downloaded during that duration AND (from the channel names\n given OR downloaded by what users specified).\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "reports",
+                "artifact_downloads"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"from_date\": \"<date>\",\n  \"to_date\": \"<date>\",\n  \"download_as\": \"<string>\",\n  \"channel_names\": \"<array,null>\",\n  \"user_names\": \"<array,null>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "33581a7d-7852-4288-9968-5526495481fb",
+              "name": "Returns artifact download report file successfully  based on download_as option selected",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "reports",
+                    "artifact_downloads"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"from_date\": \"<date>\",\n  \"to_date\": \"<date>\",\n  \"download_as\": \"<string>\",\n  \"channel_names\": \"<array,null>\",\n  \"user_names\": \"<array,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"items\": [\n    {\n      \"artifact_downloaded_at\": \"string\",\n      \"user_id\": \"string\",\n      \"user_ip_address\": \"string\",\n      \"username\": \"string\",\n      \"host_username\": \"string\",\n      \"channel_id\": \"string\",\n      \"channel_name\": \"string\",\n      \"artifact_family\": \"string\",\n      \"artifact_ckey\": \"string\",\n      \"artifact_sha256\": \"string\",\n      \"environment\": \"string\",\n      \"hostname\": \"string\",\n      \"cves_count\": 1096,\n      \"cve_score\": 3876.535659868999,\n      \"cve_status\": \"disputed\",\n      \"cve_information\": [\n        {\n          \"id\": \"CVE-2019-9948\",\n          \"score\": 1126.7705696834696,\n          \"status\": \"string\",\n          \"curated\": true,\n          \"published_at\": \"string\",\n          \"nvd_modified_at\": \"string\",\n          \"anaconda_modified_at\": \"string\"\n        },\n        {\n          \"id\": \"CVE-2019-9948\",\n          \"score\": 671.208653622205,\n          \"status\": \"string\",\n          \"curated\": false,\n          \"published_at\": \"string\",\n          \"nvd_modified_at\": \"string\",\n          \"anaconda_modified_at\": \"string\"\n        }\n      ],\n      \"user_agent_headers\": \"string\"\n    },\n    {\n      \"artifact_downloaded_at\": \"string\",\n      \"user_id\": \"string\",\n      \"user_ip_address\": \"string\",\n      \"username\": \"string\",\n      \"host_username\": \"string\",\n      \"channel_id\": \"string\",\n      \"channel_name\": \"string\",\n      \"artifact_family\": \"string\",\n      \"artifact_ckey\": \"string\",\n      \"artifact_sha256\": \"string\",\n      \"environment\": \"string\",\n      \"hostname\": \"string\",\n      \"cves_count\": 1116,\n      \"cve_score\": 378.89376498996705,\n      \"cve_status\": \"reported\",\n      \"cve_information\": [\n        {\n          \"id\": \"CVE-2019-9948\",\n          \"score\": 9984.231991602672,\n          \"status\": \"string\",\n          \"curated\": true,\n          \"published_at\": \"string\",\n          \"nvd_modified_at\": \"string\",\n          \"anaconda_modified_at\": \"string\"\n        },\n        {\n          \"id\": \"CVE-2019-9948\",\n          \"score\": 8830.815832796829,\n          \"status\": \"string\",\n          \"curated\": false,\n          \"published_at\": \"string\",\n          \"nvd_modified_at\": \"string\",\n          \"anaconda_modified_at\": \"string\"\n        }\n      ],\n      \"user_agent_headers\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2db2c939-32e8-4702-ae75-8fe06ff44f48",
+              "name": "Server cannot execute request due to something that is perceived to be a client error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "reports",
+                    "artifact_downloads"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"from_date\": \"<date>\",\n  \"to_date\": \"<date>\",\n  \"download_as\": \"<string>\",\n  \"channel_names\": \"<array,null>\",\n  \"user_names\": \"<array,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad-parameter\",\n  \"message\": \"Bad request parameter for 'sort'\",\n  \"status\": 401\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ab8f9b6a-fe5b-4016-ac40-782f18180d73",
+              "name": "Unauthenticated, no token is provided or token is invalid",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "reports",
+                    "artifact_downloads"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"from_date\": \"<date>\",\n  \"to_date\": \"<date>\",\n  \"download_as\": \"<string>\",\n  \"channel_names\": \"<array,null>\",\n  \"user_names\": \"<array,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad-parameter\",\n  \"message\": \"Bad request parameter for 'sort'\",\n  \"status\": 401\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "785813f7-0d84-45cb-a542-69b9b5239bb9",
+              "name": "Access is forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "reports",
+                    "artifact_downloads"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"from_date\": \"<date>\",\n  \"to_date\": \"<date>\",\n  \"download_as\": \"<string>\",\n  \"channel_names\": \"<array,null>\",\n  \"user_names\": \"<array,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad-parameter\",\n  \"message\": \"Bad request parameter for 'sort'\",\n  \"status\": 401\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "369344e2-14d2-4ff6-9988-4943b2b496f1",
+              "name": "Internal server error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "reports",
+                    "artifact_downloads"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"from_date\": \"<date>\",\n  \"to_date\": \"<date>\",\n  \"download_as\": \"<string>\",\n  \"channel_names\": \"<array,null>\",\n  \"user_names\": \"<array,null>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"bad-parameter\",\n  \"message\": \"Bad request parameter for 'sort'\",\n  \"status\": 401\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.anaconda.cloud/api",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "da7c6fff-7549-46c3-8d99-e199828f2249",
+    "name": "Anaconda Server Reports API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

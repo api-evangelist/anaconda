@@ -1,0 +1,4221 @@
+openapi: 3.2.0
+info:
+  version: '6.5'
+  title: Anaconda Server Channels API
+  description: Channel management endpoints
+servers:
+- url: https://api.anaconda.cloud/api
+tags:
+- name: channels
+  description: Channel management endpoints
+paths:
+  /channels:
+    get:
+      tags:
+      - channels
+      summary: Get all channels with filtering possibilities
+      operationId: repo.endpoints.channels.channels.list_channels
+      parameters:
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/channel-ids-query'
+      - $ref: '#/components/parameters/channel-sort-query'
+      - $ref: '#/components/parameters/include-subchannels'
+      - $ref: '#/components/parameters/include-reserved-query'
+      responses:
+        '200':
+          description: get all channels
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Channel'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+      - channels
+      summary: Create a new channel
+      operationId: repo.endpoints.channels.channels.post_channel
+      description: create a new channel
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelCreateRequest'
+      responses:
+        '201':
+          description: successfully created a channel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}:
+    get:
+      tags:
+      - channels
+      summary: Get data for a specific channel
+      operationId: repo.endpoints.channels.channels.get_channel
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      responses:
+        '200':
+          description: get a specific channel by name
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+      - channels
+      summary: Edit the data for the specified channel
+      operationId: repo.endpoints.channels.channels.put_channel
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelUpdateRequest'
+      responses:
+        '200':
+          description: successfully updated the channel
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+    delete:
+      tags:
+      - channels
+      summary: Delete channel and all its contents
+      operationId: repo.endpoints.channels.channels.delete_channel
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      responses:
+        '201':
+          description: no channel to delete
+        '202':
+          description: successfully deleted the channel
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/permissions:
+    get:
+      tags:
+      - channels
+      summary: Get the user permission level on the channel
+      operationId: repo.endpoints.channels.channels.channel_permissions
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      responses:
+        '200':
+          description: successfully retrieved the permission scopes on a channel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourcePermissions'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /channels/{channel_name}/history:
+    get:
+      tags:
+      - channels
+      summary: Get the history logs of the channel
+      operationId: repo.endpoints.channels.channels.channel_history
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/event-types-query'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: successfully retrieved the activity logs for the channel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelHistory'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/cves_history:
+    get:
+      tags:
+      - channels
+      summary: Get the cve history logs of the channel
+      operationId: repo.endpoints.channels.channels_cve_history.get_cve_channel_history
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/from-date-parameter'
+      - $ref: '#/components/parameters/to-date-parameter'
+      - $ref: '#/components/parameters/min-download-count-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/cve-notifications-event-type-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/max-impact-score-query'
+      - $ref: '#/components/parameters/min-impact-score-query'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: successfully retrieved the cve history logs for the channel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelCveHistory'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+    post:
+      tags:
+      - channels
+      summary: generate min-download-count-parametertory for a specific timestamp for example for existing cves history
+      operationId: repo.endpoints.channels.channels_cve_history.generate_cve_notifications
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CVENotificationsTimestamp'
+      responses:
+        '202':
+          description: successfully starting building of cve notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '200':
+          description: No history available for given timestamp
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/stats:
+    get:
+      tags:
+      - channels
+      summary: Get stats and counters for the channel
+      operationId: repo.endpoints.channels.channels.channel_stats
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      responses:
+        '200':
+          description: returns stats for the channel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelStats'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/virtual-channels:
+    get:
+      tags:
+      - channels
+      summary: Get list of all virtual channels created from current channel
+      operationId: repo.endpoints.channels.channels.list_virtual_channels
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/channel-sort-query'
+      responses:
+        '200':
+          description: return list of virtual channels
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Channel'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/artifacts:
+    get:
+      tags:
+      - channels
+      summary: Get list of artifacts for specific channel
+      description: Retrieve all artifacts for the current channel and passing the ?filter= query will only returns those artifacts in the current channel that match that filter string
+      operationId: repo.endpoints.channels.channel_artifacts.list_artifacts
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/only_names-query'
+      - $ref: '#/components/parameters/artifact-sort-query'
+      - $ref: '#/components/parameters/artifact_family-query'
+      - $ref: '#/components/parameters/platform-query'
+      responses:
+        '200':
+          description: get list of packages for channels
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Artifact'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+      - channels
+      summary: Upload an artifact to the channel (implemented by repo-proxy, can't be called directly)
+      operationId: repo.endpoints.channels.channel_artifacts.upload_placeholder
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      requestBody:
+        description: upload the artifact to the channel with specified filetype
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - filetype
+              - content
+              properties:
+                filetype:
+                  $ref: '#/components/schemas/UploadFileType'
+                r_version:
+                  type: string
+                  description: cran_binary_package R version
+                distribution:
+                  type: string
+                  description: cran_binary_package distribution
+                  example: macosx
+                content:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: successful file uploaded
+        '204':
+          description: successful subsequent file uploads
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/artifacts/bulk:
+    put:
+      summary: Perform a bulk action for artifacts in channel
+      operationId: repo.endpoints.channels.channel_artifacts.bulk
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArtifactBulkActionRequest'
+      responses:
+        '202':
+          description: bulk did something to artifacts in the channel successfully
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+      tags:
+      - channels
+  /channels/{channel_name}/artifacts/{artifact_family}:
+    put:
+      tags:
+      - channels
+      summary: Refreshes the index for specific artifact family in the channel
+      operationId: repo.endpoints.channels.channel_artifacts.refresh_artifact_family_index
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      responses:
+        '202':
+          description: index update accepted
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}:
+    get:
+      tags:
+      - channels
+      summary: Get specific artifact in current channel
+      operationId: repo.endpoints.channels.channel_artifacts.get_artifact
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      responses:
+        '200':
+          description: successfully returned an Artifact
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artifact'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - channels
+      summary: Delete the specific artifact in the current channel
+      operationId: repo.endpoints.channels.channel_artifacts.delete_artifact
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      responses:
+        '204':
+          description: successfully deleted
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/readme:
+    get:
+      x-not-implemented: red
+      tags:
+      - channels
+      summary: Get the README file for this artifact
+      operationId: repo.endpoints.channels.channel_artifacts.get_artifact_readme
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      responses:
+        '200':
+          description: successfully retrieved README for this artifact
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: true
+  /channels/{channel_name}/cves:
+    get:
+      tags:
+      - channels
+      summary: Get all the CVE's associated with this channel
+      operationId: repo.endpoints.channels.channel_artifacts.list_channel_cves
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/max_cve_score-query'
+      - $ref: '#/components/parameters/architectures-query'
+      - $ref: '#/components/parameters/cve-name-query'
+      - $ref: '#/components/parameters/version-query'
+      - $ref: '#/components/parameters/min_packages_count-query'
+      - $ref: '#/components/parameters/artifact_name-query'
+      - $ref: '#/components/parameters/cve-sort-query'
+      - $ref: '#/components/parameters/with_cve_counts_by_severity-query'
+      responses:
+        '200':
+          description: successfully returns the CVE objects related to this channel
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CVE'
+                  cve_count_by_severity:
+                    $ref: '#/components/schemas/CVEsBySeverity'
+            text/csv:
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/cves/ws:
+    get:
+      tags:
+      - channels
+      operationId: repo.endpoints.channels.channel_artifacts.cve_report_batched
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/max_cve_score-query'
+      - $ref: '#/components/parameters/architectures-query'
+      - $ref: '#/components/parameters/cve-name-query'
+      - $ref: '#/components/parameters/version-query'
+      - $ref: '#/components/parameters/artifact_name-query'
+      responses:
+        '101':
+          description: Read-only websocket with new events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVE'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      security:
+      - jwt: []
+  /channels/{channel_name}/cves/{cve_id}:
+    get:
+      tags:
+      - channels
+      summary: Get channel CVE details
+      operationId: repo.endpoints.channels.channel_artifacts.get_channel_cve_details
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/cve_id-parameter'
+      responses:
+        '200':
+          description: successfully returns the channel's CVE detailss
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVE'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/cves/{cve_id}/files:
+    get:
+      tags:
+      - channels
+      summary: Get all package files, associated with specific CVE in the channel
+      operationId: repo.endpoints.channels.channel_artifacts.list_channel_cve_files
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/cve_id-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      responses:
+        '200':
+          description: successfully returns routes, related to this CVE in the channel
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CVEPackage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/cves:
+    get:
+      tags:
+      - channels
+      summary: Get all the CVE's associated with this channel and artifact
+      operationId: repo.endpoints.channels.channel_artifacts.list_artifact_cves
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/with_cve_counts_by_severity-query'
+      responses:
+        '200':
+          description: successfully returns the CVE objects, related to this CVE in artifact
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CVE'
+                  cve_count_by_severity:
+                    $ref: '#/components/schemas/CVEsBySeverity'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/cves/{cve_id}:
+    get:
+      tags:
+      - channels
+      summary: Get artifact CVE details
+      operationId: repo.endpoints.channels.channel_artifacts.get_artifact_cve_details
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/cve_id-parameter'
+      responses:
+        '200':
+          description: successfully returns the artifact CVE details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVE'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/cves/{cve_id}/files:
+    get:
+      tags:
+      - channels
+      summary: successfully returns routes, related to this CVE in the artifact
+      operationId: repo.endpoints.channels.channel_artifacts.list_artifact_cve_files
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/cve_id-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      responses:
+        '200':
+          description: successfully returns routes, related to this CVE in the channel
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CVEPackage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/files:
+    get:
+      tags:
+      - channels
+      summary: Get all files of the artifact
+      operationId: repo.endpoints.channels.channel_artifacts.list_artifact_files
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/file-sort-query'
+      - $ref: '#/components/parameters/omit_cve-query'
+      - $ref: '#/components/parameters/include_nonsearchable-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/max_cve_score-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/architectures-query'
+      - $ref: '#/components/parameters/package-state-query'
+      - $ref: '#/components/parameters/created-min-query'
+      - $ref: '#/components/parameters/created-max-query'
+      - $ref: '#/components/parameters/ckey-query'
+      - $ref: '#/components/parameters/version-query'
+      - $ref: '#/components/parameters/cve_extra_info-query'
+      responses:
+        '200':
+          description: successfully retrieved all files
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArtifactFile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/files/{ckey:[^/].*?}:
+    get:
+      tags:
+      - channels
+      summary: Get artifact file
+      operationId: repo.endpoints.channels.channel_artifacts.artifact_file
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/ckey-parameter'
+      - $ref: '#/components/parameters/omit_cve-query'
+      responses:
+        '200':
+          description: Artifact file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtifactFile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/file-cves/{ckey:[^/].*?}:
+    get:
+      tags:
+      - channels
+      summary: Get a list of CVEs for the file (ckey)
+      operationId: repo.endpoints.channels.channel_artifacts.list_file_cves
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/ckey-parameter'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: List of CVEs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CVE'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /signature-verification/{artifact_family}:
+    post:
+      tags:
+      - channels
+      summary: Verify a single package metadata
+      operationId: repo.endpoints.signature_verification.is_verified
+      parameters:
+      - $ref: '#/components/parameters/signature-artifact_family-parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileSignatureVerificationRequest'
+      responses:
+        '200':
+          description: Verfication succeed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  verified:
+                    type: boolean
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/dependencies:
+    get:
+      tags:
+      - channels
+      summary: Get all dependencies of artifact
+      operationId: repo.endpoints.channels.channel_artifacts.list_artifact_dependencies
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: successfully retrieved all dependencies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArtifactDependency'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/dependants:
+    get:
+      tags:
+      - channels
+      summary: Get all dependant packages from the artifact
+      operationId: repo.endpoints.channels.channel_artifacts.list_artifact_dependants
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: successfully retrieved all dependants
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArtifactDependency'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/move:
+    put:
+      x-not-implemented: red
+      tags:
+      - channels
+      summary: Move the artifact to another channel
+      operationId: repo.endpoints.channels.channel_artifacts.move_artifact
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArtifactBulkActionRequest'
+      responses:
+        '200':
+          description: successfully moved the artifact to another channel
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+      deprecated: true
+  /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/copy:
+    put:
+      x-not-implemented: red
+      tags:
+      - channels
+      summary: Copy the artifact to another channel
+      operationId: repo.endpoints.channels.channel_artifacts.copy_artifact
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArtifactBulkActionRequest'
+      responses:
+        '200':
+          description: successfully copied the artifact to another channel
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+      deprecated: true
+  /channels/{channel_name}/mirrors:
+    get:
+      tags:
+      - channels
+      summary: Get list of mirror configurations
+      operationId: repo.endpoints.channels.channel_mirrors.list_mirrors
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/mirror-sort-query'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Mirror'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+    post:
+      tags:
+      - channels
+      summary: Create a mirror
+      operationId: repo.endpoints.channels.channel_mirrors.post_mirror
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/task-manager-schedule-query'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MirrorConfiguration'
+      responses:
+        '201':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mirror'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '409':
+          $ref: '#/components/responses/Conflict'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/mirrors/{mirror_id}/stop_mirror_sync:
+    post:
+      tags:
+      - channels
+      summary: Stop mirror sync task
+      operationId: repo.endpoints.channels.channel_mirrors.stop_mirror_sync
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/mirror_id-parameter'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mirror'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/mirrors/{mirror_id}:
+    get:
+      tags:
+      - channels
+      summary: Get mirror details
+      operationId: repo.endpoints.channels.channel_mirrors.get_mirror
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/mirror_id-parameter'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mirror'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+    put:
+      tags:
+      - channels
+      summary: Update a mirror
+      operationId: repo.endpoints.channels.channel_mirrors.put_mirror
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/mirror_id-parameter'
+      - $ref: '#/components/parameters/task-manager-schedule-query'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MirrorConfiguration'
+      responses:
+        '202':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mirror'
+        '204':
+          description: no content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+    delete:
+      tags:
+      - channels
+      summary: Delete an existing mirror configuration
+      operationId: repo.endpoints.channels.channel_mirrors.delete_mirror
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/mirror_id-parameter'
+      responses:
+        '200':
+          description: ok
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/files-filtered:
+    get:
+      tags:
+      - channels
+      summary: Get list of routes filtered by last mirror for specific channel
+      description: Retrieve all routes filtered by last mirror for the specific channel
+      operationId: repo.endpoints.channels.channels_routes_filtered.list_routes_filtered
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: get list of routes filtered for channel
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FileFiltered'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels:
+    get:
+      tags:
+      - channels
+      summary: Get list of subchannels within the channel
+      operationId: repo.endpoints.channels.subchannels.list_subchannels
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/channel-ids-query'
+      - $ref: '#/components/parameters/channel-sort-query'
+      responses:
+        '200':
+          description: get the subchannels of the channel
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Subchannel'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+      - channels
+      summary: Create a subchannel
+      operationId: repo.endpoints.channels.subchannels.post_subchannel
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelCreateRequest'
+      responses:
+        '201':
+          description: successfully created the subchannel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subchannel'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}:
+    get:
+      tags:
+      - channels
+      summary: Get the specific subchannel details
+      operationId: repo.endpoints.channels.subchannels.get_subchannel
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      responses:
+        '200':
+          description: get the subchannel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subchannel'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+      - channels
+      summary: Update the subchannel
+      operationId: repo.endpoints.channels.subchannels.put_subchannel
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subchannel'
+      responses:
+        '200':
+          description: successfully updated the subchannel
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+    delete:
+      tags:
+      - channels
+      summary: Delete the subchannel
+      operationId: repo.endpoints.channels.subchannels.delete_subchannel
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      responses:
+        '202':
+          description: successfully deleted the subchannel
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/cves_history:
+    get:
+      tags:
+      - channels
+      summary: Get the cve history logs of the subchannel
+      operationId: repo.endpoints.channels.subchannels_cve_history.get_cve_subchannel_history
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/to-date-parameter'
+      - $ref: '#/components/parameters/from-date-parameter'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/cve-notifications-event-type-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/min-download-count-query'
+      - $ref: '#/components/parameters/max-impact-score-query'
+      - $ref: '#/components/parameters/min-impact-score-query'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: successfully retrieved the cve history logs for the channel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelCveHistory'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+    post:
+      tags:
+      - channels
+      summary: generate cves_history for a specific timestamp for example for existing cves history
+      operationId: repo.endpoints.channels.subchannels_cve_history.generate_cve_notifications
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/timestamp-parameter'
+      responses:
+        '202':
+          description: successfully starting building of cve notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '200':
+          description: No history available for given timestamp
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/mirrors/{mirror_id}/stop_mirror_sync:
+    post:
+      tags:
+      - channels
+      summary: Stop mirror sync task
+      operationId: repo.endpoints.channels.subchannel_mirrors.stop_mirror_sync
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/mirror_id-parameter'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mirror'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/permissions:
+    get:
+      tags:
+      - channels
+      summary: Get the user permission level on the channel
+      operationId: repo.endpoints.channels.subchannels.subchannel_permissions
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      responses:
+        '200':
+          description: successfully retrieved the permission scopes on a subchannel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourcePermissions'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts:
+    get:
+      tags:
+      - channels
+      summary: Get the artifacts of the subchannel
+      operationId: repo.endpoints.channels.subchannel_artifacts.list_artifacts
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/only_names-query'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/artifact-sort-query'
+      - $ref: '#/components/parameters/artifact_family-query'
+      - $ref: '#/components/parameters/platform-query'
+      responses:
+        '200':
+          description: get the subchannel artifacts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Artifact'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+      - channels
+      summary: Upload an artifact to the subchannel (implemented by repo-proxy, can't be called directly)
+      operationId: repo.endpoints.channels.subchannel_artifacts.upload_placeholder
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      requestBody:
+        description: upload the artifact to the subchannel with specified type and name
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                filetype:
+                  $ref: '#/components/schemas/UploadFileType'
+                description:
+                  type: string
+                  description: a string that describes the package that is being uploaded
+                content:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: successful file uploaded
+        '204':
+          description: successful subsequent file uploads
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/stats:
+    get:
+      tags:
+      - channels
+      summary: Get stats and counters for the subchannel
+      operationId: repo.endpoints.channels.subchannels.subchannel_stats
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      responses:
+        '200':
+          description: returns stats for the subchannel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelStats'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/virtual-channels:
+    get:
+      tags:
+      - channels
+      summary: Get list of all virtual channels created from current subchannel
+      operationId: repo.endpoints.channels.subchannels.list_virtual_channels
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/channel-sort-query'
+      responses:
+        '200':
+          description: return list of virtual channels
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Channel'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/bulk:
+    put:
+      tags:
+      - channels
+      summary: Perform a bulk action for artifacts in subchannel
+      operationId: repo.endpoints.channels.subchannel_artifacts.bulk
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArtifactBulkActionRequest'
+      responses:
+        '202':
+          description: bulk did something to artifacts in the subchannel successfully
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}:
+    put:
+      tags:
+      - channels
+      summary: Refreshes the index for specific artifact family in the subchannel
+      operationId: repo.endpoints.channels.subchannel_artifacts.refresh_artifact_family_index
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      responses:
+        '202':
+          description: index update accepted
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}:
+    get:
+      tags:
+      - channels
+      summary: Get the details of the specific artifact in the subchannel
+      operationId: repo.endpoints.channels.subchannel_artifacts.get_artifact
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      responses:
+        '200':
+          description: successfully returned an Artifact
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Artifact'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags:
+      - channels
+      summary: Delete the specific artifact in the subchannel
+      operationId: repo.endpoints.channels.subchannel_artifacts.delete_artifact
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      responses:
+        '204':
+          description: successfully deleted the artifact from the subchannel
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/readme:
+    get:
+      x-not-implemented: red
+      tags:
+      - channels
+      summary: Get the readme of the specific artifact in the subchannel
+      operationId: repo.endpoints.channels.subchannel_artifacts.get_artifact_readme
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      responses:
+        '200':
+          description: successfully returned an artifact readme
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: true
+  /channels/{channel_name}/subchannels/{subchannel_name}/cves:
+    get:
+      tags:
+      - channels
+      summary: Get all the CVE's associated with this subchannel
+      operationId: repo.endpoints.channels.subchannel_artifacts.list_subchannel_cves
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/max_cve_score-query'
+      - $ref: '#/components/parameters/architectures-query'
+      - $ref: '#/components/parameters/cve-name-query'
+      - $ref: '#/components/parameters/version-query'
+      - $ref: '#/components/parameters/min_packages_count-query'
+      - $ref: '#/components/parameters/artifact_name-query'
+      - $ref: '#/components/parameters/cve-sort-query'
+      - $ref: '#/components/parameters/with_cve_counts_by_severity-query'
+      responses:
+        '200':
+          description: successfully returns the CVE objects related to this channel
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CVE'
+            text/csv:
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/cves/ws:
+    get:
+      tags:
+      - channels
+      operationId: repo.endpoints.channels.subchannel_artifacts.cve_report_batched
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/max_cve_score-query'
+      - $ref: '#/components/parameters/architectures-query'
+      - $ref: '#/components/parameters/cve-name-query'
+      - $ref: '#/components/parameters/version-query'
+      - $ref: '#/components/parameters/artifact_name-query'
+      responses:
+        '101':
+          description: Read-only websocket with new events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVE'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      security:
+      - jwt: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/cves/{cve_id}:
+    get:
+      tags:
+      - channels
+      summary: Get subchannel CVE details
+      operationId: repo.endpoints.channels.subchannel_artifacts.get_subchannel_cve_details
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/cve_id-parameter'
+      responses:
+        '200':
+          description: successfully returns subchannel CVE details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVE'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/cves/{cve_id}/files:
+    get:
+      tags:
+      - channels
+      summary: Get all package files, associated with specific CVE in the channel
+      operationId: repo.endpoints.channels.subchannel_artifacts.list_subchannel_cve_files
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/cve_id-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      responses:
+        '200':
+          description: successfully returns routes, related to this CVE in the subchannel
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CVEPackage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/cves:
+    get:
+      tags:
+      - channels
+      summary: Get all the CVE's associated with this subchannel and artifact
+      operationId: repo.endpoints.channels.subchannel_artifacts.list_artifact_cves
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/with_cve_counts_by_severity-query'
+      responses:
+        '200':
+          description: successfully returns the CVE objects, related to this subchannel
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CVE'
+                  cve_count_by_severity:
+                    $ref: '#/components/schemas/CVEsBySeverity'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/cves/{cve_id}:
+    get:
+      tags:
+      - channels
+      summary: Get subchannel artifact CVE details
+      operationId: repo.endpoints.channels.subchannel_artifacts.get_artifact_cve_details
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/cve_id-parameter'
+      responses:
+        '200':
+          description: successfully returns the subchannel artifact CVE details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVE'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/cves/{cve_id}/files:
+    get:
+      tags:
+      - channels
+      summary: successfully returns routes, related to this CVE in the artifact
+      operationId: repo.endpoints.channels.subchannel_artifacts.list_artifact_cve_files
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/cve_id-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      responses:
+        '200':
+          description: successfully returns routes, related to this CVE in the artifact
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CVE'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/files:
+    get:
+      tags:
+      - channels
+      summary: Get all files of artifact in subchannel
+      operationId: repo.endpoints.channels.subchannel_artifacts.list_artifact_files
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/file-sort-query'
+      - $ref: '#/components/parameters/omit_cve-query'
+      - $ref: '#/components/parameters/include_nonsearchable-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/max_cve_score-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/architectures-query'
+      - $ref: '#/components/parameters/package-state-query'
+      - $ref: '#/components/parameters/created-min-query'
+      - $ref: '#/components/parameters/created-max-query'
+      - $ref: '#/components/parameters/ckey-query'
+      - $ref: '#/components/parameters/version-query'
+      - $ref: '#/components/parameters/cve_extra_info-query'
+      responses:
+        '200':
+          description: successfully retrieved all files
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArtifactFile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/files/{ckey:[^/].*?}:
+    get:
+      tags:
+      - channels
+      summary: Get artifact file in subchannel
+      operationId: repo.endpoints.channels.subchannel_artifacts.artifact_file
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/ckey-parameter'
+      - $ref: '#/components/parameters/omit_cve-query'
+      responses:
+        '200':
+          description: Artifact file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtifactFile'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  ? /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/file-cves/{ckey:[^/].*?}
+  : get:
+      tags:
+      - channels
+      summary: Get a list of CVEs for the file (ckey)
+      operationId: repo.endpoints.channels.subchannel_artifacts.list_file_cves
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/ckey-parameter'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: List of CVEs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CVE'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/dependencies:
+    get:
+      tags:
+      - channels
+      summary: Get all dependencies of artifact in subchannel
+      operationId: repo.endpoints.channels.subchannel_artifacts.list_artifact_dependencies
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: successfully retrieved all dependencies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArtifactDependency'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/dependants:
+    get:
+      tags:
+      - channels
+      summary: Get all dependants of artifact in subchannel
+      operationId: repo.endpoints.channels.subchannel_artifacts.list_artifact_dependants
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: successfully retrieved all dependants
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArtifactDependency'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/move:
+    put:
+      x-not-implemented: red
+      tags:
+      - channels
+      summary: Move the artifact between two subchannels
+      operationId: repo.endpoints.channels.subchannel_artifacts.move_artifact
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dest:
+                  type: string
+                  description: the destination subchannel to move this artifact to
+      responses:
+        '200':
+          description: successfully moved the artifact to another subchannel
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+      deprecated: true
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/copy:
+    put:
+      x-not-implemented: red
+      tags:
+      - channels
+      summary: Copy the artifact to another subchannel
+      operationId: repo.endpoints.channels.subchannel_artifacts.copy_artifact
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dest:
+                  type: string
+                  description: the subchannel to copy the artifact to
+      responses:
+        '200':
+          description: successfully copied the artifact to another subchannel
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+      deprecated: true
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/download:
+    get:
+      x-not-implemented: red
+      tags:
+      - channels
+      summary: Donwload the artifact from the subchannel
+      description: download the artifact in the current subchannel specified by the artifact id
+      operationId: repo.endpoints.channels.subchannel_artifacts.download_artifact_file
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      responses:
+        '200':
+          description: successfully found the resource to download
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      deprecated: true
+  /channels/{channel_name}/subchannels/{subchannel_name}/mirrors:
+    get:
+      tags:
+      - channels
+      summary: Get list of mirrors of the subchannel
+      operationId: repo.endpoints.channels.subchannel_mirrors.list_mirrors
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/mirror-sort-query'
+      responses:
+        '200':
+          description: get the subchannel mirrors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Mirror'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+    post:
+      tags:
+      - channels
+      summary: Create a mirror in the subchannel
+      operationId: repo.endpoints.channels.subchannel_mirrors.post_mirror
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/task-manager-schedule-query'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MirrorConfiguration'
+      responses:
+        '201':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mirror'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/mirrors/{mirror_id}:
+    get:
+      tags:
+      - channels
+      summary: Show mirror details in subchannel
+      operationId: repo.endpoints.channels.subchannel_mirrors.get_mirror
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/mirror_id-parameter'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mirror'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+    put:
+      tags:
+      - channels
+      summary: Update a mirror in subchannel
+      operationId: repo.endpoints.channels.subchannel_mirrors.put_mirror
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/mirror_id-parameter'
+      - $ref: '#/components/parameters/task-manager-schedule-query'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MirrorConfiguration'
+      responses:
+        '202':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mirror'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+    delete:
+      tags:
+      - channels
+      summary: Delete the mirror from the subchannel
+      operationId: repo.endpoints.channels.subchannel_mirrors.delete_mirror
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/mirror_id-parameter'
+      responses:
+        '204':
+          description: successfully removed the mirror from the subchannel
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/history:
+    get:
+      tags:
+      - channels
+      summary: Get the history logs of the subchannel
+      operationId: repo.endpoints.channels.subchannels.subchannel_history
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: get the subchannel history
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelHistory'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+components:
+  schemas:
+    ChannelType:
+      description: channel type
+      type: string
+      default: default
+      enum:
+      - default
+      - virtual
+    CVENotificationsTimestamp:
+      required:
+      - timestamp
+      additionalProperties: false
+      type: object
+      description: Timestamp for Generation of CVE Notifications
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+    ArtifactFamily:
+      type: string
+      enum:
+      - anaconda_project
+      - anaconda_env
+      - cve
+      - conda
+      - python
+      - cran
+      - notebook
+      - docker
+      - sbom
+    ChannelCreateRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        description:
+          type: string
+        privacy:
+          $ref: '#/components/schemas/ChannelPrivacy'
+        channel_type:
+          $ref: '#/components/schemas/ChannelType'
+        indexing_behavior:
+          $ref: '#/components/schemas/ChannelIndexingBehavior'
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/VirtualChannelSource'
+        filters:
+          $ref: '#/components/schemas/ChannelFilters'
+        settings:
+          $ref: '#/components/schemas/ChannelSettings'
+    CVE:
+      type: object
+      description: CVE information
+      properties:
+        id:
+          type: string
+          example: CVE-2019-9948
+        description:
+          type: string
+          description: Text description of the vulnerability from the database
+        score:
+          type: number
+          description: Maximum score of the CVE
+        cvssv2_score:
+          type: number
+          description: CVSSv2 score of the CVE
+        cvssv3_score:
+          type: number
+          description: CVSSv3 score of the CVE
+        curated:
+          type: boolean
+          description: Indicates whether CVE has curated status
+        packages_count:
+          type: number
+          description: Number of associated packages with this CVE
+        packages:
+          description: optionals
+          type: array
+          items:
+            type: object
+            properties:
+              channel_name:
+                type: string
+                example: The Channel
+              parent_channel_name:
+                type: string
+                example: The Root Channel
+              cve_status:
+                $ref: '#/components/schemas/CVE_status'
+              artifact_family:
+                $ref: '#/components/schemas/ArtifactFamily'
+              artifact_type:
+                type: string
+                example: conda1
+              ckey:
+                type: string
+                example: osx-64/numpy-1.1.1.conda
+              common_name:
+                type: string
+                example: numpy
+              blob_sha256:
+                type: string
+                example: 82cf9c932145565158eb8ee67dba369851210aab
+              blob_size:
+                type: string
+                example: 1234
+        published_at:
+          description: date when the CVE has been published in NVD
+          type: string
+        nvd_modified_at:
+          description: latest date when the CVE was updated in NVD
+          type: string
+        anaconda_modified_at:
+          description: latest date when the CVE was curated by Anaconda
+          type: string
+        cvssv2:
+          type: object
+          properties:
+            cvssV2:
+              type: object
+              properties:
+                version:
+                  type: string
+                  example: 2.0
+                vectorString:
+                  type: string
+                  example: AV:N/AC:L/Au:N/C:P/I:P/A:N
+                accessComplexity:
+                  type: string
+                  example: LOW
+                accessVector:
+                  type: string
+                  example: NETWORK
+                authentication:
+                  type: string
+                  example: NONE
+                availabilityImpact:
+                  type: string
+                  example: NONE
+                baseScore:
+                  type: string
+                  example: 6.4
+                confidentialityImpact:
+                  type: string
+                  example: PARTIAL
+                integrityImpact:
+                  type: string
+                  example: PARTIAL
+            exploitabilityScore:
+              type: number
+              example: 10.0
+            impactScore:
+              type: number
+              example: 6.5
+            severity:
+              type: string
+              example: MEDIUM
+            obtainAllPrivilege:
+              type: boolean
+            obtainOtherPrivilege:
+              type: boolean
+            obtainUserPrivilege:
+              type: boolean
+            userInteractionRequired:
+              type: boolean
+        cvssv3:
+          type: object
+          properties:
+            cvssV3:
+              type: object
+              properties:
+                attackComplexity:
+                  type: string
+                  example: LOW
+                attackVector:
+                  type: string
+                  example: NETWORK
+                availabilityImpact:
+                  type: string
+                  example: NONE
+                baseScore:
+                  type: string
+                  example: 9.1
+                baseSeverity:
+                  type: string
+                  example: CRITICAL
+                confidentialityImpact:
+                  type: string
+                  example: HIGH
+                integrityImpact:
+                  type: string
+                  example: HIGH
+                privilegesRequired:
+                  type: string
+                  example: NONE
+                scope:
+                  type: string
+                  example: UNCHANGED
+                userInteraction:
+                  type: string
+                  example: NONE
+                vectorString:
+                  type: string
+                  example: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N
+                version:
+                  type: string
+                  example: 3.0
+            exploitabilityScore:
+              type: number
+              example: 10.0
+            impactScore:
+              type: number
+              example: 6.5
+        nvdv2:
+          type: object
+          additionalProperties: true
+        reviews:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        cwes:
+          type: array
+          items:
+            type: string
+    Artifact:
+      type: object
+      description: The object stored in Repo in as few properties as possible
+      properties:
+        name:
+          type: string
+        family:
+          $ref: '#/components/schemas/ArtifactFamily'
+        channel:
+          type: string
+        subchannel:
+          type: string
+        download_count:
+          type: number
+        privacy:
+          $ref: '#/components/schemas/ChannelPrivacy'
+        file_count:
+          description: number of files (routes) in the artifact
+          type: number
+        cve_count:
+          description: number of CVE in the artifact files
+          type: number
+        metadata:
+          type: object
+          description: family specific fields such as base and version
+        updated_at:
+          type: string
+    ResourcePermissions:
+      type: object
+      properties:
+        scopes:
+          type: array
+          items:
+            type: string
+            example: channel:edit
+    ChannelStats:
+      type: object
+      description: Channel stats object
+      additionalProperties: false
+      required:
+      - stats
+      properties:
+        stats:
+          type: object
+          properties:
+            counters:
+              type: object
+              properties:
+                total_artifact_count:
+                  type: integer
+                  description: Total number of artifacts
+                  example: 10
+                package_count:
+                  type: integer
+                  description: Number of packages (conda, cran, python)
+                  example: 10
+                project_count:
+                  type: integer
+                  description: Number of anaconda projects
+                  example: 10
+                notebook_count:
+                  type: integer
+                  description: Number of notebooks
+                  example: 10
+                environment_count:
+                  type: integer
+                  description: Number of environments
+                  example: 10
+                mirror_count:
+                  type: integer
+                  description: Number of channel mirrors
+                  example: 10
+                group_count:
+                  type: integer
+                  description: Number of groups
+                  example: 10
+                subchannel_count:
+                  type: integer
+                  description: Number of subchannels in the channel
+                  example: 10
+                download_count:
+                  type: integer
+                  description: Number of downloads
+                  example: 10
+    ChannelHistory:
+      type: object
+      description: The object to return for Channel History
+      additionalProperties: false
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              event_type:
+                type: string
+                description: Event type
+                example: channel_created
+              data:
+                type: object
+                description: Event data
+                example: channel/subchannel name, access level
+              meta:
+                type: object
+                description: the captured event context
+                example: user
+              created:
+                type: number
+                description: timestamp of log creation
+    FilterLicenses:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+        enum:
+        - agpl
+        - gpl2
+        - gpl3
+        - lgpl
+        - bsd
+        - mit
+        - apache
+        - psf
+        - public_domain
+        - proprietary
+        - other
+        - none
+      description: List of license familities to look for. Empty array means all licenses
+    CVENotificationChanges:
+      type: array
+      additionalProperties: true
+      required:
+      - cve_id
+      - new_score
+      - new_status
+      properties:
+        cve_id:
+          type: string
+        old_score:
+          type: number
+        new_score:
+          type: string
+        old_status:
+          type: string
+        new_status:
+          type: string
+    ChannelFilters:
+      type: object
+      description: 'Filter directives for mirroring operation. Fields are optional. Can''t have include and exclude licenses together. This attribute is not returned by default in channels list
+
+        '
+      additionalProperties: false
+      properties:
+        conda:
+          type: object
+          additionalProperties: false
+          properties:
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+        cran:
+          type: object
+          additionalProperties: false
+          properties:
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+        python:
+          type: object
+          additionalProperties: false
+          properties:
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+    UploadFileType:
+      type: string
+      enum:
+      - conda1
+      - anaconda_cve
+      - anaconda_cve_index
+      - anaconda_project
+      - anaconda_env
+      - bdist_wheel
+      - bdist_egg
+      - sdist
+      - cran_source_package
+      - cran_binary_package
+      - jupyter_notebook
+      - docker_repository
+    FilterExcludeSpecs:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+      description: 'A list of MatchSpec strings, for excluding specific packages. General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
+
+        '
+    ChannelPrivacy:
+      description: channel privacy channel
+      type: string
+      enum:
+      - private
+      - authenticated
+      - public
+    Subchannel:
+      type: object
+      description: Nested channel object
+      properties:
+        id:
+          type: string
+        name:
+          description: This can be any string based name
+          example: dev, prod, test, main, utility, ui
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        description:
+          type: string
+        parent:
+          description: name of parent channel
+          type: string
+        privacy:
+          $ref: '#/components/schemas/ChannelPrivacy'
+        channel_type:
+          $ref: '#/components/schemas/ChannelType'
+        indexing_behavior:
+          $ref: '#/components/schemas/ChannelIndexingBehavior'
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/VirtualChannelSource'
+        created:
+          description: date created
+          type: string
+        updated:
+          description: date of last update
+          type: string
+    CVEsNotificationEventTypes:
+      type: string
+      enum:
+      - score_increased
+      - score_decreased
+      - status_changed
+    CVENotificationsHistory:
+      type: object
+      description: The object representing cve notification
+      properties:
+        file_name:
+          type: string
+        platform:
+          type: string
+        artifact_family:
+          $ref: '#/components/schemas/ArtifactFamily'
+        cves_count:
+          type: number
+        old_max_score:
+          type: number
+        new_max_score:
+          type: number
+        notification_changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CVENotificationChanges'
+        number_of_downloads:
+          type: number
+        created_at:
+          type: string
+    ChannelUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        description:
+          type: string
+        privacy:
+          $ref: '#/components/schemas/ChannelPrivacy'
+        filters:
+          $ref: '#/components/schemas/ChannelFilters'
+        settings:
+          $ref: '#/components/schemas/ChannelSettings'
+        indexing_behavior:
+          type: string
+          enum:
+          - default
+          - frozen
+    Channel:
+      type: object
+      description: Channel object
+      required:
+      - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        parent:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+          description: if present, the object is supposed to be a subchannel
+        description:
+          type: string
+        privacy:
+          $ref: '#/components/schemas/ChannelPrivacy'
+        channel_type:
+          $ref: '#/components/schemas/ChannelType'
+        indexing_behavior:
+          $ref: '#/components/schemas/ChannelIndexingBehavior'
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/VirtualChannelSource'
+        created:
+          description: date created
+          type: string
+        updated:
+          description: date of last update
+          type: string
+        artifact_count:
+          description: number of artifacts the channel currently has
+          type: number
+        download_count:
+          description: number of downloads
+          type: number
+        filters:
+          $ref: '#/components/schemas/ChannelFilters'
+    FilterOnlySpecs:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+      description: 'A list of MatchSpec strings, for explicit list of artifacts Doesn''t work together with licenses and exclude_specs General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
+
+        '
+    ChannelSettings:
+      type: object
+      description: 'Settings for cve notifications and other  channel related activities.
+
+        '
+      additionalProperties: false
+      properties:
+        cve_notifications:
+          type: object
+          additionalProperties: false
+          properties:
+            cve_score_increase:
+              description: Do you want to see cve notifications when cve score increases?
+              type: boolean
+            cve_score_decrease:
+              description: Do you want to see cve notifications when cve score decreases?
+              type: boolean
+            cve_status_change:
+              description: 'Do you want to see cve notifications when cve status changes? Currently by default "active", "mitigated", "cleared" statuses are considered.
+
+                '
+              type: boolean
+            cve_score_threshold:
+              description: 'Threshold value for which score changes should be considered. If the value is -1, then no threshold is considered -  Notifications will be shown for any score changes
+
+                '
+              type: number
+              minimum: -1
+              maximum: 10
+    CVEPackage:
+      type: object
+      description: CVE Package information
+      properties:
+        channel_name:
+          type: string
+          example: The Channel
+        parent_channel_name:
+          type: string
+          example: The Root Channel
+        cve_status:
+          $ref: '#/components/schemas/CVE_status'
+        artifact_family:
+          $ref: '#/components/schemas/ArtifactFamily'
+        artifact_type:
+          type: string
+          example: conda1
+        ckey:
+          type: string
+          example: osx-64/numpy-1.1.1.conda
+        common_name:
+          type: string
+          example: numpy
+        blob_sha256:
+          type: string
+          example: 82cf9c932145565158eb8ee67dba369851210aab
+        blob_size:
+          type: string
+          example: 1234
+    FileFiltered:
+      type: object
+      description: File filtered from latest mirror
+      properties:
+        channel_id:
+          type: string
+        channel_name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        ckey:
+          type: string
+          example: osx-64/numpy-1.1.1.conda
+        filtered_cause:
+          allOf:
+          - $ref: '#/components/schemas/FilteredCause'
+        change:
+          $ref: '#/components/schemas/RouteChange'
+        mirror_id:
+          type:
+          - string
+          - 'null'
+        created_at:
+          type: string
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+    Mirror:
+      type: object
+      description: Configured mirror object
+      properties:
+        mirror_id:
+          type: string
+        mirror_name:
+          type: string
+          description: Mirror name
+          pattern: ^[A-Za-z0-9_\-\/\.].*$
+        source_root:
+          type: string
+          format: uri
+          example: https://conda.anaconda.org/mewtwo
+          description: The upstream location of the channel to mirror.
+        mirror_type:
+          type: string
+          description: Type of upstream source to mirror
+          enum:
+          - conda
+          - python_simple
+          - cran
+          - cve
+          - sbom
+        mirror_mode:
+          type: string
+          default: passive
+          enum:
+          - active
+          - passive
+          - redirect
+        cron:
+          type: string
+        proxy:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'Proxy server URL configuration to use to attain access to upstream source.
+
+            '
+        filters:
+          type: object
+          additionalProperties: true
+          description: Filter directives that are specific to each individual artifact type.
+        state:
+          type: string
+          enum:
+          - pending
+          - running
+          - completed
+          - failed
+          - deleted
+          - stopping
+          - stopped
+        cause:
+          type: string
+          description: Mirror failure cause
+        sync_state:
+          $ref: '#/components/schemas/MirrorSyncState'
+        last_run_at:
+          type: string
+        next_run_at:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    FilteredCause:
+      type: string
+      enum:
+      - only_specs
+      - exclude_specs
+      - duplicated_legacy_conda
+      - cve
+      - license
+      - date
+      - signed
+      - platforms
+    RouteChange:
+      type: string
+      enum:
+      - added
+      - removed
+    CVEsBySeverity:
+      type: object
+      description: CVE counts grouped by severity based on NVD classification
+      properties:
+        critical:
+          type: integer
+        high:
+          type: integer
+        medium:
+          type: integer
+        low:
+          type: integer
+        none:
+          type: integer
+    ArtifactDependency:
+      type: object
+      description: Dependent package of an artifact
+      properties:
+        name:
+          type: string
+          example: numpy
+        version:
+          type: string
+          example: '>=8.9.2,<9.0b0'
+        artifact:
+          $ref: '#/components/schemas/Artifact'
+    ChannelCveHistory:
+      type: array
+      description: List of cve histories
+      items:
+        $ref: '#/components/schemas/CVENotificationsHistory'
+    CVE_status:
+      type: string
+      enum:
+      - reported
+      - active
+      - mitigated
+      - cleared
+      - disputed
+      - unknown
+    FilterIncludeSpecs:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+      description: 'A list of MatchSpec strings, for including from excluded list General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
+
+        '
+    ArtifactBulkActionRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        action:
+          type: string
+          enum:
+          - copy
+          - move
+          - delete
+          description: Bulk action name
+        target_channel:
+          type: string
+          description: Target channel name (only for copy and move actions)
+        target_subchannel:
+          type: string
+          description: Target subchannel name (target_channel is also required as a parent)
+        items:
+          type: array
+          items:
+            type: object
+            description: actionable artifact items
+            required:
+            - name
+            - family
+            properties:
+              name:
+                type: string
+              family:
+                $ref: '#/components/schemas/ArtifactFamily'
+              ckey:
+                type: string
+      required:
+      - action
+      - items
+    VirtualChannelSource:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        parent_name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+    FileSignatureVerificationRequest:
+      type: object
+      properties:
+        metadata:
+          type: object
+          properties:
+            md5:
+              type: string
+            name:
+              type: string
+            size:
+              type: number
+            build:
+              type: string
+            sha256:
+              type: string
+            subdir:
+              type: string
+            depends:
+              type: array
+              items:
+                type: string
+            license:
+              type: string
+            version:
+              type: string
+            build_number:
+              type: number
+          required:
+          - md5
+          - name
+          - size
+          - build
+          - sha256
+          - subdir
+          - depends
+          - license
+          - version
+          - build_number
+        signatures:
+          type: object
+          additionalProperties: false
+          properties:
+            public_key:
+              pattern: ^[a-f0-9]{64}$
+              type: string
+            signature:
+              type: string
+              pattern: ^[a-f0-9]{128}$
+          required:
+          - signature
+          - public_key
+      required:
+      - metadata
+      - signatures
+    ChannelIndexingBehavior:
+      description: channel indexing behavior
+      type: string
+      default: default
+      enum:
+      - default
+      - frozen
+    ArtifactFile:
+      type: object
+      description: The file associated with an artifact
+      properties:
+        channel:
+          type: string
+          description: artifact's channel
+        subchannel:
+          type: string
+          description: artifact's subchannel
+        ckey:
+          type: string
+        family:
+          $ref: '#/components/schemas/ArtifactFamily'
+        name:
+          type: string
+          description: common_name of the artifact
+        metadata:
+          type: object
+          description: artifact_type specific fields such as base and version
+        signatures:
+          type: object
+          description: list of signatures for this artifact
+        size:
+          type: number
+          description: size of the artifact in bytes
+          example: 12452
+        url:
+          type: string
+          description: the location of the file for downloading
+        cve_count:
+          type: number
+          example: 1
+        cve_score:
+          type: number
+          example: 9.8
+        cve_scores:
+          type: object
+          properties:
+            cvssv2:
+              type: number
+              example: 4.3
+            cvssv3:
+              type: number
+              example: 9.8
+        cve_status:
+          $ref: '#/components/schemas/CVE_status'
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    MirrorSyncState:
+      type: object
+      additionalProperties: false
+      description: State of current mirror synchronization
+      properties:
+        count:
+          type: object
+          additionalProperties: false
+          properties:
+            removed:
+              type: integer
+              description: Number of packages, removed from the channel
+            passive:
+              type: integer
+              description: Number of passively mirrored packages
+            active:
+              type: integer
+              description: Number of pulled packages
+            active_planned:
+              type: integer
+              description: Number of total planned packages for pulling
+            failed:
+              type: integer
+              description: Number of failed packages to pull
+            package_stat:
+              type: object
+              additionalProperties: false
+              properties:
+                primary:
+                  type: integer
+                  description: Number of primary packages listed in only specs mirrored
+                dependencies:
+                  type: integer
+                  description: Number of dependencies packages mirrored
+            mirror_filtered:
+              type: object
+              additionalProperties: false
+              properties:
+                cve:
+                  type: integer
+                  description: Number of packages removed because of CVE filter
+                date:
+                  type: integer
+                  description: Number of packages removed because of date filter
+                signed:
+                  type: integer
+                  description: Number of packages removed because of missing signatures
+                license:
+                  type: integer
+                  description: Number of packages removed because of license filter
+                only_specs:
+                  type: integer
+                  description: Number of packages removed because of "only packages" filter
+                exclude_specs:
+                  type: integer
+                  description: Number of packages removed because of exclude/include filter
+                duplicated_legacy_conda:
+                  type: integer
+                  description: \ Number of packages removed because of legacy package format and having corresponding .conda package
+            channel_filtered:
+              type: object
+              additionalProperties: false
+              properties:
+                license:
+                  type: integer
+                exclude_specs:
+                  type: integer
+        last_ckey:
+          type: string
+        last_exception:
+          type: string
+        total_steps_count:
+          type: integer
+        current_step_number:
+          type: integer
+        current_step_description:
+          type: string
+        current_step_percentage:
+          type: integer
+        bytes_transfered:
+          type: integer
+          description: Total number of bytes transfered during active mirroring
+    MirrorConfiguration:
+      type: object
+      description: Information about mirroring configuration
+      required:
+      - mirror_name
+      - source_root
+      - mirror_type
+      - mirror_mode
+      - cron
+      properties:
+        mirror_name:
+          type: string
+          description: Mirror name
+          pattern: ^[A-Za-z0-9_\-\/\.].*$
+        source_root:
+          type: string
+          format: uri
+          example: https://conda.anaconda.org/mewtwo
+          description: The upstream location of the channel to mirror.
+        mirror_type:
+          type: string
+          description: Type of upstream source to mirror
+          enum:
+          - conda
+          - python_simple
+          - cran
+          - cve
+          - sbom
+        mirror_mode:
+          type: string
+          default: passive
+          enum:
+          - active
+          - passive
+          - redirect
+        cron:
+          type: string
+          description: 'A five-field cron expression indicating the schedule for active synchronization.
+
+            '
+        proxy:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'Proxy server URL configuration to use to attain access to upstream source.
+
+            '
+        filters:
+          type: object
+          description: Filter directives that are specific to each individual mirror type.
+          properties:
+            subdirs:
+              type: array
+              uniqueItems: true
+              items:
+                type: string
+              description: Conda specific subdirs. Empty array means include all subdirs
+              example:
+              - osx-64
+              - linux-64
+              - noarch
+            cve_score_threshold:
+              type: number
+              description: Any packages with CVE score higher than that will be filtered out
+              example: 5.9
+            cve_score_exceptions:
+              type: array
+              uniqueItems: true
+              items:
+                type: string
+              description: CVE ids that are excluded from cve score threshold
+              example:
+              - CVE-2022-21372
+              - CVE-2019-1348
+            exclude_non_curated_cve:
+              type: boolean
+              description: Omit mirroring files associated to non curated CVEs
+            exclude_cve_statuses:
+              type: array
+              uniqueItems: true
+              items:
+                $ref: '#/components/schemas/CVE_status'
+              description: Omit mirroring files associated to non curated CVEs
+            dedupe_conda_legacy:
+              type: boolean
+              description: Ignore legacy .tar.bz2 conda packages when .conda is available
+            projects:
+              type: array
+              uniqueItems: true
+              items:
+                type: string
+              description: python_simple specific list of projects. empty array means all projects
+              example:
+              - numpy
+              - pandas
+              - scikit-learn
+            packages:
+              type: array
+              uniqueItems: true
+              items:
+                type: string
+              description: CRAN specific list of packages
+              example:
+              - dplyr
+              - MASS
+              - RPostgres
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+            only_specs:
+              $ref: '#/components/schemas/FilterOnlySpecs'
+            include_dependencies:
+              type: boolean
+              default: false
+              description: '* If this is true, then dependencies will be mirrored
+
+                * The value should be True / enabled only if only_specs list is not empty.
+
+                '
+            date_from:
+              type: string
+              format: date
+              description: bottom date YYYY-mm-dd when package published. Conda-only
+            date_to:
+              type: string
+              format: date
+              description: upper date YYYY-mm-dd when package was published. Conda-only
+            only_signed:
+              type: boolean
+              default: false
+              description: Unsigned packages will be filtered out. Conda-only
+        run_now:
+          type: boolean
+          default: false
+          description: 'Does a one-time, immediate, and off-schedule run of the mirroring operation.
+
+            '
+  parameters:
+    to-date-parameter:
+      name: to_date
+      description: ending timestamp for filtering data
+      in: query
+      schema:
+        type: string
+        format: date
+        description: upper date YYYY-mm-dd
+    offset-query:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+        default: 0
+      description: the offset of the result set
+    only_names-query:
+      in: query
+      name: only_names
+      description: list of packages, search for. exact names, separated by comma
+      schema:
+        type: array
+        items:
+          type: string
+    include-subchannels:
+      in: query
+      name: include_subchannels
+      description: option to include or exclude subchannels from the response
+      schema:
+        type: boolean
+        default: false
+    ckey-query:
+      name: ckey
+      in: query
+      schema:
+        type: string
+      description: ckey
+    package-state-query:
+      in: query
+      name: state
+      description: active or passive state
+      schema:
+        type: string
+        enum:
+        - active
+        - passive
+    ckey-parameter:
+      name: ckey
+      in: path
+      required: true
+      schema:
+        type: string
+        format: path
+    min-download-count-query:
+      in: query
+      name: min_download_count
+      description: Displays notifications only for packages with provided minimum number of downloads
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    include-reserved-query:
+      in: query
+      name: include_reserved
+      description: option to include reserved channels in response
+      schema:
+        type: boolean
+        default: false
+    with_cve_counts_by_severity-query:
+      in: query
+      name: with_cve_counts_by_severity
+      required: false
+      schema:
+        type: boolean
+        default: false
+      description: return cve counts by severity.
+    event-types-query:
+      in: query
+      name: event_types
+      required: false
+      description: comma separated list of event types to filter
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - channel_created
+          - channel_updated
+          - channel_deleted
+          - mirror_registered
+          - mirror_deleted
+          - mirroring_completed
+          - mirroring_failed
+          - artifact_registered
+          - artifact_removed
+          - artifact_copied
+          - artifact_generated
+          - artifact_metadata_updated
+          - artifact_downloaded
+    cve_id-parameter:
+      name: cve_id
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 1
+    cve_status-query:
+      in: query
+      name: status
+      description: CVE artifact status (may be comma-separated)
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/CVE_status'
+    search-query:
+      in: query
+      name: q
+      description: the string to search on
+      schema:
+        type: string
+    min_packages_count-query:
+      in: query
+      name: min_packages_count
+      description: Returns the CVE with at least provided minimum score
+      schema:
+        type: integer
+        minimum: 0
+    cve-notifications-event-type-query:
+      in: query
+      name: event_types
+      description: filter CVE Notifications by event types
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/CVEsNotificationEventTypes'
+    mirror-sort-query:
+      in: query
+      name: sort
+      description: property to sort mirrors (may be comma-separated)
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - mirror_name
+          - -mirror_name
+          - created_at
+          - -created_at
+          - routes_mirrored
+          - -routes_mirrored
+          - mirror_type
+          - -mirror_type
+          - updated_at
+          - -updated_at
+          - state
+          - -state
+    channel-sort-query:
+      in: query
+      name: sort
+      description: property to sort channels (may be comma-separated)
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - name
+          - -name
+          - updated_at
+          - -updated_at
+    artifact-sort-query:
+      in: query
+      name: sort
+      description: property to sort artifacts (may be comma-separated)
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - common_name
+          - -common_name
+          - download_count
+          - -download_count
+          - updated_at
+          - -updated_at
+    task-manager-schedule-query:
+      name: task_manager_schedule
+      in: query
+      description: if true, schedule mirroring in task manager component
+      schema:
+        type: boolean
+        default: false
+    cve_extra_info-query:
+      in: query
+      name: cve_extra_info
+      description: In addition to relevant cve_id, score and status provide description, etc.
+      schema:
+        type: boolean
+        default: false
+    platform-query:
+      name: platform
+      in: query
+      schema:
+        type: string
+      description: filter for the platform
+    mirror_id-parameter:
+      name: mirror_id
+      in: path
+      required: true
+      schema:
+        type: string
+    artifact_family-parameter:
+      name: artifact_family
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/ArtifactFamily'
+    limit-query:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 100
+      description: the number of results in the result set
+    timestamp-parameter:
+      name: timestamp
+      description: exact timestamp for filtering data
+      in: query
+      schema:
+        type: string
+        format: date-time
+    architectures-query:
+      in: query
+      name: architectures
+      description: the package architectures list to search on
+      schema:
+        type: array
+        example:
+        - linux-64
+        - osx-64
+        - win-32
+        - win-64
+        items:
+          type: string
+    max-impact-score-query:
+      in: query
+      name: max_score
+      description: Returns the CVE Notifications below provided maximum impact score
+      schema:
+        type: number
+        minimum: 0
+        maximum: 10
+    subchannel-parameter:
+      name: subchannel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
+    artifact_name-query:
+      in: query
+      name: artifact
+      description: package name to search on
+      schema:
+        type: string
+    channel-parameter:
+      name: channel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
+    omit_cve-query:
+      in: query
+      name: omit_cve
+      description: Explicitly don't return CVE data
+      schema:
+        type: boolean
+        default: false
+    include_nonsearchable-query:
+      in: query
+      name: include_nonsearchable
+      description: Include also nonsearchable files
+      schema:
+        type: boolean
+        default: false
+    from-date-parameter:
+      name: from_date
+      description: starting timestamp for filtering data
+      in: query
+      schema:
+        type: string
+        format: date
+        description: bottom date YYYY-mm-dd
+    cve-name-query:
+      in: query
+      name: cve_name
+      description: the exact CVE id to search on
+      example: CVE-2018-1000805
+      schema:
+        type: string
+    created-max-query:
+      in: query
+      name: created_max
+      description: date of creation (in combination with created_min field as start date)
+      schema:
+        type: string
+    version-query:
+      in: query
+      name: version
+      description: Package Version
+      schema:
+        type: string
+    max_cve_score-query:
+      in: query
+      name: max_score
+      description: Returns files below requesed max_cve_score
+      schema:
+        type: number
+        minimum: 0
+        maximum: 10
+    min-impact-score-query:
+      in: query
+      name: min_score
+      description: Returns the CVE Notifications with at least provided minimum impact score
+      schema:
+        type: number
+        minimum: 0
+        maximum: 10
+    artifact_family-query:
+      name: artifact_family
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/ArtifactFamily'
+    created-min-query:
+      in: query
+      name: created_min
+      description: date of creation in string
+      schema:
+        type: string
+    min_cve_score-query:
+      in: query
+      name: min_score
+      description: Returns the CVE with at least provided minimum score
+      schema:
+        type: number
+        minimum: 0
+        maximum: 10
+    artifact_name-parameter:
+      name: artifact_name
+      in: path
+      required: true
+      description: the unique name of the artifact
+      schema:
+        type: string
+        example: numpy
+    cve-sort-query:
+      in: query
+      name: sort
+      description: property to sort CVEs (may be comma-separated)
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - score
+          - -score
+          - published_at
+          - -published_at
+          - modified_at
+          - -modified_at
+          - created_at
+          - -created_at
+    signature-artifact_family-parameter:
+      in: path
+      name: artifact_family
+      required: true
+      schema:
+        type: string
+        enum:
+        - conda
+    channel-ids-query:
+      in: query
+      name: ids
+      required: false
+      description: the channel ids to filter for
+      schema:
+        type: array
+        items:
+          type: string
+    file-sort-query:
+      in: query
+      name: sort
+      description: property to sort artifact files (may be comma-separated)
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - ckey
+          - -ckey
+          - updated_at
+          - -updated_at
+          - blob_size
+          - -blob_size
+          - metadata_version
+          - -metadata_version
+          - metadata_platforms
+          - -metadata_platforms
+  responses:
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: Creating/updating resource raises a conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: repo.auth.token_provider.decode_token
+    user_token:
+      type: apiKey
+      name: X-Auth
+      in: header
+      x-apikeyInfoFunc: repo.auth.token_provider.decode_user_private_token

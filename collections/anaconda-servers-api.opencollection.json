@@ -1,0 +1,154 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Servers API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Servers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Check the health of the servers API",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/servers/health"
+          },
+          "docs": "Check the health of the servers API"
+        },
+        {
+          "info": {
+            "name": "Get all servers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/servers",
+            "params": [
+              {
+                "name": "fileId",
+                "value": "",
+                "type": "query",
+                "description": "Filter servers by model file ID"
+              },
+              {
+                "name": "tag",
+                "value": "",
+                "type": "query",
+                "description": "Filter servers by tag"
+              },
+              {
+                "name": "port",
+                "value": "",
+                "type": "query",
+                "description": "Filter servers by port"
+              },
+              {
+                "name": "host",
+                "value": "",
+                "type": "query",
+                "description": "Filter servers by host"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter servers by status"
+              }
+            ]
+          },
+          "docs": "Get all servers"
+        },
+        {
+          "info": {
+            "name": "Create a new server",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "{{baseUrl}}/api/servers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a new server"
+        },
+        {
+          "info": {
+            "name": "Get server details by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/servers/:serverId",
+            "params": [
+              {
+                "name": "serverId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the server to retrieve"
+              }
+            ]
+          },
+          "docs": "Get server details by ID"
+        },
+        {
+          "info": {
+            "name": "Control server state (start/stop)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/servers/:serverId",
+            "params": [
+              {
+                "name": "serverId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the server to control"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Control server state (start/stop)"
+        },
+        {
+          "info": {
+            "name": "Delete a server",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/servers/:serverId",
+            "params": [
+              {
+                "name": "serverId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the server to delete"
+              }
+            ]
+          },
+          "docs": "Delete a server"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

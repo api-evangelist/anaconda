@@ -1,0 +1,295 @@
+openapi: 3.2.0
+info:
+  version: '6.5'
+  title: Anaconda Server Mirrors API
+servers:
+- url: https://api.anaconda.cloud/api
+tags:
+- name: mirrors
+paths:
+  /mirrors:
+    get:
+      tags:
+      - mirrors
+      summary: Get list of mirrors
+      operationId: repo.endpoints.mirrors.get_all
+      parameters:
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/mirror-sort-query'
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  mirrors:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MirrorWithChannel'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+components:
+  responses:
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    ChannelPrivacy:
+      description: channel privacy channel
+      type: string
+      enum:
+      - private
+      - authenticated
+      - public
+    MirrorWithChannel:
+      type: object
+      required:
+      - id
+      - name
+      - source_root
+      - type
+      - mode
+      - cron
+      - state
+      - last_run_at
+      - created_at
+      - updated_at
+      - channel
+      - filters
+      description: Mirror with appropriate channel details
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          description: Mirror name
+          pattern: ^[A-Za-z0-9_\-\/\.].*$
+        source_root:
+          type: string
+          format: uri
+          example: https://conda.anaconda.org/mewtwo
+          description: The upstream location of the channel to mirror.
+        type:
+          type: string
+          description: Type of upstream source to mirror
+          enum:
+          - conda
+          - python_simple
+          - cran
+          - cve
+          - sbom
+        mode:
+          type: string
+          default: passive
+          enum:
+          - active
+          - passive
+          - redirect
+        state:
+          type: string
+          enum:
+          - pending
+          - running
+          - completed
+          - failed
+          - deleted
+          - stopping
+          - stopped
+        sync_state:
+          $ref: '#/components/schemas/MirrorSyncState'
+        last_run_at:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        channel:
+          type: object
+          properties:
+            name:
+              type: string
+              pattern: ^[a-z][a-z0-9_\-]*$
+            privacy:
+              $ref: '#/components/schemas/ChannelPrivacy'
+        subchannel:
+          type: object
+          properties:
+            name:
+              type: string
+              pattern: ^[a-z][a-z0-9_\-]*$
+            privacy:
+              $ref: '#/components/schemas/ChannelPrivacy'
+    MirrorSyncState:
+      type: object
+      additionalProperties: false
+      description: State of current mirror synchronization
+      properties:
+        count:
+          type: object
+          additionalProperties: false
+          properties:
+            removed:
+              type: integer
+              description: Number of packages, removed from the channel
+            passive:
+              type: integer
+              description: Number of passively mirrored packages
+            active:
+              type: integer
+              description: Number of pulled packages
+            active_planned:
+              type: integer
+              description: Number of total planned packages for pulling
+            failed:
+              type: integer
+              description: Number of failed packages to pull
+            package_stat:
+              type: object
+              additionalProperties: false
+              properties:
+                primary:
+                  type: integer
+                  description: Number of primary packages listed in only specs mirrored
+                dependencies:
+                  type: integer
+                  description: Number of dependencies packages mirrored
+            mirror_filtered:
+              type: object
+              additionalProperties: false
+              properties:
+                cve:
+                  type: integer
+                  description: Number of packages removed because of CVE filter
+                date:
+                  type: integer
+                  description: Number of packages removed because of date filter
+                signed:
+                  type: integer
+                  description: Number of packages removed because of missing signatures
+                license:
+                  type: integer
+                  description: Number of packages removed because of license filter
+                only_specs:
+                  type: integer
+                  description: Number of packages removed because of "only packages" filter
+                exclude_specs:
+                  type: integer
+                  description: Number of packages removed because of exclude/include filter
+                duplicated_legacy_conda:
+                  type: integer
+                  description: \ Number of packages removed because of legacy package format and having corresponding .conda package
+            channel_filtered:
+              type: object
+              additionalProperties: false
+              properties:
+                license:
+                  type: integer
+                exclude_specs:
+                  type: integer
+        last_ckey:
+          type: string
+        last_exception:
+          type: string
+        total_steps_count:
+          type: integer
+        current_step_number:
+          type: integer
+        current_step_description:
+          type: string
+        current_step_percentage:
+          type: integer
+        bytes_transfered:
+          type: integer
+          description: Total number of bytes transfered during active mirroring
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+  parameters:
+    offset-query:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+        default: 0
+      description: the offset of the result set
+    limit-query:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 100
+      description: the number of results in the result set
+    mirror-sort-query:
+      in: query
+      name: sort
+      description: property to sort mirrors (may be comma-separated)
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - mirror_name
+          - -mirror_name
+          - created_at
+          - -created_at
+          - routes_mirrored
+          - -routes_mirrored
+          - mirror_type
+          - -mirror_type
+          - updated_at
+          - -updated_at
+          - state
+          - -state
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: repo.auth.token_provider.decode_token
+    user_token:
+      type: apiKey
+      name: X-Auth
+      in: header
+      x-apikeyInfoFunc: repo.auth.token_provider.decode_user_private_token

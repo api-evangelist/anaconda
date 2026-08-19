@@ -1,0 +1,35 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "AI Navigator AI Navigator API API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "AI Navigator API",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "GET /api",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api"
+          },
+          "docs": "Returns application information"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

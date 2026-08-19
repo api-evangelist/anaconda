@@ -1,0 +1,210 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Server System API",
+    "version": "6.5"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "system",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get system information such as health, version, etc.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/system"
+          },
+          "docs": "Get system information such as health, version, etc."
+        },
+        {
+          "info": {
+            "name": "Get system stats such as disk usage, etc.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/system/stats",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get system stats such as disk usage, etc."
+        },
+        {
+          "info": {
+            "name": "Get system metrics in OpenMetrics format",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/system/metrics",
+            "params": [
+              {
+                "name": "name[]",
+                "value": "",
+                "type": "query",
+                "description": "metrics name filter"
+              }
+            ]
+          },
+          "docs": "Get system metrics in OpenMetrics format"
+        },
+        {
+          "info": {
+            "name": "Get all possible scopes in system",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/system/scopes",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all possible scopes in system"
+        },
+        {
+          "info": {
+            "name": "Get all possible resource types, used for role management",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/system/resource_types",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get all possible resource types, used for role management"
+        },
+        {
+          "info": {
+            "name": "Get current license information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/system/license",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get current license information"
+        },
+        {
+          "info": {
+            "name": "Add license key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/system/license",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Add license key"
+        },
+        {
+          "info": {
+            "name": "Update or re-activate license key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/system/license",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update or re-activate license key"
+        },
+        {
+          "info": {
+            "name": "Get current system settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/system/settings",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get current system settings"
+        },
+        {
+          "info": {
+            "name": "Update system settings",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/system/settings",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Update system settings"
+        },
+        {
+          "info": {
+            "name": "Action to cleanup given list of blobs",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/system/blob_cleanup",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "## Clears the blobs based on the details (sha256) provided by admin\n"
+        },
+        {
+          "info": {
+            "name": "Action to cleanup orphan blobs for users with system management roles",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.anaconda.cloud/api/system/blob_cleanup",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "## Finds and clears all orphan blobs that are not index artifacts\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,477 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anaconda Server Users API",
+    "version": "6.5"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "users",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Update user token metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/account/tokens/:token_id/metadata",
+            "params": [
+              {
+                "name": "token_id",
+                "value": "",
+                "type": "path",
+                "description": "Id of the token position, not an X-Auth or JWT token itself!"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Updates token metadata\n"
+        },
+        {
+          "info": {
+            "name": "Get user tokens for current account by admin user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/users/:user_id/tokens",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Returns the list of created token by this user, either `scope` or `resource` type. Token list includes also `token_hash`.\n"
+        },
+        {
+          "info": {
+            "name": "Create a new user token by admin user",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/users/:user_id/tokens",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Give access to allow user to do specific actions on one or more resources"
+        },
+        {
+          "info": {
+            "name": "Bulk update of token information for users",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/users/tokens",
+            "params": [
+              {
+                "name": "with_hash",
+                "value": "",
+                "type": "query",
+                "description": "get token endpoint by default returns token hash."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "By default reissues a new tokens and returns a UsersTokens object with tokens,  successful_updated_users and unsuccessful_updated_users attributes. If `reissue_token` query parameter is false, then tokens are not reissued and old values are used. The api returns `null` as a token in this case.\n"
+        },
+        {
+          "info": {
+            "name": "Bulk update of token information for users",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/users/tokens",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "By default reissues a new tokens and returns a UsersTokens object with tokens,  successful_updated_users and unsuccessful_updated_users attributes. If `reissue_token` query parameter is false, then tokens are not reissued and old values are used. The api returns `null` as a token in this case.\n"
+        },
+        {
+          "info": {
+            "name": "Update user token information",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/users/:user_id/tokens/:token_id",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "token_id",
+                "value": "",
+                "type": "path",
+                "description": "Id of the token position, not an X-Auth or JWT token itself!"
+              },
+              {
+                "name": "reissue_token",
+                "value": "",
+                "type": "query",
+                "description": "update token endpoint by default reissues a new token."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "By default reissues a new token and returns in `token` attribute. If `reissue_token` query parameter is false, then token is not reissued and old value is used. The api returns `null` as a token in this case.\n"
+        },
+        {
+          "info": {
+            "name": "Delete specific user token",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.anaconda.cloud/api/users/:user_id/tokens/:token_id",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "token_id",
+                "value": "",
+                "type": "path",
+                "description": "Id of the token position, not an X-Auth or JWT token itself!"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete specific user token"
+        },
+        {
+          "info": {
+            "name": "Update user token metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/users/:user_id/tokens/:token_id/metadata",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "token_id",
+                "value": "",
+                "type": "path",
+                "description": "Id of the token position, not an X-Auth or JWT token itself!"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Updates token metadata\n"
+        },
+        {
+          "info": {
+            "name": "Get list of users for the group editing",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/users",
+            "params": [
+              {
+                "name": "q",
+                "value": "",
+                "type": "query",
+                "description": "the string to search on"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get list of users for the group editing"
+        },
+        {
+          "info": {
+            "name": "Admin Only! Create user (handled by IDP for now)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/users",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Admin only. This can only be done by the logged in user."
+        },
+        {
+          "info": {
+            "name": "Admin Only! get individual user by user id (handled by IDP for now)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/users/:user_id",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Admin Only! get individual user by user id (handled by IDP for now)"
+        },
+        {
+          "info": {
+            "name": "Admin Only! Edit the individual user role by user id",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/users/:user_id",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Admin Only! Edit the individual user role by user id"
+        },
+        {
+          "info": {
+            "name": "Admin Only! delete user (handled by IDP for now)",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.anaconda.cloud/api/users/:user_id",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Admin Only! delete user (handled by IDP for now)"
+        },
+        {
+          "info": {
+            "name": "Get the activity logs for the specific user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/users/:user_id/activity",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "the offset of the result set"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "the number of results in the result set"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the activity logs for the specific user"
+        },
+        {
+          "info": {
+            "name": "Get the list of available roles",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.anaconda.cloud/api/roles",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Get the list of available roles"
+        },
+        {
+          "info": {
+            "name": "Adds a new role",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anaconda.cloud/api/roles",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Adds a new role"
+        },
+        {
+          "info": {
+            "name": "Edit the role",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.anaconda.cloud/api/roles/:role_id",
+            "params": [
+              {
+                "name": "role_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Edit the role"
+        },
+        {
+          "info": {
+            "name": "Delete the role",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.anaconda.cloud/api/roles/:role_id",
+            "params": [
+              {
+                "name": "role_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "Delete the role"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

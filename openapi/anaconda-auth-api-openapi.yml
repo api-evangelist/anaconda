@@ -1,0 +1,157 @@
+openapi: 3.2.0
+info:
+  version: '6.5'
+  title: Anaconda Server Auth API
+  description: Authentication endpoints
+servers:
+- url: https://api.anaconda.cloud/api
+tags:
+- name: auth
+  description: Authentication endpoints
+paths:
+  /auth/login:
+    post:
+      tags:
+      - auth
+      summary: Authenticate user
+      operationId: repo.endpoints.auth.login
+      requestBody:
+        description: Get user token by providing credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Token information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /auth/logout:
+    get:
+      tags:
+      - auth
+      operationId: repo.endpoints.auth.logout_get
+      responses:
+        '302':
+          description: successful redirect a user
+  /auth/authorize:
+    get:
+      tags:
+      - auth
+      summary: Initiates authentication flow
+      operationId: repo.endpoints.auth.openidc_authorize
+      responses:
+        '200':
+          description: returns the redirect_rul
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  redirect_url:
+                    type: string
+  /auth/callback/kc:
+    get:
+      tags:
+      - auth
+      parameters:
+      - in: query
+        name: code
+        required: true
+        schema:
+          type: string
+        description: authorization_code from OpenID provider
+      - in: query
+        name: state
+        schema:
+          type: string
+      - in: query
+        name: redirect_uri
+        schema:
+          type: string
+      summary: Callback endpoint, used for final redirect from the OpenID connect provider
+      operationId: repo.endpoints.auth.openidc_callback_keycloak
+      description: kc means Keycloak, could be potentially extended with different providers
+      responses:
+        '302':
+          description: redirects to index page and sets the corresponding cookies
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+components:
+  responses:
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - username
+      - password
+      properties:
+        username:
+          type: string
+          minLength: 1
+          example: user@anaconda.com
+        password:
+          type: string
+          minLength: 1
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: repo.auth.token_provider.decode_token
+    user_token:
+      type: apiKey
+      name: X-Auth
+      in: header
+      x-apikeyInfoFunc: repo.auth.token_provider.decode_user_private_token

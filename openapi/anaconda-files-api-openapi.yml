@@ -1,0 +1,341 @@
+openapi: 3.2.0
+info:
+  title: Anaconda Files API
+  version: 1.0.0
+  description: 'Operations tagged Files across 2 of this provider''s published API definitions: anaconda-ai-navigator-openapi-original.json, anaconda-desktop-openapi-original.json. Each path carries the servers of the definition it was published in.'
+security:
+- bearerAuth: []
+tags:
+- name: Files
+paths:
+  /models/{modelId}/files:
+    get:
+      summary: List all files for a specific model
+      tags:
+      - Files
+      parameters:
+      - in: path
+        name: modelId
+        required: true
+        schema:
+          type: string
+        description: ID of the model
+      - in: query
+        name: downloaded
+        schema:
+          type: boolean
+        description: Filter to only show downloaded files
+      responses:
+        '200':
+          description: List of model files retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ModelFile'
+        '404':
+          description: Model not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/models/{modelId}/files/{fileId}:
+    get:
+      summary: Get details of a specific model file
+      tags:
+      - Files
+      parameters:
+      - in: path
+        name: modelId
+        required: true
+        schema:
+          type: string
+        description: ID of the model
+      - in: path
+        name: fileId
+        required: true
+        schema:
+          type: string
+        description: ID of the file
+      responses:
+        '200':
+          description: Model file details retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ModelFile'
+        '404':
+          description: Model or file not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      summary: Update download status of a model file
+      tags:
+      - Files
+      parameters:
+      - in: path
+        name: modelId
+        required: true
+        schema:
+          type: string
+        description: ID of the model
+      - in: path
+        name: fileId
+        required: true
+        schema:
+          type: string
+        description: ID of the file
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DownloadAction'
+      responses:
+        '200':
+          description: Download status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DownloadStatus'
+        '400':
+          description: Invalid action
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Model or file not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a model file
+      tags:
+      - Files
+      parameters:
+      - in: path
+        name: modelId
+        required: true
+        schema:
+          type: string
+        description: ID of the model
+      - in: path
+        name: fileId
+        required: true
+        schema:
+          type: string
+        description: ID of the file
+      responses:
+        '200':
+          description: File deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+        '404':
+          description: Model or file not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    ModelFile:
+      type: object
+      required:
+      - id
+      - name
+      - downloadUrl
+      - sizeBytes
+      - sha256checksum
+      - quantization
+      - format
+      - maxRamUsage
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the model file
+        name:
+          type: string
+          description: Name of the model file
+        downloadUrl:
+          type: string
+          description: URL to download the model file
+        sizeBytes:
+          type: number
+          description: Size of the model file in bytes
+        sha256checksum:
+          type: string
+          description: SHA-256 hash of the model file for integrity verification
+        quantization:
+          type: string
+          description: Quantization method used for the model
+        format:
+          type: string
+          description: File format of the model
+        isDownloaded:
+          type: boolean
+          description: Whether the model file has been downloaded locally
+        maxRamUsage:
+          type: number
+          description: Maximum RAM required to run the model in bytes
+        downloadStatus:
+          type: object
+          description: Information about the download status of the file
+          properties:
+            status:
+              type: string
+              enum:
+              - not_started
+              - in_progress
+              - paused
+              - completed
+              description: Current status of the download
+            progress:
+              $ref: '#/components/schemas/Download'
+            localPath:
+              type: string
+              description: Local path where the file is stored (only when status is completed)
+    DownloadAction:
+      type: object
+      required:
+      - action
+      properties:
+        action:
+          type: string
+          enum:
+          - start
+          - pause
+          - resume
+          description: Action to perform on the download
+    DownloadStatus:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - status
+          properties:
+            status:
+              type: string
+              enum:
+              - in_progress
+              - paused
+              - completed
+              description: Current status of the download
+            progress:
+              $ref: '#/components/schemas/Download'
+              description: Download progress information (only when status is in_progress or paused)
+            localPath:
+              type: string
+              description: Local path where the file is stored (only when status is completed)
+    Download:
+      type: object
+      required:
+      - fileId
+      - modelId
+      - filename
+      - downloadedRatio
+      - transferredBytes
+      - totalBytes
+      - paused
+      - downloadTimeTaken
+      - averageMbps
+      properties:
+        fileId:
+          type: string
+          description: ID of the file being downloaded
+        modelId:
+          type: string
+          description: ID of the model being downloaded
+        filename:
+          type: string
+          description: Name of the file being downloaded
+        downloadedRatio:
+          type: number
+          description: Percentage of download completion (0-1)
+        transferredBytes:
+          type: number
+          description: Number of bytes transferred
+        totalBytes:
+          type: number
+          description: Total size of the file in bytes
+        paused:
+          type: boolean
+          description: Whether the download is paused
+        downloadTimeTaken:
+          type: number
+          description: Time taken for download in milliseconds
+        averageMbps:
+          type: number
+          description: Average download speed in Mbps
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              enum:
+              - INVALID_REQUEST
+              - DATABASE_NOT_RUNNING
+              - INTERNAL_SERVER_ERROR
+              - INVALID_SERVER_ID
+              - SERVER_NOT_RUNNING
+              - SERVER_RUNNING
+              - INTERNAL_SERVER_ERROR
+            message:
+              type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: UUID
+      description: Enter your API key here
+x-refined-from:
+- anaconda-ai-navigator-openapi-original.json
+- anaconda-desktop-openapi-original.json

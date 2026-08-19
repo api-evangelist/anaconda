@@ -1,0 +1,1434 @@
+openapi: 3.2.0
+info:
+  version: '6.5'
+  title: Anaconda Server Cves API
+servers:
+- url: https://api.anaconda.cloud/api
+tags:
+- name: cves
+paths:
+  /channels/{channel_name}/cves_history:
+    get:
+      tags:
+      - cves
+      summary: Get the cve history logs of the channel
+      operationId: repo.endpoints.channels.channels_cve_history.get_cve_channel_history
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/from-date-parameter'
+      - $ref: '#/components/parameters/to-date-parameter'
+      - $ref: '#/components/parameters/min-download-count-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/cve-notifications-event-type-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/max-impact-score-query'
+      - $ref: '#/components/parameters/min-impact-score-query'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: successfully retrieved the cve history logs for the channel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelCveHistory'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+    post:
+      tags:
+      - cves
+      summary: generate min-download-count-parametertory for a specific timestamp for example for existing cves history
+      operationId: repo.endpoints.channels.channels_cve_history.generate_cve_notifications
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CVENotificationsTimestamp'
+      responses:
+        '202':
+          description: successfully starting building of cve notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '200':
+          description: No history available for given timestamp
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/cves:
+    get:
+      tags:
+      - cves
+      summary: Get all the CVE's associated with this channel
+      operationId: repo.endpoints.channels.channel_artifacts.list_channel_cves
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/max_cve_score-query'
+      - $ref: '#/components/parameters/architectures-query'
+      - $ref: '#/components/parameters/cve-name-query'
+      - $ref: '#/components/parameters/version-query'
+      - $ref: '#/components/parameters/min_packages_count-query'
+      - $ref: '#/components/parameters/artifact_name-query'
+      - $ref: '#/components/parameters/cve-sort-query'
+      - $ref: '#/components/parameters/with_cve_counts_by_severity-query'
+      responses:
+        '200':
+          description: successfully returns the CVE objects related to this channel
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CVE'
+                  cve_count_by_severity:
+                    $ref: '#/components/schemas/CVEsBySeverity'
+            text/csv:
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/cves/ws:
+    get:
+      tags:
+      - cves
+      operationId: repo.endpoints.channels.channel_artifacts.cve_report_batched
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/max_cve_score-query'
+      - $ref: '#/components/parameters/architectures-query'
+      - $ref: '#/components/parameters/cve-name-query'
+      - $ref: '#/components/parameters/version-query'
+      - $ref: '#/components/parameters/artifact_name-query'
+      responses:
+        '101':
+          description: Read-only websocket with new events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVE'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      security:
+      - jwt: []
+  /channels/{channel_name}/cves/{cve_id}:
+    get:
+      tags:
+      - cves
+      summary: Get channel CVE details
+      operationId: repo.endpoints.channels.channel_artifacts.get_channel_cve_details
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/cve_id-parameter'
+      responses:
+        '200':
+          description: successfully returns the channel's CVE detailss
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVE'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/cves/{cve_id}/files:
+    get:
+      tags:
+      - cves
+      summary: Get all package files, associated with specific CVE in the channel
+      operationId: repo.endpoints.channels.channel_artifacts.list_channel_cve_files
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/cve_id-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      responses:
+        '200':
+          description: successfully returns routes, related to this CVE in the channel
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CVEPackage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/cves:
+    get:
+      tags:
+      - cves
+      summary: Get all the CVE's associated with this channel and artifact
+      operationId: repo.endpoints.channels.channel_artifacts.list_artifact_cves
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/with_cve_counts_by_severity-query'
+      responses:
+        '200':
+          description: successfully returns the CVE objects, related to this CVE in artifact
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CVE'
+                  cve_count_by_severity:
+                    $ref: '#/components/schemas/CVEsBySeverity'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/cves/{cve_id}:
+    get:
+      tags:
+      - cves
+      summary: Get artifact CVE details
+      operationId: repo.endpoints.channels.channel_artifacts.get_artifact_cve_details
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/cve_id-parameter'
+      responses:
+        '200':
+          description: successfully returns the artifact CVE details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVE'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/cves/{cve_id}/files:
+    get:
+      tags:
+      - cves
+      summary: successfully returns routes, related to this CVE in the artifact
+      operationId: repo.endpoints.channels.channel_artifacts.list_artifact_cve_files
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/cve_id-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      responses:
+        '200':
+          description: successfully returns routes, related to this CVE in the channel
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CVEPackage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/cves_history:
+    get:
+      tags:
+      - cves
+      summary: Get the cve history logs of the subchannel
+      operationId: repo.endpoints.channels.subchannels_cve_history.get_cve_subchannel_history
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/to-date-parameter'
+      - $ref: '#/components/parameters/from-date-parameter'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/cve-notifications-event-type-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/min-download-count-query'
+      - $ref: '#/components/parameters/max-impact-score-query'
+      - $ref: '#/components/parameters/min-impact-score-query'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      responses:
+        '200':
+          description: successfully retrieved the cve history logs for the channel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelCveHistory'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+    post:
+      tags:
+      - cves
+      summary: generate cves_history for a specific timestamp for example for existing cves history
+      operationId: repo.endpoints.channels.subchannels_cve_history.generate_cve_notifications
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/timestamp-parameter'
+      responses:
+        '202':
+          description: successfully starting building of cve notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '200':
+          description: No history available for given timestamp
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/cves:
+    get:
+      tags:
+      - cves
+      summary: Get all the CVE's associated with this subchannel
+      operationId: repo.endpoints.channels.subchannel_artifacts.list_subchannel_cves
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/max_cve_score-query'
+      - $ref: '#/components/parameters/architectures-query'
+      - $ref: '#/components/parameters/cve-name-query'
+      - $ref: '#/components/parameters/version-query'
+      - $ref: '#/components/parameters/min_packages_count-query'
+      - $ref: '#/components/parameters/artifact_name-query'
+      - $ref: '#/components/parameters/cve-sort-query'
+      - $ref: '#/components/parameters/with_cve_counts_by_severity-query'
+      responses:
+        '200':
+          description: successfully returns the CVE objects related to this channel
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CVE'
+            text/csv:
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/cves/ws:
+    get:
+      tags:
+      - cves
+      operationId: repo.endpoints.channels.subchannel_artifacts.cve_report_batched
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/max_cve_score-query'
+      - $ref: '#/components/parameters/architectures-query'
+      - $ref: '#/components/parameters/cve-name-query'
+      - $ref: '#/components/parameters/version-query'
+      - $ref: '#/components/parameters/artifact_name-query'
+      responses:
+        '101':
+          description: Read-only websocket with new events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVE'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+      security:
+      - jwt: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/cves/{cve_id}:
+    get:
+      tags:
+      - cves
+      summary: Get subchannel CVE details
+      operationId: repo.endpoints.channels.subchannel_artifacts.get_subchannel_cve_details
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/cve_id-parameter'
+      responses:
+        '200':
+          description: successfully returns subchannel CVE details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVE'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/cves/{cve_id}/files:
+    get:
+      tags:
+      - cves
+      summary: Get all package files, associated with specific CVE in the channel
+      operationId: repo.endpoints.channels.subchannel_artifacts.list_subchannel_cve_files
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/cve_id-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      responses:
+        '200':
+          description: successfully returns routes, related to this CVE in the subchannel
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CVEPackage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/cves:
+    get:
+      tags:
+      - cves
+      summary: Get all the CVE's associated with this subchannel and artifact
+      operationId: repo.endpoints.channels.subchannel_artifacts.list_artifact_cves
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/with_cve_counts_by_severity-query'
+      responses:
+        '200':
+          description: successfully returns the CVE objects, related to this subchannel
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CVE'
+                  cve_count_by_severity:
+                    $ref: '#/components/schemas/CVEsBySeverity'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/cves/{cve_id}:
+    get:
+      tags:
+      - cves
+      summary: Get subchannel artifact CVE details
+      operationId: repo.endpoints.channels.subchannel_artifacts.get_artifact_cve_details
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/cve_id-parameter'
+      responses:
+        '200':
+          description: successfully returns the subchannel artifact CVE details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVE'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/cves/{cve_id}/files:
+    get:
+      tags:
+      - cves
+      summary: successfully returns routes, related to this CVE in the artifact
+      operationId: repo.endpoints.channels.subchannel_artifacts.list_artifact_cve_files
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/artifact_family-parameter'
+      - $ref: '#/components/parameters/artifact_name-parameter'
+      - $ref: '#/components/parameters/cve_id-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      responses:
+        '200':
+          description: successfully returns routes, related to this CVE in the artifact
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CVE'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /cves:
+    get:
+      tags:
+      - cves
+      summary: Get list of the latest CVEs
+      operationId: repo.endpoints.cves.list_cves
+      parameters:
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      - $ref: '#/components/parameters/min_packages_count-query'
+      - $ref: '#/components/parameters/search-query'
+      - $ref: '#/components/parameters/cve-sort-query'
+      responses:
+        '200':
+          description: get latest CVEs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CVE'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /cves/{cve_id}:
+    get:
+      tags:
+      - cves
+      summary: Get the CVE by its ID
+      operationId: repo.endpoints.cves.get_cve
+      parameters:
+      - $ref: '#/components/parameters/cve_id-parameter'
+      responses:
+        '200':
+          description: get cve detailss
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVE'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /cves/{cve_id}/files:
+    get:
+      tags:
+      - cves
+      summary: Get the CVE by its ID
+      operationId: repo.endpoints.cves.list_cve_files
+      parameters:
+      - $ref: '#/components/parameters/cve_id-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/cve_status-query'
+      - $ref: '#/components/parameters/min_cve_score-query'
+      responses:
+        '200':
+          description: get cve all relevant files
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CVE'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /cves-report:
+    get:
+      tags:
+      - cves
+      summary: Get list of the CVEs with status for provided list of packages
+      operationId: repo.endpoints.cves.list_cves_for_packages
+      parameters:
+      - $ref: '#/components/parameters/sha256s-query'
+      - $ref: '#/components/parameters/use_blob-query'
+      responses:
+        '200':
+          description: get CVE status for packages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CVEsReport'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+    post:
+      tags:
+      - cves
+      summary: Get list of the CVEs with status for provided list of packages. Using Post as Get
+      operationId: repo.endpoints.cves.list_cves_for_packages_post_query
+      parameters:
+      - $ref: '#/components/parameters/use_blob-query'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - sha256s
+              properties:
+                sha256s:
+                  type: array
+                  description: list of sha256 checksums
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: get CVE status for packages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CVEsReport'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+components:
+  responses:
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    CVENotificationChanges:
+      type: array
+      additionalProperties: true
+      required:
+      - cve_id
+      - new_score
+      - new_status
+      properties:
+        cve_id:
+          type: string
+        old_score:
+          type: number
+        new_score:
+          type: string
+        old_status:
+          type: string
+        new_status:
+          type: string
+    ChannelCveHistory:
+      type: array
+      description: List of cve histories
+      items:
+        $ref: '#/components/schemas/CVENotificationsHistory'
+    CVENotificationsTimestamp:
+      required:
+      - timestamp
+      additionalProperties: false
+      type: object
+      description: Timestamp for Generation of CVE Notifications
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+    ArtifactFamily:
+      type: string
+      enum:
+      - anaconda_project
+      - anaconda_env
+      - cve
+      - conda
+      - python
+      - cran
+      - notebook
+      - docker
+      - sbom
+    CVEPackage:
+      type: object
+      description: CVE Package information
+      properties:
+        channel_name:
+          type: string
+          example: The Channel
+        parent_channel_name:
+          type: string
+          example: The Root Channel
+        cve_status:
+          $ref: '#/components/schemas/CVE_status'
+        artifact_family:
+          $ref: '#/components/schemas/ArtifactFamily'
+        artifact_type:
+          type: string
+          example: conda1
+        ckey:
+          type: string
+          example: osx-64/numpy-1.1.1.conda
+        common_name:
+          type: string
+          example: numpy
+        blob_sha256:
+          type: string
+          example: 82cf9c932145565158eb8ee67dba369851210aab
+        blob_size:
+          type: string
+          example: 1234
+    CVEsReport:
+      type: object
+      description: CVE Package information
+      properties:
+        sha256:
+          type: string
+        cves:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: CVE-2019-9948
+              score:
+                type: number
+                description: Maximum score of the CVE
+              status:
+                type: string
+                description: CVE status
+              curated:
+                type: boolean
+                description: Indicates whether CVE has curated status
+              published_at:
+                description: date when the CVE has been published in NVD
+                type: string
+              nvd_modified_at:
+                description: latest date when the CVE was updated in NVD
+                type: string
+              anaconda_modified_at:
+                description: latest date when the CVE was curated by Anaconda
+                type: string
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+    CVE_status:
+      type: string
+      enum:
+      - reported
+      - active
+      - mitigated
+      - cleared
+      - disputed
+      - unknown
+    CVE:
+      type: object
+      description: CVE information
+      properties:
+        id:
+          type: string
+          example: CVE-2019-9948
+        description:
+          type: string
+          description: Text description of the vulnerability from the database
+        score:
+          type: number
+          description: Maximum score of the CVE
+        cvssv2_score:
+          type: number
+          description: CVSSv2 score of the CVE
+        cvssv3_score:
+          type: number
+          description: CVSSv3 score of the CVE
+        curated:
+          type: boolean
+          description: Indicates whether CVE has curated status
+        packages_count:
+          type: number
+          description: Number of associated packages with this CVE
+        packages:
+          description: optionals
+          type: array
+          items:
+            type: object
+            properties:
+              channel_name:
+                type: string
+                example: The Channel
+              parent_channel_name:
+                type: string
+                example: The Root Channel
+              cve_status:
+                $ref: '#/components/schemas/CVE_status'
+              artifact_family:
+                $ref: '#/components/schemas/ArtifactFamily'
+              artifact_type:
+                type: string
+                example: conda1
+              ckey:
+                type: string
+                example: osx-64/numpy-1.1.1.conda
+              common_name:
+                type: string
+                example: numpy
+              blob_sha256:
+                type: string
+                example: 82cf9c932145565158eb8ee67dba369851210aab
+              blob_size:
+                type: string
+                example: 1234
+        published_at:
+          description: date when the CVE has been published in NVD
+          type: string
+        nvd_modified_at:
+          description: latest date when the CVE was updated in NVD
+          type: string
+        anaconda_modified_at:
+          description: latest date when the CVE was curated by Anaconda
+          type: string
+        cvssv2:
+          type: object
+          properties:
+            cvssV2:
+              type: object
+              properties:
+                version:
+                  type: string
+                  example: 2.0
+                vectorString:
+                  type: string
+                  example: AV:N/AC:L/Au:N/C:P/I:P/A:N
+                accessComplexity:
+                  type: string
+                  example: LOW
+                accessVector:
+                  type: string
+                  example: NETWORK
+                authentication:
+                  type: string
+                  example: NONE
+                availabilityImpact:
+                  type: string
+                  example: NONE
+                baseScore:
+                  type: string
+                  example: 6.4
+                confidentialityImpact:
+                  type: string
+                  example: PARTIAL
+                integrityImpact:
+                  type: string
+                  example: PARTIAL
+            exploitabilityScore:
+              type: number
+              example: 10.0
+            impactScore:
+              type: number
+              example: 6.5
+            severity:
+              type: string
+              example: MEDIUM
+            obtainAllPrivilege:
+              type: boolean
+            obtainOtherPrivilege:
+              type: boolean
+            obtainUserPrivilege:
+              type: boolean
+            userInteractionRequired:
+              type: boolean
+        cvssv3:
+          type: object
+          properties:
+            cvssV3:
+              type: object
+              properties:
+                attackComplexity:
+                  type: string
+                  example: LOW
+                attackVector:
+                  type: string
+                  example: NETWORK
+                availabilityImpact:
+                  type: string
+                  example: NONE
+                baseScore:
+                  type: string
+                  example: 9.1
+                baseSeverity:
+                  type: string
+                  example: CRITICAL
+                confidentialityImpact:
+                  type: string
+                  example: HIGH
+                integrityImpact:
+                  type: string
+                  example: HIGH
+                privilegesRequired:
+                  type: string
+                  example: NONE
+                scope:
+                  type: string
+                  example: UNCHANGED
+                userInteraction:
+                  type: string
+                  example: NONE
+                vectorString:
+                  type: string
+                  example: CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N
+                version:
+                  type: string
+                  example: 3.0
+            exploitabilityScore:
+              type: number
+              example: 10.0
+            impactScore:
+              type: number
+              example: 6.5
+        nvdv2:
+          type: object
+          additionalProperties: true
+        reviews:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        cwes:
+          type: array
+          items:
+            type: string
+    CVEsNotificationEventTypes:
+      type: string
+      enum:
+      - score_increased
+      - score_decreased
+      - status_changed
+    CVENotificationsHistory:
+      type: object
+      description: The object representing cve notification
+      properties:
+        file_name:
+          type: string
+        platform:
+          type: string
+        artifact_family:
+          $ref: '#/components/schemas/ArtifactFamily'
+        cves_count:
+          type: number
+        old_max_score:
+          type: number
+        new_max_score:
+          type: number
+        notification_changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CVENotificationChanges'
+        number_of_downloads:
+          type: number
+        created_at:
+          type: string
+    CVEsBySeverity:
+      type: object
+      description: CVE counts grouped by severity based on NVD classification
+      properties:
+        critical:
+          type: integer
+        high:
+          type: integer
+        medium:
+          type: integer
+        low:
+          type: integer
+        none:
+          type: integer
+  parameters:
+    offset-query:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+        default: 0
+      description: the offset of the result set
+    to-date-parameter:
+      name: to_date
+      description: ending timestamp for filtering data
+      in: query
+      schema:
+        type: string
+        format: date
+        description: upper date YYYY-mm-dd
+    search-query:
+      in: query
+      name: q
+      description: the string to search on
+      schema:
+        type: string
+    cve-name-query:
+      in: query
+      name: cve_name
+      description: the exact CVE id to search on
+      example: CVE-2018-1000805
+      schema:
+        type: string
+    artifact_family-parameter:
+      name: artifact_family
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/ArtifactFamily'
+    limit-query:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 100
+      description: the number of results in the result set
+    min_packages_count-query:
+      in: query
+      name: min_packages_count
+      description: Returns the CVE with at least provided minimum score
+      schema:
+        type: integer
+        minimum: 0
+    timestamp-parameter:
+      name: timestamp
+      description: exact timestamp for filtering data
+      in: query
+      schema:
+        type: string
+        format: date-time
+    cve-notifications-event-type-query:
+      in: query
+      name: event_types
+      description: filter CVE Notifications by event types
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/CVEsNotificationEventTypes'
+    architectures-query:
+      in: query
+      name: architectures
+      description: the package architectures list to search on
+      schema:
+        type: array
+        example:
+        - linux-64
+        - osx-64
+        - win-32
+        - win-64
+        items:
+          type: string
+    version-query:
+      in: query
+      name: version
+      description: Package Version
+      schema:
+        type: string
+    max-impact-score-query:
+      in: query
+      name: max_score
+      description: Returns the CVE Notifications below provided maximum impact score
+      schema:
+        type: number
+        minimum: 0
+        maximum: 10
+    max_cve_score-query:
+      in: query
+      name: max_score
+      description: Returns files below requesed max_cve_score
+      schema:
+        type: number
+        minimum: 0
+        maximum: 10
+    subchannel-parameter:
+      name: subchannel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
+    min-impact-score-query:
+      in: query
+      name: min_score
+      description: Returns the CVE Notifications with at least provided minimum impact score
+      schema:
+        type: number
+        minimum: 0
+        maximum: 10
+    artifact_name-query:
+      in: query
+      name: artifact
+      description: package name to search on
+      schema:
+        type: string
+    min_cve_score-query:
+      in: query
+      name: min_score
+      description: Returns the CVE with at least provided minimum score
+      schema:
+        type: number
+        minimum: 0
+        maximum: 10
+    artifact_name-parameter:
+      name: artifact_name
+      in: path
+      required: true
+      description: the unique name of the artifact
+      schema:
+        type: string
+        example: numpy
+    cve-sort-query:
+      in: query
+      name: sort
+      description: property to sort CVEs (may be comma-separated)
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - score
+          - -score
+          - published_at
+          - -published_at
+          - modified_at
+          - -modified_at
+          - created_at
+          - -created_at
+    channel-parameter:
+      name: channel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
+    min-download-count-query:
+      in: query
+      name: min_download_count
+      description: Displays notifications only for packages with provided minimum number of downloads
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    with_cve_counts_by_severity-query:
+      in: query
+      name: with_cve_counts_by_severity
+      required: false
+      schema:
+        type: boolean
+        default: false
+      description: return cve counts by severity.
+    cve_id-parameter:
+      name: cve_id
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 1
+    use_blob-query:
+      in: query
+      name: use_blob
+      required: false
+      schema:
+        type: boolean
+        default: false
+    sha256s-query:
+      in: query
+      name: sha256s
+      description: list of sha256 (may be comma-separated)
+      schema:
+        type: array
+        items:
+          type: string
+    from-date-parameter:
+      name: from_date
+      description: starting timestamp for filtering data
+      in: query
+      schema:
+        type: string
+        format: date
+        description: bottom date YYYY-mm-dd
+    cve_status-query:
+      in: query
+      name: status
+      description: CVE artifact status (may be comma-separated)
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/CVE_status'
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: repo.auth.token_provider.decode_token
+    user_token:
+      type: apiKey
+      name: X-Auth
+      in: header
+      x-apikeyInfoFunc: repo.auth.token_provider.decode_user_private_token

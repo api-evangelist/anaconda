@@ -1,0 +1,408 @@
+openapi: 3.2.0
+info:
+  title: Anaconda Servers API
+  version: 1.0.0
+  description: 'Operations tagged Servers across 2 of this provider''s published API definitions: anaconda-ai-navigator-openapi-original.json, anaconda-desktop-openapi-original.json. Each path carries the servers of the definition it was published in.'
+security:
+- bearerAuth: []
+tags:
+- name: Servers
+paths:
+  /api/servers/health:
+    get:
+      summary: Check the health of the servers API
+      tags:
+      - Servers
+      responses:
+        '200':
+          description: Servers API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: /api/servers/health ok
+  /api/servers:
+    get:
+      summary: Get all servers
+      tags:
+      - Servers
+      parameters:
+      - in: query
+        name: fileId
+        schema:
+          type: string
+        description: Filter servers by model file ID
+      - in: query
+        name: tag
+        schema:
+          type: string
+        description: Filter servers by tag
+      - in: query
+        name: port
+        schema:
+          type: integer
+        description: Filter servers by port
+      - in: query
+        name: host
+        schema:
+          type: string
+        description: Filter servers by host
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - running
+          - stopped
+          - starting
+          - stopping
+          - errored
+          - unavailable
+        description: Filter servers by status
+      responses:
+        '200':
+          description: List of servers retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ServerDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Create a new server
+      tags:
+      - Servers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Server'
+      responses:
+        '200':
+          description: Server created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Server'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Model not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/servers/{serverId}:
+    get:
+      summary: Get server details by ID
+      tags:
+      - Servers
+      parameters:
+      - in: path
+        name: serverId
+        required: true
+        schema:
+          type: string
+        description: ID of the server to retrieve
+      responses:
+        '200':
+          description: Server details retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ServerDetails'
+        '400':
+          description: Invalid server ID format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Server not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      summary: Control server state (start/stop)
+      tags:
+      - Servers
+      parameters:
+      - in: path
+        name: serverId
+        required: true
+        schema:
+          type: string
+        description: ID of the server to control
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServerAction'
+      responses:
+        '200':
+          description: Server state changed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      status:
+                        type: string
+                        enum:
+                        - running
+                        - stopped
+                      startedAt:
+                        type: string
+                        format: date-time
+                      stoppedAt:
+                        type: string
+                        format: date-time
+        '202':
+          description: Server already in requested state
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      status:
+                        type: string
+        '400':
+          description: Invalid request or server not running
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Server not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a server
+      tags:
+      - Servers
+      parameters:
+      - in: path
+        name: serverId
+        required: true
+        schema:
+          type: string
+        description: ID of the server to delete
+      responses:
+        '200':
+          description: Server deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      status:
+                        type: string
+                        enum:
+                        - deleted
+                      deletedAt:
+                        type: string
+                        format: date-time
+        '400':
+          description: Invalid server ID format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Server not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Server is currently running and cannot be deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              enum:
+              - INVALID_REQUEST
+              - DATABASE_NOT_RUNNING
+              - INTERNAL_SERVER_ERROR
+              - INVALID_SERVER_ID
+              - SERVER_NOT_RUNNING
+              - SERVER_RUNNING
+              - INTERNAL_SERVER_ERROR
+            message:
+              type: string
+    ServerAction:
+      type: object
+      required:
+      - action
+      properties:
+        action:
+          type: string
+          enum:
+          - start
+          - stop
+    Server:
+      type: object
+      required:
+      - serverConfig
+      properties:
+        serverConfig:
+          type: object
+          required:
+          - modelFileName
+          properties:
+            modelFileName:
+              type: string
+            apiParams:
+              type: object
+            loadParams:
+              type: object
+            inferParams:
+              type: object
+            logsDir:
+              type: string
+        startServerOnCreate:
+          type: boolean
+    ServerDetails:
+      type: object
+      properties:
+        modelFile:
+          type: object
+          description: Details about the model file used by the server
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            localPath:
+              type: string
+            isDownloaded:
+              type: boolean
+            quantization:
+              type: string
+        serverConfig:
+          type: object
+          description: Original server configuration
+          properties:
+            modelFileName:
+              type: string
+            apiParams:
+              type: object
+            loadParams:
+              type: object
+            inferParams:
+              type: object
+            logsDir:
+              type: string
+        server:
+          type: object
+          properties:
+            host:
+              type: string
+            port:
+              type: integer
+        tag:
+          type: string
+          description: Server tag (e.g., 'inference', 'embedding')
+        status:
+          type: string
+          enum:
+          - STARTING
+          - RUNNING
+          - STOPPING
+          - STOPPED
+          - ERROR
+        serverProcessId:
+          type:
+          - integer
+          - 'null'
+        id:
+          type: string
+          description: Unique server identifier
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: UUID
+      description: Enter your API key here
+x-refined-from:
+- anaconda-ai-navigator-openapi-original.json
+- anaconda-desktop-openapi-original.json

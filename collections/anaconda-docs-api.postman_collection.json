@@ -1,0 +1,87 @@
+{
+  "item": [
+    {
+      "id": "2a902be6-5ef4-4962-b2a9-c2d9e748e2dd",
+      "name": "docs",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "86dd888d-6d4c-41f9-a0fc-80d5cbd8af4d",
+          "name": "Redirect a user to the right documentation location",
+          "request": {
+            "name": "Redirect a user to the right documentation location",
+            "description": {},
+            "url": {
+              "path": [
+                "external-docs"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "85c17833-da6b-41a2-bd90-fc48456bd020",
+              "name": "redirect to the current documentation of Anaconda Server",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "external-docs"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Found",
+              "code": 302,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.anaconda.cloud/api",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "c415793b-9b61-4944-a954-f8dec6eaa703",
+    "name": "Anaconda Server Docs API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

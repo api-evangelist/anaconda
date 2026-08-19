@@ -1,0 +1,921 @@
+openapi: 3.2.0
+info:
+  version: '6.5'
+  title: Anaconda Server Groups API
+  description: Group management endpoints
+servers:
+- url: https://api.anaconda.cloud/api
+tags:
+- name: groups
+  description: Group management endpoints
+paths:
+  /channels/{channel_name}/groups:
+    get:
+      tags:
+      - groups
+      summary: Get the channel groups
+      operationId: repo.endpoints.channels.channel_groups.list_groups
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      responses:
+        '200':
+          description: successfully retrieved the channel groups
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChannelGroup'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+    post:
+      tags:
+      - groups
+      summary: Add new group to the channel
+      operationId: repo.endpoints.channels.channel_groups.post_group
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelGroupRequest'
+      responses:
+        '204':
+          description: successfully added group to the channel
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+  /channels/{channel_name}/groups/{group_id}:
+    put:
+      tags:
+      - groups
+      summary: Update group channel permission
+      operationId: repo.endpoints.channels.channel_groups.change_group
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/group_id-parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelGroupPermissions'
+      responses:
+        '200':
+          description: successfully updated the channel group permissions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChannelGroup'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+    delete:
+      tags:
+      - groups
+      summary: Delete the group from the channel
+      operationId: repo.endpoints.channels.channel_groups.delete_group
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/group_id-parameter'
+      responses:
+        '204':
+          description: Group is successfully removed
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/groups:
+    get:
+      tags:
+      - groups
+      summary: Get list of groups for the subchannel
+      operationId: repo.endpoints.channels.subchannel_groups.list_groups
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      responses:
+        '200':
+          description: successfully retrieved the channel attached groups
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChannelGroup'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+    post:
+      tags:
+      - groups
+      summary: Add a new group to the subchannel
+      operationId: repo.endpoints.channels.subchannel_groups.post_group
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelGroupRequest'
+      responses:
+        '204':
+          description: successfully added group to the subchannel
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+  /channels/{channel_name}/subchannels/{subchannel_name}/groups/{group_id}:
+    put:
+      tags:
+      - groups
+      summary: Update group subchannel permission
+      operationId: repo.endpoints.channels.subchannel_groups.change_group
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/group_id-parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChannelGroupPermissions'
+      responses:
+        '200':
+          description: successfully updated the subchannel group permissions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChannelGroup'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+    delete:
+      tags:
+      - groups
+      summary: Delete a group from the subchannel
+      operationId: repo.endpoints.channels.subchannel_groups.delete_group
+      parameters:
+      - $ref: '#/components/parameters/channel-parameter'
+      - $ref: '#/components/parameters/subchannel-parameter'
+      - $ref: '#/components/parameters/group_id-parameter'
+      responses:
+        '204':
+          description: Group is successfully removed
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+  /groups:
+    get:
+      tags:
+      - groups
+      summary: Get list of all groups
+      operationId: repo.endpoints.groups.list_all_groups
+      parameters:
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/with-user-counts-query'
+      responses:
+        '200':
+          description: successfully retrieved all groups
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total_count:
+                    type: integer
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Group'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+    post:
+      tags:
+      - groups
+      summary: Create a new group
+      operationId: repo.endpoints.groups.post_group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupRequest'
+      responses:
+        '200':
+          description: successfully created the group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+      - user_token: []
+  /groups/{group_id}:
+    get:
+      tags:
+      - groups
+      summary: Get group details
+      description: gets the data for a group specified by the name of the group
+      operationId: repo.endpoints.groups.get_group
+      parameters:
+      - $ref: '#/components/parameters/group_id-parameter'
+      responses:
+        '200':
+          description: successfully retrieved single group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+    put:
+      tags:
+      - groups
+      summary: Edit a group
+      description: Edits the group specified by the group name
+      operationId: repo.endpoints.groups.put_group
+      parameters:
+      - $ref: '#/components/parameters/group_id-parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupRequest'
+      responses:
+        '200':
+          description: successfully edited the specified subchannel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subchannel'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+    delete:
+      tags:
+      - groups
+      summary: Delete a group
+      description: Allows a user to delete the group specified by the group name
+      operationId: repo.endpoints.groups.delete_group
+      parameters:
+      - $ref: '#/components/parameters/group_id-parameter'
+      responses:
+        '204':
+          description: successfully deleted group
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+  /groups/{group_id}/users:
+    post:
+      tags:
+      - groups
+      summary: Add a user to the group
+      description: Adds a user to the group with specific permission
+      operationId: repo.endpoints.groups.add_user
+      parameters:
+      - $ref: '#/components/parameters/group_id-parameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - user_id
+              - permission
+              properties:
+                user_id:
+                  type: string
+                  description: the user_id
+                permission:
+                  type: string
+                  enum:
+                  - read
+                  - manage
+      responses:
+        '200':
+          description: successfully retrieved single group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+  /groups/{group_id}/users/{user_id}:
+    delete:
+      tags:
+      - groups
+      summary: removes a user from the group
+      description: removes a user from the group
+      operationId: repo.endpoints.groups.delete_user
+      parameters:
+      - $ref: '#/components/parameters/group_id-parameter'
+      - $ref: '#/components/parameters/user_id-parameter'
+      responses:
+        '200':
+          description: successfully retrieved single group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+  /groups/{group_id}/channels:
+    get:
+      tags:
+      - groups
+      summary: Get list of the group channels
+      operationId: repo.endpoints.groups.list_channels
+      parameters:
+      - $ref: '#/components/parameters/group_id-parameter'
+      - $ref: '#/components/parameters/offset-query'
+      - $ref: '#/components/parameters/limit-query'
+      - $ref: '#/components/parameters/channel-sort-query'
+      responses:
+        '200':
+          description: successfully retrieved list of channels
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Channel'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+      - jwt: []
+components:
+  schemas:
+    ChannelType:
+      description: channel type
+      type: string
+      default: default
+      enum:
+      - default
+      - virtual
+    ChannelFilters:
+      type: object
+      description: 'Filter directives for mirroring operation. Fields are optional. Can''t have include and exclude licenses together. This attribute is not returned by default in channels list
+
+        '
+      additionalProperties: false
+      properties:
+        conda:
+          type: object
+          additionalProperties: false
+          properties:
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+        cran:
+          type: object
+          additionalProperties: false
+          properties:
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+        python:
+          type: object
+          additionalProperties: false
+          properties:
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+    FilterExcludeSpecs:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+      description: 'A list of MatchSpec strings, for excluding specific packages. General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
+
+        '
+    FilterIncludeSpecs:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+      description: 'A list of MatchSpec strings, for including from excluded list General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
+
+        '
+    ChannelGroupPermissions:
+      type: object
+      description: group members permissions to channel
+      required:
+      - permission
+      properties:
+        permission:
+          type: string
+          enum:
+          - read
+          - write
+          - manage
+    VirtualChannelSource:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        parent_name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+    ChannelPrivacy:
+      description: channel privacy channel
+      type: string
+      enum:
+      - private
+      - authenticated
+      - public
+    ChannelGroupRequest:
+      type: object
+      required:
+      - group_id
+      - permission
+      properties:
+        group_id:
+          type: string
+          description: group_id to add
+        permission:
+          type: string
+          enum:
+          - read
+          - write
+          - manage
+    ChannelGroup:
+      type: object
+      description: Channel group relationship metadata
+      properties:
+        group_id:
+          type: string
+          description: the assigned group_id
+        name:
+          type: string
+          description: the assigned group name
+          pattern: ^[A-Za-z0-9_\-\/].*$
+        description:
+          type: string
+          description: the assigned group description
+        permission:
+          type: string
+          enum:
+          - read
+          - write
+          - manage
+        persistent:
+          type: boolean
+          description: the persistent groups could not be deleted
+        created_at:
+          type: string
+          description: when the group was created
+        updated_at:
+          type: string
+          description: when the group was updated
+    Subchannel:
+      type: object
+      description: Nested channel object
+      properties:
+        id:
+          type: string
+        name:
+          description: This can be any string based name
+          example: dev, prod, test, main, utility, ui
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        description:
+          type: string
+        parent:
+          description: name of parent channel
+          type: string
+        privacy:
+          $ref: '#/components/schemas/ChannelPrivacy'
+        channel_type:
+          $ref: '#/components/schemas/ChannelType'
+        indexing_behavior:
+          $ref: '#/components/schemas/ChannelIndexingBehavior'
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/VirtualChannelSource'
+        created:
+          description: date created
+          type: string
+        updated:
+          description: date of last update
+          type: string
+    ChannelIndexingBehavior:
+      description: channel indexing behavior
+      type: string
+      default: default
+      enum:
+      - default
+      - frozen
+    Channel:
+      type: object
+      description: Channel object
+      required:
+      - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        parent:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+          description: if present, the object is supposed to be a subchannel
+        description:
+          type: string
+        privacy:
+          $ref: '#/components/schemas/ChannelPrivacy'
+        channel_type:
+          $ref: '#/components/schemas/ChannelType'
+        indexing_behavior:
+          $ref: '#/components/schemas/ChannelIndexingBehavior'
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/VirtualChannelSource'
+        created:
+          description: date created
+          type: string
+        updated:
+          description: date of last update
+          type: string
+        artifact_count:
+          description: number of artifacts the channel currently has
+          type: number
+        download_count:
+          description: number of downloads
+          type: number
+        filters:
+          $ref: '#/components/schemas/ChannelFilters'
+    Group:
+      type: object
+      description: Logical collection of users within a channel
+      properties:
+        id:
+          type: string
+          description: uid
+        name:
+          type: string
+          pattern: ^[A-Za-z0-9_-\/].*$
+          description: the name of the group
+          example: ui-team
+        description:
+          type: string
+          description: the description of the group
+          example: ui-team owner access
+        members_count:
+          type: integer
+          description: member count
+          example: 1
+        created_at:
+          type: string
+          description: when the group was created
+        updated_at:
+          type: string
+          description: when the group was updated
+        user_permission:
+          type: string
+          enum:
+          - read
+          - manage
+          description: "permissions types for users\n  * \"read\" - the group member can only view within the group\n  * \"manage\" - the group member can both view and edit group and update users\n"
+        remote:
+          type: boolean
+          description: remote group
+          example: false
+    FilterLicenses:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+        enum:
+        - agpl
+        - gpl2
+        - gpl3
+        - lgpl
+        - bsd
+        - mit
+        - apache
+        - psf
+        - public_domain
+        - proprietary
+        - other
+        - none
+      description: List of license familities to look for. Empty array means all licenses
+    GroupRequest:
+      type: object
+      required:
+      - name
+      - description
+      properties:
+        name:
+          type: string
+          description: the name of the group
+          example: ui-team
+          pattern: ^[A-Za-z0-9_\-\/].*$
+        description:
+          type: string
+          description: the description of the group
+          example: ui-team description
+  responses:
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: Creating/updating resource raises a conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  parameters:
+    offset-query:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+        default: 0
+      description: the offset of the result set
+    limit-query:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 100
+      description: the number of results in the result set
+    channel-sort-query:
+      in: query
+      name: sort
+      description: property to sort channels (may be comma-separated)
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - name
+          - -name
+          - updated_at
+          - -updated_at
+    with-user-counts-query:
+      in: query
+      name: with_user_counts
+      description: Skips the user counts for groups all groups
+      required: false
+      schema:
+        type: boolean
+        default: true
+    subchannel-parameter:
+      name: subchannel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
+    channel-parameter:
+      name: channel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
+    group_id-parameter:
+      name: group_id
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z0-9-]+$
+    user_id-parameter:
+      name: user_id
+      in: path
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: repo.auth.token_provider.decode_token
+    user_token:
+      type: apiKey
+      name: X-Auth
+      in: header
+      x-apikeyInfoFunc: repo.auth.token_provider.decode_user_private_token
