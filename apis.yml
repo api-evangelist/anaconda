@@ -15,7 +15,7 @@ url: https://raw.githubusercontent.com/api-evangelist/anaconda/refs/heads/main/a
 image: https://www.anaconda.com/wp-content/uploads/2024/07/anaconda-logo.svg
 x-type: company
 x-source: harvest:secondary-market
-specificationVersion: '0.20'
+specificationVersion: '0.23'
 x-enrichment:
   date: '2026-08-02'
   status: enriched
