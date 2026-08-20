@@ -26,6 +26,19 @@ modified: '2026-08-02'
 tags:
 - Company
 - Data Science
+- Machine-Learning
+- Artificial Intelligence
+- Package Management
+- Python
+- Developer Tools
+- Software Supply Chain
+- Repository
+- Package Registry
+- Conda
+- MCP
+tags_raw:
+- Company
+- Data Science
 - Machine Learning
 - Artificial Intelligence
 - Package Management
@@ -92,6 +105,8 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
+  - Account
+  tags_raw:
   - account
   properties:
   - type: OpenAPI
@@ -132,6 +147,8 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
+  - Artifacts
+  tags_raw:
   - artifacts
   properties:
   - type: OpenAPI
@@ -172,6 +189,8 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
+  - Authentication
+  tags_raw:
   - auth
   properties:
   - type: OpenAPI
@@ -192,6 +211,8 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
+  - Channels
+  tags_raw:
   - channels
   properties:
   - type: OpenAPI
@@ -212,6 +233,8 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
+  - CVEs
+  tags_raw:
   - cves
   properties:
   - type: OpenAPI
@@ -232,6 +255,8 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
+  - Diagnosis
+  tags_raw:
   - diagnosis
   properties:
   - type: OpenAPI
@@ -252,6 +277,8 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
+  - Docs
+  tags_raw:
   - docs
   properties:
   - type: OpenAPI
@@ -272,6 +299,8 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
+  - File
+  tags_raw:
   - Files
   properties:
   - type: OpenAPI
@@ -292,6 +321,8 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
+  - Group
+  tags_raw:
   - groups
   properties:
   - type: OpenAPI
@@ -312,6 +343,8 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
+  - Installers
+  tags_raw:
   - installers
   properties:
   - type: OpenAPI
@@ -372,6 +405,8 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
+  - Organization
+  tags_raw:
   - organizations
   properties:
   - type: OpenAPI
@@ -412,6 +447,8 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
+  - Reports
+  tags_raw:
   - reports
   properties:
   - type: OpenAPI
@@ -452,6 +489,8 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
+  - System
+  tags_raw:
   - system
   properties:
   - type: OpenAPI
@@ -472,6 +511,8 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
+  - User
+  tags_raw:
   - users
   properties:
   - type: OpenAPI
@@ -512,6 +553,8 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
+  - WebSocket
+  tags_raw:
   - websocket
   properties:
   - type: OpenAPI
