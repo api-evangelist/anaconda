@@ -245,7 +245,7 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
-  - cves
+  - CVEs
   tags_raw:
   - cves
   properties:
@@ -267,7 +267,7 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
-  - diagnosis
+  - Diagnosis
   tags_raw:
   - diagnosis
   properties:
@@ -355,7 +355,7 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
-  - installers
+  - Installers
   tags_raw:
   - installers
   properties:
@@ -565,7 +565,7 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-platform/main
   baseURL: https://api.anaconda.cloud/api
   tags:
-  - websocket
+  - WebSocket
   tags_raw:
   - websocket
   properties:
