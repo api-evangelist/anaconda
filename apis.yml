@@ -81,11 +81,12 @@ maintainers:
 apis:
 - aid: anaconda:anaconda-org-api
   name: Anaconda.org Repository API
-  description: The public REST API behind anaconda.org — the community package repository that serves
-    conda and PyPI artifacts. Exposes user/organization profiles, packages, releases, files, labels and
-    channels, and is the API the first-party anaconda-client library and `anaconda org` CLI plugin speak
-    to. Anonymous reads are open; writes require an Anaconda.org token. No OpenAPI is published for this
-    surface as of this profiling pass.
+  description: >-
+    The public REST API behind anaconda.org — the community package repository that serves conda and PyPI
+    artifacts. Exposes user/organization profiles, packages, releases, files, labels and channels, and
+    is the API the first-party anaconda-client library and `anaconda org` CLI plugin speak to. Anonymous
+    reads are open; writes require an Anaconda.org token. No OpenAPI is published for this surface as
+    of this profiling pass.
   humanURL: https://anaconda.com/docs/anaconda-org/main
   baseURL: https://api.anaconda.org
   tags:
@@ -100,14 +101,16 @@ apis:
     url: https://anaconda.com/docs/cli-reference/anaconda-client/commands/index
 - aid: anaconda:mcp
   name: Anaconda MCP
-  description: Anaconda's Model Context Protocol surface for AI coding agents. `anaconda-mcp` is a unified
-    local gateway that composes conda-aware MCP servers, giving Claude Desktop, Claude Code, Cursor, VS
-    Code, OpenCode and Windsurf direct access to conda environments, installed packages, channel configuration
+  description: >-
+    Anaconda's Model Context Protocol surface for AI coding agents. `anaconda-mcp` is a unified local
+    gateway that composes conda-aware MCP servers, giving Claude Desktop, Claude Code, Cursor, VS Code,
+    OpenCode and Windsurf direct access to conda environments, installed packages, channel configuration
     and structured package metadata for real dependency resolution. `anaconda ai mcp` is a second server
     exposing the AI Navigator model and inference-server operations as MCP tools over stdio or streamable-http.
   humanURL: https://anaconda.com/docs/cli-reference/anaconda-mcp/getting-started
-  x-baseURL-note: Locally hosted MCP servers (stdio by default; `anaconda ai mcp` also offers streamable-http
-    on 127.0.0.1:8000). Anaconda publishes no remote/hosted MCP endpoint, so no baseURL is asserted here.
+  x-baseURL-note: >-
+    Locally hosted MCP servers (stdio by default; `anaconda ai mcp` also offers streamable-http on 127.0.0.1:8000).
+    Anaconda publishes no remote/hosted MCP endpoint, so no baseURL is asserted here.
   tags:
   - MCP
   - Agents
@@ -238,28 +241,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/anaconda-channels-api-openapi.yml
-  - type: Documentation
-    url: https://anaconda.com/docs/anaconda-platform/main
-  - type: APIReference
-    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
-  - type: APIReference
-    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
-  - type: APIReference
-    url: https://anaconda.com/docs/api-reference/get-api
-  - type: Documentation
-    url: https://anaconda.com/docs/anaconda-desktop/main
-- aid: anaconda:anaconda-cves-api
-  name: Anaconda Cves API
-  description: The cves API from Anaconda — 20 operation(s) for cves.
-  humanURL: https://anaconda.com/docs/anaconda-platform/main
-  baseURL: https://api.anaconda.cloud/api
-  tags:
-  - CVEs
-  tags_raw:
-  - cves
-  properties:
-  - type: OpenAPI
-    url: openapi/anaconda-cves-api-openapi.yml
   - type: Documentation
     url: https://anaconda.com/docs/anaconda-platform/main
   - type: APIReference
@@ -580,6 +561,26 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/anaconda-websocket-api-openapi.yml
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-platform/main
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/org-management-api/org-management-api
+  - type: APIReference
+    url: https://anaconda.com/docs/anaconda-platform/admin/audit-logs/audit-log-api
+  - type: APIReference
+    url: https://anaconda.com/docs/api-reference/get-api
+  - type: Documentation
+    url: https://anaconda.com/docs/anaconda-desktop/main
+- aid: anaconda:anaconda-cves-api
+  name: Anaconda Cves API
+  description: The cves API from Anaconda — 20 operation(s) for cves.
+  humanURL: https://anaconda.com/docs/anaconda-org/main
+  baseURL: https://api.anaconda.org
+  tags:
+  - cves
+  properties:
+  - type: OpenAPI
+    url: openapi/anaconda-cves-api-openapi.yml
   - type: Documentation
     url: https://anaconda.com/docs/anaconda-platform/main
   - type: APIReference
