@@ -577,6 +577,8 @@ apis:
   humanURL: https://anaconda.com/docs/anaconda-org/main
   baseURL: https://api.anaconda.org
   tags:
+  - CVEs
+  tags_raw:
   - cves
   properties:
   - type: OpenAPI
