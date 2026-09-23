@@ -5,12 +5,12 @@ info:
 servers:
 - url: https://api.anaconda.cloud/api
 tags:
-- name: docs
+- name: Docs
 paths:
   /external-docs:
     get:
       tags:
-      - docs
+      - Docs
       summary: Redirect a user to the right documentation location
       operationId: repo.endpoints.system.get_external_docs
       responses:

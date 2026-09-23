@@ -6,13 +6,13 @@ info:
 servers:
 - url: https://api.anaconda.cloud/api
 tags:
-- name: auth
+- name: Auth
   description: Authentication endpoints
 paths:
   /auth/login:
     post:
       tags:
-      - auth
+      - Auth
       summary: Authenticate user
       operationId: repo.endpoints.auth.login
       requestBody:
@@ -38,15 +38,17 @@ paths:
   /auth/logout:
     get:
       tags:
-      - auth
+      - Auth
       operationId: repo.endpoints.auth.logout_get
       responses:
         '302':
           description: successful redirect a user
+      summary: Repo endpoints auth logout get
+      x-summary-source: derived
   /auth/authorize:
     get:
       tags:
-      - auth
+      - Auth
       summary: Initiates authentication flow
       operationId: repo.endpoints.auth.openidc_authorize
       responses:
@@ -62,7 +64,7 @@ paths:
   /auth/callback/kc:
     get:
       tags:
-      - auth
+      - Auth
       parameters:
       - in: query
         name: code
@@ -90,6 +92,12 @@ paths:
           $ref: '#/components/responses/Unauthenticated'
 components:
   responses:
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
     Unauthenticated:
       description: Unauthenticated, no token is provided or token is invalid
       content:
@@ -102,32 +110,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   schemas:
     LoginResponse:
       type: object
       properties:
         token:
           type: string
-    LoginRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - username
-      - password
-      properties:
-        username:
-          type: string
-          minLength: 1
-          example: user@anaconda.com
-        password:
-          type: string
-          minLength: 1
     ErrorResponse:
       type: object
       description: The metadata contained in an error response
@@ -144,6 +132,20 @@ components:
           type: integer
           description: The HTTP Status code
           example: 401
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - username
+      - password
+      properties:
+        username:
+          type: string
+          minLength: 1
+          example: user@anaconda.com
+        password:
+          type: string
+          minLength: 1
   securitySchemes:
     jwt:
       type: http

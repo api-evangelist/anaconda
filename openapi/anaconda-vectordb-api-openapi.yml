@@ -27,6 +27,8 @@ paths:
                       message:
                         type: string
                         example: /api/vector-db/health ok
+      operationId: getApiVectorDbHealth
+      x-operation-id-source: derived
   /api/vector-db:
     post:
       summary: Initialize the vector database
@@ -48,6 +50,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: postApiVectorDb
+      x-operation-id-source: derived
     patch:
       summary: Start or stop the vector database
       tags:
@@ -80,6 +84,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: patchApiVectorDb
+      x-operation-id-source: derived
   /api/vector-db/tables:
     get:
       summary: Get all tables in the vector database
@@ -106,6 +112,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: getApiVectorDbTables
+      x-operation-id-source: derived
     post:
       summary: Create a new table in the vector database
       tags:
@@ -144,6 +152,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: postApiVectorDbTables
+      x-operation-id-source: derived
   /api/vector-db/tables/{tableName}:
     delete:
       summary: Delete a table from the vector database
@@ -181,6 +191,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: deleteApiVectorDbTablesByTableName
+      x-operation-id-source: derived
 components:
   schemas:
     CreateTableResponse:
@@ -216,6 +228,42 @@ components:
         numRows:
           type: integer
           description: Number of rows inserted
+    VectorDB:
+      type: object
+      required:
+      - running
+      - host
+      - port
+      - database
+      - user
+      - password
+      properties:
+        running:
+          type: boolean
+          description: Whether the vector database is running
+        host:
+          type: string
+          description: Database host address
+        port:
+          type: integer
+          description: Database port number
+        database:
+          type: string
+          description: Database name
+        user:
+          type: string
+          description: Database username
+        password:
+          type: string
+          description: Database password
+    VectorDBAction:
+      type: object
+      required:
+      - running
+      properties:
+        running:
+          type: boolean
+          description: Whether to start (true) or stop (false) the vector database
     CreateTableRequest:
       type: object
       required:
@@ -267,42 +315,6 @@ components:
               - INTERNAL_SERVER_ERROR
             message:
               type: string
-    VectorDBAction:
-      type: object
-      required:
-      - running
-      properties:
-        running:
-          type: boolean
-          description: Whether to start (true) or stop (false) the vector database
-    VectorDB:
-      type: object
-      required:
-      - running
-      - host
-      - port
-      - database
-      - user
-      - password
-      properties:
-        running:
-          type: boolean
-          description: Whether the vector database is running
-        host:
-          type: string
-          description: Database host address
-        port:
-          type: integer
-          description: Database port number
-        database:
-          type: string
-          description: Database name
-        user:
-          type: string
-          description: Database username
-        password:
-          type: string
-          description: Database password
   securitySchemes:
     bearerAuth:
       type: http

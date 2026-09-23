@@ -6,7 +6,7 @@ servers:
 - url: https://anaconda.com
   description: Anaconda Cloud
 tags:
-- name: organizations
+- name: Organizations
 paths:
   /api/v1/organizations/{org_id}/service-accounts:
     post:
@@ -14,7 +14,7 @@ paths:
       summary: Create Service Account
       description: Creates a service account for the specified organization.
       tags:
-      - organizations
+      - Organizations
       parameters:
       - name: org_id
         in: path
@@ -48,7 +48,7 @@ paths:
       summary: List Service Accounts
       description: Returns a list of all service accounts in the organization.
       tags:
-      - organizations
+      - Organizations
       parameters:
       - name: org_id
         in: path
@@ -77,7 +77,7 @@ paths:
       summary: Delete Service Account
       description: Deletes the service account associated with the specified client ID.
       tags:
-      - organizations
+      - Organizations
       parameters:
       - name: org_id
         in: path
@@ -114,7 +114,7 @@ paths:
       summary: Onboard Users
       description: Onboards users by adding them to your organization, assigning seats, and generating organization access tokens.
       tags:
-      - organizations
+      - Organizations
       parameters:
       - name: org_id
         in: path
@@ -149,7 +149,7 @@ paths:
       summary: Add User
       description: Adds a user to the organization.
       tags:
-      - organizations
+      - Organizations
       parameters:
       - name: org_id
         in: path
@@ -183,7 +183,7 @@ paths:
       summary: List Users
       description: Returns a list of all users in the organization.
       tags:
-      - organizations
+      - Organizations
       parameters:
       - name: org_id
         in: path
@@ -219,7 +219,7 @@ paths:
       summary: Remove User
       description: Removes a user from the organization.
       tags:
-      - organizations
+      - Organizations
       parameters:
       - name: org_id
         in: path
@@ -263,7 +263,7 @@ paths:
       summary: Assign Seat
       description: Assigns a subscription seat to the specified user.
       tags:
-      - organizations
+      - Organizations
       parameters:
       - name: org_id
         in: path
@@ -319,7 +319,7 @@ paths:
       summary: Revoke Seat
       description: Removes a subscription seat from the specified user. The seat becomes available for assignment to another user.
       tags:
-      - organizations
+      - Organizations
       parameters:
       - name: org_id
         in: path
@@ -357,7 +357,7 @@ paths:
       summary: Create User Token
       description: Generates an organization access token for the specified user.
       tags:
-      - organizations
+      - Organizations
       parameters:
       - name: org_id
         in: path
@@ -398,7 +398,7 @@ paths:
       summary: Update User Token
       description: Updates the expiration date of a user's organization access token.
       tags:
-      - organizations
+      - Organizations
       parameters:
       - name: org_id
         in: path
@@ -436,7 +436,7 @@ paths:
       summary: List User Tokens
       description: Returns all tokens assigned to the specified user, including their IDs, expiration dates, and revocation status.
       tags:
-      - organizations
+      - Organizations
       parameters:
       - name: org_id
         in: path
@@ -472,7 +472,7 @@ paths:
       summary: Revoke User Token
       description: Revokes a user's organization access token.
       tags:
-      - organizations
+      - Organizations
       parameters:
       - name: org_id
         in: path
@@ -519,157 +519,6 @@ paths:
       - JWT or Access Token: []
 components:
   schemas:
-    CreateTokenResponse:
-      type: object
-      required:
-      - token
-      properties:
-        token:
-          type: string
-          description: The generated access token value.
-        expires_at:
-          type:
-          - string
-          - 'null'
-          description: The expiration date and time of the token.
-    ManagedUser:
-      type: object
-      required:
-      - id
-      properties:
-        id:
-          type: string
-          description: The unique identifier for the created user.
-        email:
-          type:
-          - string
-          - 'null'
-          format: email
-          description: The email address of the user.
-        first_name:
-          type:
-          - string
-          - 'null'
-          description: The first name of the user.
-        last_name:
-          type:
-          - string
-          - 'null'
-          description: The last name of the user.
-    UserGroupSchema:
-      type: object
-      required:
-      - id
-      - name
-      - org_id
-      - created_at
-      - updated_at
-      - user_count
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The unique identifier for this group.
-        name:
-          type: string
-          description: The name of this group.
-        org_id:
-          type: string
-          format: uuid
-          description: The organization ID this group belongs to.
-        created_at:
-          type: string
-          format: date-time
-          description: When this group was created.
-        updated_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: When this group was last updated.
-        user_count:
-          type: integer
-          description: The number of users in this group.
-    CreateOrganizationServiceAccountRequest:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 64
-          description: The name for the new service account. Must use lowercase letters, numbers, hyphens, or underscores only.
-    ErrorResponse:
-      type: object
-      required:
-      - error
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorDetails'
-    TokenListResponse:
-      type: object
-      required:
-      - items
-      properties:
-        items:
-          type: array
-          description: The list of tokens for the user.
-          items:
-            $ref: '#/components/schemas/Token'
-    CreateOrganizationManagedUsersRequest:
-      type: object
-      required:
-      - user_emails
-      properties:
-        user_emails:
-          type: array
-          items:
-            type: string
-            format: email
-          description: A list of email addresses for the users to onboard.
-    UserOrganizationRole:
-      type: string
-      enum:
-      - member
-      - admin
-      - billing_manager
-      description: The role of the user within the organization.
-    AutoRegistrationResponse:
-      type: object
-      properties:
-        users_in_onboarding_process:
-          type: array
-          items:
-            type: string
-          description: Email addresses of users that were successfully queued for onboarding.
-        users_unavailable_for_onboarding:
-          type: array
-          items:
-            type: string
-          description: Email addresses of users that could not be onboarded (for example, because they already have an account or no seats are available).
-        total_organization_seats:
-          type: string
-          description: The total number of seats in your organization's subscription.
-        available_organization_seats:
-          type: string
-          description: The number of remaining unassigned seats.
-    OrganizationServiceAccount:
-      type: object
-      required:
-      - name
-      - client_id
-      - org_id
-      properties:
-        name:
-          type: string
-          description: The name of the service account.
-        client_id:
-          type: string
-          description: The unique client identifier for the service account.
-        org_id:
-          type: string
-          description: The organization ID the service account belongs to.
     OrganizationUserList:
       type: object
       required:
@@ -680,150 +529,6 @@ components:
           description: A list of users in the organization.
           items:
             $ref: '#/components/schemas/OrganizationUser'
-    Token:
-      type: object
-      required:
-      - id
-      - expires_at
-      - metadata
-      properties:
-        id:
-          type: string
-          description: The unique identifier for this token.
-        expires_at:
-          type: string
-          description: The expiration date and time of this token.
-        metadata:
-          type: object
-          description: Additional metadata associated with this token.
-        revoked:
-          type:
-          - boolean
-          - 'null'
-          description: Whether this token has been revoked.
-    CreateTokenRequest:
-      type: object
-      required:
-      - expires_at
-      properties:
-        expires_at:
-          type: string
-          format: date-time
-          description: The expiration date and time for the token in ISO 8601 format (for example, `2026-12-31T00:00:00+00:00`).
-        expiration_tolerance_months:
-          type: integer
-          default: 0
-          description: Number of additional months to extend the token beyond the `expires_at` date as a grace period.
-        send_token_email:
-          type: boolean
-          default: true
-          description: Whether to send the token to the user via email.
-    ValidationError:
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      properties:
-        loc:
-          type: array
-          items:
-            type: string
-          description: The location of the validation error (for example, `["body", "name"]`).
-        msg:
-          type: string
-          description: A human-readable validation error message.
-        type:
-          type: string
-          description: The type of validation error.
-    ErrorDetails:
-      type: object
-      required:
-      - message
-      - code
-      properties:
-        message:
-          type: string
-          description: A human-readable error message.
-        code:
-          type: string
-          description: An error code identifying the type of error.
-        data:
-          description: Additional error context, if available.
-    CreateOrganizationManagedUserRequest:
-      type: object
-      properties:
-        email:
-          type:
-          - string
-          - 'null'
-          format: email
-          description: The email address for the new user. If omitted, an organization-managed user is created instead.
-        first_name:
-          type:
-          - string
-          - 'null'
-          description: The first name of the user. For managed users, use a descriptive name for the token's intended purpose.
-        last_name:
-          type:
-          - string
-          - 'null'
-          description: The last name of the user. For managed users, use a descriptive name for the token's intended purpose.
-    HTTPValidationError:
-      type: object
-      properties:
-        detail:
-          type: array
-          description: A list of validation errors.
-          items:
-            $ref: '#/components/schemas/ValidationError'
-    UpdateTokenAPIRequest:
-      type: object
-      properties:
-        expires_at:
-          type:
-          - string
-          - 'null'
-          format: date-time
-          description: The new expiration date and time for the token in ISO 8601 format. Ignored when `is_renewal` is `true`.
-        expiration_tolerance_months:
-          type: integer
-          default: 0
-          description: Number of additional months to extend the token beyond the `expires_at` date as a grace period.
-        is_renewal:
-          type: boolean
-          default: false
-          description: Set to `true` to automatically extend the token expiration to match your organization's subscription end date. When `true`, the `expires_at` field is ignored.
-    OrganizationServiceAccountListResponse:
-      type: object
-      required:
-      - items
-      properties:
-        items:
-          type: array
-          description: The list of service accounts in the organization.
-          items:
-            $ref: '#/components/schemas/OrganizationServiceAccount'
-    OrganizationServiceAccountWithSecret:
-      type: object
-      required:
-      - name
-      - client_id
-      - org_id
-      - client_secret
-      properties:
-        name:
-          type: string
-          description: The name of the service account.
-        client_id:
-          type: string
-          description: The unique client identifier for the service account.
-        org_id:
-          type: string
-          description: The organization ID the service account belongs to.
-        client_secret:
-          type: string
-          description: The client secret for authenticating as this service account. This value is only shown once at creation time.
     OrganizationUser:
       type: object
       required:
@@ -864,6 +569,301 @@ components:
           items:
             $ref: '#/components/schemas/UserGroupSchema'
           description: The groups this user belongs to. Only populated when `include_groups=true` is passed.
+    HTTPValidationError:
+      type: object
+      properties:
+        detail:
+          type: array
+          description: A list of validation errors.
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    ErrorDetails:
+      type: object
+      required:
+      - message
+      - code
+      properties:
+        message:
+          type: string
+          description: A human-readable error message.
+        code:
+          type: string
+          description: An error code identifying the type of error.
+        data:
+          description: Additional error context, if available.
+    AutoRegistrationResponse:
+      type: object
+      properties:
+        users_in_onboarding_process:
+          type: array
+          items:
+            type: string
+          description: Email addresses of users that were successfully queued for onboarding.
+        users_unavailable_for_onboarding:
+          type: array
+          items:
+            type: string
+          description: Email addresses of users that could not be onboarded (for example, because they already have an account or no seats are available).
+        total_organization_seats:
+          type: string
+          description: The total number of seats in your organization's subscription.
+        available_organization_seats:
+          type: string
+          description: The number of remaining unassigned seats.
+    CreateTokenResponse:
+      type: object
+      required:
+      - token
+      properties:
+        token:
+          type: string
+          description: The generated access token value.
+        expires_at:
+          type:
+          - string
+          - 'null'
+          description: The expiration date and time of the token.
+    OrganizationServiceAccount:
+      type: object
+      required:
+      - name
+      - client_id
+      - org_id
+      properties:
+        name:
+          type: string
+          description: The name of the service account.
+        client_id:
+          type: string
+          description: The unique client identifier for the service account.
+        org_id:
+          type: string
+          description: The organization ID the service account belongs to.
+    UserOrganizationRole:
+      type: string
+      enum:
+      - member
+      - admin
+      - billing_manager
+      description: The role of the user within the organization.
+    CreateOrganizationServiceAccountRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 64
+          description: The name for the new service account. Must use lowercase letters, numbers, hyphens, or underscores only.
+    OrganizationServiceAccountListResponse:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          description: The list of service accounts in the organization.
+          items:
+            $ref: '#/components/schemas/OrganizationServiceAccount'
+    OrganizationServiceAccountWithSecret:
+      type: object
+      required:
+      - name
+      - client_id
+      - org_id
+      - client_secret
+      properties:
+        name:
+          type: string
+          description: The name of the service account.
+        client_id:
+          type: string
+          description: The unique client identifier for the service account.
+        org_id:
+          type: string
+          description: The organization ID the service account belongs to.
+        client_secret:
+          type: string
+          description: The client secret for authenticating as this service account. This value is only shown once at creation time.
+    UserGroupSchema:
+      type: object
+      required:
+      - id
+      - name
+      - org_id
+      - created_at
+      - updated_at
+      - user_count
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier for this group.
+        name:
+          type: string
+          description: The name of this group.
+        org_id:
+          type: string
+          format: uuid
+          description: The organization ID this group belongs to.
+        created_at:
+          type: string
+          format: date-time
+          description: When this group was created.
+        updated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: When this group was last updated.
+        user_count:
+          type: integer
+          description: The number of users in this group.
+    ManagedUser:
+      type: object
+      required:
+      - id
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the created user.
+        email:
+          type:
+          - string
+          - 'null'
+          format: email
+          description: The email address of the user.
+        first_name:
+          type:
+          - string
+          - 'null'
+          description: The first name of the user.
+        last_name:
+          type:
+          - string
+          - 'null'
+          description: The last name of the user.
+    CreateTokenRequest:
+      type: object
+      required:
+      - expires_at
+      properties:
+        expires_at:
+          type: string
+          format: date-time
+          description: The expiration date and time for the token in ISO 8601 format (for example, `2026-12-31T00:00:00+00:00`).
+        expiration_tolerance_months:
+          type: integer
+          default: 0
+          description: Number of additional months to extend the token beyond the `expires_at` date as a grace period.
+        send_token_email:
+          type: boolean
+          default: true
+          description: Whether to send the token to the user via email.
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetails'
+    CreateOrganizationManagedUsersRequest:
+      type: object
+      required:
+      - user_emails
+      properties:
+        user_emails:
+          type: array
+          items:
+            type: string
+            format: email
+          description: A list of email addresses for the users to onboard.
+    TokenListResponse:
+      type: object
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          description: The list of tokens for the user.
+          items:
+            $ref: '#/components/schemas/Token'
+    CreateOrganizationManagedUserRequest:
+      type: object
+      properties:
+        email:
+          type:
+          - string
+          - 'null'
+          format: email
+          description: The email address for the new user. If omitted, an organization-managed user is created instead.
+        first_name:
+          type:
+          - string
+          - 'null'
+          description: The first name of the user. For managed users, use a descriptive name for the token's intended purpose.
+        last_name:
+          type:
+          - string
+          - 'null'
+          description: The last name of the user. For managed users, use a descriptive name for the token's intended purpose.
+    UpdateTokenAPIRequest:
+      type: object
+      properties:
+        expires_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: The new expiration date and time for the token in ISO 8601 format. Ignored when `is_renewal` is `true`.
+        expiration_tolerance_months:
+          type: integer
+          default: 0
+          description: Number of additional months to extend the token beyond the `expires_at` date as a grace period.
+        is_renewal:
+          type: boolean
+          default: false
+          description: Set to `true` to automatically extend the token expiration to match your organization's subscription end date. When `true`, the `expires_at` field is ignored.
+    ValidationError:
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      properties:
+        loc:
+          type: array
+          items:
+            type: string
+          description: The location of the validation error (for example, `["body", "name"]`).
+        msg:
+          type: string
+          description: A human-readable validation error message.
+        type:
+          type: string
+          description: The type of validation error.
+    Token:
+      type: object
+      required:
+      - id
+      - expires_at
+      - metadata
+      properties:
+        id:
+          type: string
+          description: The unique identifier for this token.
+        expires_at:
+          type: string
+          description: The expiration date and time of this token.
+        metadata:
+          type: object
+          description: Additional metadata associated with this token.
+        revoked:
+          type:
+          - boolean
+          - 'null'
+          description: Whether this token has been revoked.
   securitySchemes:
     JWT_or_Access_Token:
       bearerFormat: JWT

@@ -1,0 +1,29 @@
+# Front Door AI Index — anaconda — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: anaconda
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: www.anaconda.com
+  final_host: www.anaconda.com
+  ownership: own
+  owner: anaconda
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 34
+  host_score: 34
+  density: 49.49
+  words: 687
+  tiers:
+    agentic: 3
+    core: 31
+    model: 0
+  ambiguous: 3
+  top_terms:
+    AI: 30
+    agent: 3
+    agentic: 2
+    AI agent: 1
+    ML: 1

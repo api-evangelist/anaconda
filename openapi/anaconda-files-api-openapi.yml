@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Anaconda Files API
+  title: AI Navigator Files API
   version: 1.0.0
-  description: 'Operations tagged Files across 2 of this provider''s published API definitions: anaconda-ai-navigator-openapi-original.json, anaconda-desktop-openapi-original.json. Each path carries the servers of the definition it was published in.'
+  description: API documentation for AI Navigator
 security:
 - bearerAuth: []
 tags:
@@ -49,6 +49,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: getModelsByModelIdFiles
+      x-operation-id-source: derived
   /api/models/{modelId}/files/{fileId}:
     get:
       summary: Get details of a specific model file
@@ -89,6 +91,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: getApiModelsByModelIdFilesByFileId
+      x-operation-id-source: derived
     patch:
       summary: Update download status of a model file
       tags:
@@ -137,6 +141,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: patchApiModelsByModelIdFilesByFileId
+      x-operation-id-source: derived
     delete:
       summary: Delete a model file
       tags:
@@ -179,6 +185,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: deleteApiModelsByModelIdFilesByFileId
+      x-operation-id-source: derived
 components:
   schemas:
     ModelFile:
@@ -249,29 +257,6 @@ components:
           - pause
           - resume
           description: Action to perform on the download
-    DownloadStatus:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: object
-          required:
-          - status
-          properties:
-            status:
-              type: string
-              enum:
-              - in_progress
-              - paused
-              - completed
-              description: Current status of the download
-            progress:
-              $ref: '#/components/schemas/Download'
-              description: Download progress information (only when status is in_progress or paused)
-            localPath:
-              type: string
-              description: Local path where the file is stored (only when status is completed)
     Download:
       type: object
       required:
@@ -312,6 +297,29 @@ components:
         averageMbps:
           type: number
           description: Average download speed in Mbps
+    DownloadStatus:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - status
+          properties:
+            status:
+              type: string
+              enum:
+              - in_progress
+              - paused
+              - completed
+              description: Current status of the download
+            progress:
+              $ref: '#/components/schemas/Download'
+              description: Download progress information (only when status is in_progress or paused)
+            localPath:
+              type: string
+              description: Local path where the file is stored (only when status is completed)
     Error:
       type: object
       properties:
@@ -336,6 +344,3 @@ components:
       scheme: bearer
       bearerFormat: UUID
       description: Enter your API key here
-x-refined-from:
-- anaconda-ai-navigator-openapi-original.json
-- anaconda-desktop-openapi-original.json

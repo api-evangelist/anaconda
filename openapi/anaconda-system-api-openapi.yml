@@ -6,14 +6,14 @@ info:
 servers:
 - url: https://api.anaconda.cloud/api
 tags:
-- name: system
+- name: System
   description: System endpoints - version, health, etc.
 paths:
   /system:
     get:
       tags:
-      - system
-      summary: Get system information such as health, version, etc.
+      - System
+      summary: Get system information such as health, version, etc
       operationId: repo.endpoints.system.health
       responses:
         '200':
@@ -29,8 +29,8 @@ paths:
   /system/stats:
     get:
       tags:
-      - system
-      summary: Get system stats such as disk usage, etc.
+      - System
+      summary: Get system stats such as disk usage, etc
       operationId: repo.endpoints.system.stats
       responses:
         '200':
@@ -48,7 +48,7 @@ paths:
   /system/metrics:
     get:
       tags:
-      - system
+      - System
       summary: Get system metrics in OpenMetrics format
       operationId: repo.endpoints.system.metrics
       parameters:
@@ -75,7 +75,7 @@ paths:
   /system/scopes:
     get:
       tags:
-      - system
+      - System
       summary: Get all possible scopes in system
       operationId: repo.endpoints.system.scopes
       responses:
@@ -97,7 +97,7 @@ paths:
   /system/resource_types:
     get:
       tags:
-      - system
+      - System
       summary: Get all possible resource types, used for role management
       operationId: repo.endpoints.system.resource_types
       responses:
@@ -118,7 +118,7 @@ paths:
   /system/license:
     get:
       tags:
-      - system
+      - System
       summary: Get current license information
       operationId: repo.endpoints.system.get_license
       responses:
@@ -137,7 +137,7 @@ paths:
       - user_token: []
     post:
       tags:
-      - system
+      - System
       summary: Add license key
       operationId: repo.endpoints.system.post_license
       requestBody:
@@ -158,7 +158,7 @@ paths:
       - jwt: []
     put:
       tags:
-      - system
+      - System
       summary: Update or re-activate license key
       operationId: repo.endpoints.system.put_license
       responses:
@@ -175,7 +175,7 @@ paths:
   /system/settings:
     get:
       tags:
-      - system
+      - System
       summary: Get current system settings
       operationId: repo.endpoints.system.get_settings
       responses:
@@ -194,7 +194,7 @@ paths:
       - user_token: []
     put:
       tags:
-      - system
+      - System
       summary: Update system settings
       operationId: repo.endpoints.system.update_settings
       requestBody:
@@ -219,13 +219,11 @@ paths:
   /system/blob_cleanup:
     delete:
       tags:
-      - system
+      - System
       x-internal: true
       operationId: repo.endpoints.system.blob_cleanup
       summary: Action to cleanup orphan blobs for users with system management roles
-      description: '## Finds and clears all orphan blobs that are not index artifacts
-
-        '
+      description: '## Finds and clears all orphan blobs that are not index artifacts'
       responses:
         '200':
           description: cleanup stats
@@ -242,13 +240,11 @@ paths:
       - user_token: []
     post:
       tags:
-      - system
+      - System
       x-internal: true
       operationId: repo.endpoints.system.cleanup_specified_orphan_blobs
       summary: Action to cleanup given list of blobs
-      description: '## Clears the blobs based on the details (sha256) provided by admin
-
-        '
+      description: '## Clears the blobs based on the details (sha256) provided by admin'
       requestBody:
         content:
           application/json:
@@ -273,20 +269,8 @@ paths:
       - user_token: []
 components:
   responses:
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     Forbidden:
       description: Access is forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    BadRequest:
-      description: Server cannot execute request due to something that is perceived to be a client error
       content:
         application/json:
           schema:
@@ -297,43 +281,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   schemas:
-    ProductLicenseMetrics:
-      type: object
-      description: Is used in definining limits as well as current compliance metrics
-      properties:
-        instances:
-          type: object
-          properties:
-            api:
-              type: integer
-            worker:
-              type: integer
-            dispatcher:
-              type: integer
-        users:
-          type: integer
-        channels:
-          type: integer
-        mirrors:
-          type: integer
-    SystemStats:
-      type: object
-      properties:
-        blob_size:
-          type: object
-          properties:
-            total:
-              type: integer
-            by_artifact_family:
-              type: array
-              items:
-                type: object
-                properties:
-                  artifact_family:
-                    type: string
-                  blob_size:
-                    type: integer
     OpenMetrics:
       type: array
       items:
@@ -365,27 +325,6 @@ components:
                   oneOf:
                   - type: string
                   - type: number
-    CleanupStats:
-      type: object
-      description: Cleanup stats
-      properties:
-        blob_count:
-          type: number
-        space_reclaimed:
-          type: number
-          description: Space reclaimed in bytes after cleanup
-    ProductLicenseCompliance:
-      type: object
-      description: Is used in definining compliance checks for different group. warn_limit is triggered when reached 80% of the quota
-      properties:
-        ok:
-          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
-        warn_limit:
-          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
-        over_quota:
-          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
-        no_data:
-          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
     ProductLicense:
       type: object
       properties:
@@ -442,6 +381,88 @@ components:
           $ref: '#/components/schemas/ProductLicenseMetrics'
         compliance:
           $ref: '#/components/schemas/ProductLicenseCompliance'
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+    ProductLicenseCompliance:
+      type: object
+      description: Is used in definining compliance checks for different group. warn_limit is triggered when reached 80% of the quota
+      properties:
+        ok:
+          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
+        warn_limit:
+          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
+        over_quota:
+          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
+        no_data:
+          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
+    ProductLicenseRequest:
+      type: object
+      required:
+      - license_key
+      properties:
+        license_key:
+          type: string
+          minLength: 1
+    ProductLicenseComplianceGroup:
+      type: array
+      items:
+        type: string
+        enum:
+        - users
+        - channels
+        - instances.api
+        - instances.dispatcher
+        - instances.worker
+    ProductLicenseMetrics:
+      type: object
+      description: Is used in definining limits as well as current compliance metrics
+      properties:
+        instances:
+          type: object
+          properties:
+            api:
+              type: integer
+            worker:
+              type: integer
+            dispatcher:
+              type: integer
+        users:
+          type: integer
+        channels:
+          type: integer
+        mirrors:
+          type: integer
+    SystemStats:
+      type: object
+      properties:
+        blob_size:
+          type: object
+          properties:
+            total:
+              type: integer
+            by_artifact_family:
+              type: array
+              items:
+                type: object
+                properties:
+                  artifact_family:
+                    type: string
+                  blob_size:
+                    type: integer
     System:
       type: object
       properties:
@@ -464,40 +485,15 @@ components:
               type: integer
               description: Number of messages in the queue
               example: 12
-    ProductLicenseRequest:
+    CleanupStats:
       type: object
-      required:
-      - license_key
+      description: Cleanup stats
       properties:
-        license_key:
-          type: string
-          minLength: 1
-    ProductLicenseComplianceGroup:
-      type: array
-      items:
-        type: string
-        enum:
-        - users
-        - channels
-        - instances.api
-        - instances.dispatcher
-        - instances.worker
-    ErrorResponse:
-      type: object
-      description: The metadata contained in an error response
-      properties:
-        code:
-          type: string
-          description: Internal error code. Could be used to show corresponding message text from a message catalog
-          example: bad-parameter
-        message:
-          type: string
-          description: Short human-readable error message. Used mainly for logging
-          example: Bad request parameter for 'sort'
-        status:
-          type: integer
-          description: The HTTP Status code
-          example: 401
+        blob_count:
+          type: number
+        space_reclaimed:
+          type: number
+          description: Space reclaimed in bytes after cleanup
     SystemSettings:
       type: object
       additionalProperties: false

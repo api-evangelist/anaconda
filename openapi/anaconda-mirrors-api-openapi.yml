@@ -42,12 +42,6 @@ paths:
       - user_token: []
 components:
   responses:
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     Forbidden:
       description: Access is forbidden
       content:
@@ -60,7 +54,67 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  parameters:
+    limit-query:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 100
+      description: the number of results in the result set
+    offset-query:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+        default: 0
+      description: the offset of the result set
+    mirror-sort-query:
+      in: query
+      name: sort
+      description: property to sort mirrors (may be comma-separated)
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - mirror_name
+          - -mirror_name
+          - created_at
+          - -created_at
+          - routes_mirrored
+          - -routes_mirrored
+          - mirror_type
+          - -mirror_type
+          - updated_at
+          - -updated_at
+          - state
+          - -state
   schemas:
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
     ChannelPrivacy:
       description: channel privacy channel
       type: string
@@ -68,84 +122,6 @@ components:
       - private
       - authenticated
       - public
-    MirrorWithChannel:
-      type: object
-      required:
-      - id
-      - name
-      - source_root
-      - type
-      - mode
-      - cron
-      - state
-      - last_run_at
-      - created_at
-      - updated_at
-      - channel
-      - filters
-      description: Mirror with appropriate channel details
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-          description: Mirror name
-          pattern: ^[A-Za-z0-9_\-\/\.].*$
-        source_root:
-          type: string
-          format: uri
-          example: https://conda.anaconda.org/mewtwo
-          description: The upstream location of the channel to mirror.
-        type:
-          type: string
-          description: Type of upstream source to mirror
-          enum:
-          - conda
-          - python_simple
-          - cran
-          - cve
-          - sbom
-        mode:
-          type: string
-          default: passive
-          enum:
-          - active
-          - passive
-          - redirect
-        state:
-          type: string
-          enum:
-          - pending
-          - running
-          - completed
-          - failed
-          - deleted
-          - stopping
-          - stopped
-        sync_state:
-          $ref: '#/components/schemas/MirrorSyncState'
-        last_run_at:
-          type: string
-        created_at:
-          type: string
-        updated_at:
-          type: string
-        channel:
-          type: object
-          properties:
-            name:
-              type: string
-              pattern: ^[a-z][a-z0-9_\-]*$
-            privacy:
-              $ref: '#/components/schemas/ChannelPrivacy'
-        subchannel:
-          type: object
-          properties:
-            name:
-              type: string
-              pattern: ^[a-z][a-z0-9_\-]*$
-            privacy:
-              $ref: '#/components/schemas/ChannelPrivacy'
     MirrorSyncState:
       type: object
       additionalProperties: false
@@ -228,60 +204,84 @@ components:
         bytes_transfered:
           type: integer
           description: Total number of bytes transfered during active mirroring
-    ErrorResponse:
+    MirrorWithChannel:
       type: object
-      description: The metadata contained in an error response
+      required:
+      - id
+      - name
+      - source_root
+      - type
+      - mode
+      - cron
+      - state
+      - last_run_at
+      - created_at
+      - updated_at
+      - channel
+      - filters
+      description: Mirror with appropriate channel details
       properties:
-        code:
+        id:
           type: string
-          description: Internal error code. Could be used to show corresponding message text from a message catalog
-          example: bad-parameter
-        message:
+        name:
           type: string
-          description: Short human-readable error message. Used mainly for logging
-          example: Bad request parameter for 'sort'
-        status:
-          type: integer
-          description: The HTTP Status code
-          example: 401
-  parameters:
-    offset-query:
-      in: query
-      name: offset
-      required: false
-      schema:
-        type: integer
-        default: 0
-      description: the offset of the result set
-    limit-query:
-      in: query
-      name: limit
-      required: false
-      schema:
-        type: integer
-        default: 100
-      description: the number of results in the result set
-    mirror-sort-query:
-      in: query
-      name: sort
-      description: property to sort mirrors (may be comma-separated)
-      schema:
-        type: array
-        items:
+          description: Mirror name
+          pattern: ^[A-Za-z0-9_\-\/\.].*$
+        source_root:
+          type: string
+          format: uri
+          example: https://conda.anaconda.org/mewtwo
+          description: The upstream location of the channel to mirror.
+        type:
+          type: string
+          description: Type of upstream source to mirror
+          enum:
+          - conda
+          - python_simple
+          - cran
+          - cve
+          - sbom
+        mode:
+          type: string
+          default: passive
+          enum:
+          - active
+          - passive
+          - redirect
+        state:
           type: string
           enum:
-          - mirror_name
-          - -mirror_name
-          - created_at
-          - -created_at
-          - routes_mirrored
-          - -routes_mirrored
-          - mirror_type
-          - -mirror_type
-          - updated_at
-          - -updated_at
-          - state
-          - -state
+          - pending
+          - running
+          - completed
+          - failed
+          - deleted
+          - stopping
+          - stopped
+        sync_state:
+          $ref: '#/components/schemas/MirrorSyncState'
+        last_run_at:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        channel:
+          type: object
+          properties:
+            name:
+              type: string
+              pattern: ^[a-z][a-z0-9_\-]*$
+            privacy:
+              $ref: '#/components/schemas/ChannelPrivacy'
+        subchannel:
+          type: object
+          properties:
+            name:
+              type: string
+              pattern: ^[a-z][a-z0-9_\-]*$
+            privacy:
+              $ref: '#/components/schemas/ChannelPrivacy'
   securitySchemes:
     jwt:
       type: http

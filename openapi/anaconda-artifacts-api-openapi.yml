@@ -6,14 +6,14 @@ info:
 servers:
 - url: https://api.anaconda.cloud/api
 tags:
-- name: artifacts
+- name: Artifacts
   description: Artifact endpoints - search, retrieve, mirror
 paths:
   /artifacts:
     get:
       x-not-implemented: yellow
       tags:
-      - artifacts
+      - Artifacts
       summary: Get list of all artifacts
       description: Gets all the artifacts regardless of type found within the entire standalone Repo
       operationId: repo.endpoints.artifacts.search_artifacts
@@ -53,7 +53,7 @@ paths:
     get:
       x-not-implemented: red
       tags:
-      - artifacts
+      - Artifacts
       summary: Get list of all the artifacts of a specific type
       description: Gets all artifacts that match the given type parameter
       operationId: repo.endpoints.artifacts.get_all_by_type
@@ -87,7 +87,7 @@ paths:
     get:
       x-not-implemented: red
       tags:
-      - artifacts
+      - Artifacts
       summary: Get list of the artifacts by type and name
       description: Search for artifacts matching the artifact_family and artifact_name
       operationId: repo.endpoints.artifacts.get_all_by_type_and_name
@@ -118,7 +118,7 @@ paths:
     get:
       x-not-implemented: red
       tags:
-      - artifacts
+      - Artifacts
       summary: Get all channels that have this artifact in it
       operationId: repo.endpoints.artifacts.artifact_channels
       parameters:
@@ -148,7 +148,7 @@ paths:
     get:
       x-not-implemented: red
       tags:
-      - artifacts
+      - Artifacts
       summary: Download the artifact file
       operationId: repo.endpoints.artifacts.download_artifact
       parameters:
@@ -176,7 +176,7 @@ paths:
     get:
       x-not-implemented: red
       tags:
-      - artifacts
+      - Artifacts
       summary: Get list of artifact versions available for this artifact
       operationId: repo.endpoints.artifacts.versions
       parameters:
@@ -219,7 +219,7 @@ paths:
         '400':
           description: metadata format is invalid
       tags:
-      - artifacts
+      - Artifacts
   /repo/{channel_name}/{ckey:[^/].*?}:
     summary: Interacting with artifacts within a channel
     get:
@@ -237,7 +237,7 @@ paths:
         '422':
           description: proxied file is broken
       tags:
-      - artifacts
+      - Artifacts
     patch:
       summary: Patch artifact metadata
       operationId: repo.endpoints.artifacts.patch_artifact_metadata
@@ -260,7 +260,7 @@ paths:
         '422':
           description: proxied file is broken
       tags:
-      - artifacts
+      - Artifacts
       security:
       - jwt: []
       - user_token: []
@@ -276,7 +276,7 @@ paths:
         '404':
           description: root.json version not found
       tags:
-      - artifacts
+      - Artifacts
       security: []
   /repo/key_mgr.json:
     get:
@@ -288,22 +288,10 @@ paths:
         '404':
           description: key_mgr.json is not configured
       tags:
-      - artifacts
+      - Artifacts
       security: []
 components:
   responses:
-    Forbidden:
-      description: Access is forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     InternalServerError:
       description: Internal server error
       content:
@@ -322,21 +310,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   parameters:
-    offset-query:
-      in: query
-      name: offset
-      required: false
-      schema:
-        type: integer
-        default: 0
-      description: the offset of the result set
-    search-query:
-      in: query
-      name: q
-      description: the string to search on
-      schema:
-        type: string
     only_names-query:
       in: query
       name: only_names
@@ -345,12 +331,6 @@ components:
         type: array
         items:
           type: string
-    artifact_family-parameter:
-      name: artifact_family
-      in: path
-      required: true
-      schema:
-        $ref: '#/components/schemas/ArtifactFamily'
     limit-query:
       in: query
       name: limit
@@ -368,6 +348,76 @@ components:
         minimum: 0
         maximum: 1000
       description: the number of results in the result set
+    search-query:
+      in: query
+      name: q
+      description: the string to search on
+      schema:
+        type: string
+    platform-query:
+      name: platform
+      in: query
+      schema:
+        type: string
+      description: filter for the platform
+    created-query:
+      in: query
+      name: created
+      description: timestamp start boundary for when created. I guess this could be either "only artifacts created on this exact date" or "artifacts created on this date and newer"
+      schema:
+        type: integer
+    artifact_name-parameter:
+      name: artifact_name
+      in: path
+      required: true
+      description: the unique name of the artifact
+      schema:
+        type: string
+        example: numpy
+    ckey-parameter:
+      name: ckey
+      in: path
+      required: true
+      schema:
+        type: string
+        format: path
+    channel-parameter:
+      name: channel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
+    artifact_family-query:
+      name: artifact_family
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/ArtifactFamily'
+    sbom-query:
+      in: query
+      name: sbom
+      required: false
+      schema:
+        type: string
+        enum:
+        - view
+        - download
+    offset-query:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+        default: 0
+      description: the offset of the result set
+    artifact_family-parameter:
+      name: artifact_family
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/ArtifactFamily'
     artifact-sort-query:
       in: query
       name: sort
@@ -389,85 +439,7 @@ components:
       description: timestamp end boundary
       schema:
         type: integer
-    artifact_family-query:
-      name: artifact_family
-      in: query
-      schema:
-        type: array
-        items:
-          $ref: '#/components/schemas/ArtifactFamily'
-    ckey-parameter:
-      name: ckey
-      in: path
-      required: true
-      schema:
-        type: string
-        format: path
-    artifact_name-parameter:
-      name: artifact_name
-      in: path
-      required: true
-      description: the unique name of the artifact
-      schema:
-        type: string
-        example: numpy
-    channel-parameter:
-      name: channel_name
-      in: path
-      required: true
-      schema:
-        type: string
-        pattern: ^[a-z][a-z0-9_-]*$
-    platform-query:
-      name: platform
-      in: query
-      schema:
-        type: string
-      description: filter for the platform
-    created-query:
-      in: query
-      name: created
-      description: timestamp start boundary for when created. I guess this could be either "only artifacts created on this exact date" or "artifacts created on this date and newer"
-      schema:
-        type: integer
-    sbom-query:
-      in: query
-      name: sbom
-      required: false
-      schema:
-        type: string
-        enum:
-        - view
-        - download
   schemas:
-    ArtifactFamily:
-      type: string
-      enum:
-      - anaconda_project
-      - anaconda_env
-      - cve
-      - conda
-      - python
-      - cran
-      - notebook
-      - docker
-      - sbom
-    ErrorResponse:
-      type: object
-      description: The metadata contained in an error response
-      properties:
-        code:
-          type: string
-          description: Internal error code. Could be used to show corresponding message text from a message catalog
-          example: bad-parameter
-        message:
-          type: string
-          description: Short human-readable error message. Used mainly for logging
-          example: Bad request parameter for 'sort'
-        status:
-          type: integer
-          description: The HTTP Status code
-          example: 401
     ChannelPrivacy:
       description: channel privacy channel
       type: string
@@ -475,6 +447,9 @@ components:
       - private
       - authenticated
       - public
+    ArtifactMetadata:
+      type: object
+      description: Artifact's metadata
     Artifact:
       type: object
       description: The object stored in Repo in as few properties as possible
@@ -502,35 +477,6 @@ components:
           description: family specific fields such as base and version
         updated_at:
           type: string
-    ArtifactMetadata:
-      type: object
-      description: Artifact's metadata
-    ArtifactVersion:
-      type: object
-      description: The version or point-in-time that this artifact existed and all it's associated metadata
-      properties:
-        id:
-          type: string
-        version:
-          type: integer
-        name:
-          type: string
-        file_type:
-          description: type of file
-          example: conda
-          type: string
-        created_at:
-          description: the date the file was created
-          type: string
-        updated_at:
-          description: date of last update
-          type: string
-        uploader:
-          description: where was this uploaded (channel?)
-          type: string
-        download_count:
-          description: the number of downloads
-          type: integer
     UploadRequest:
       type: object
       description: The information that proxy sends us after successful upload
@@ -557,6 +503,60 @@ components:
           type: integer
         client_fields:
           type: object
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+    ArtifactFamily:
+      type: string
+      enum:
+      - anaconda_project
+      - anaconda_env
+      - cve
+      - conda
+      - python
+      - cran
+      - notebook
+      - docker
+      - sbom
+    ArtifactVersion:
+      type: object
+      description: The version or point-in-time that this artifact existed and all it's associated metadata
+      properties:
+        id:
+          type: string
+        version:
+          type: integer
+        name:
+          type: string
+        file_type:
+          description: type of file
+          example: conda
+          type: string
+        created_at:
+          description: the date the file was created
+          type: string
+        updated_at:
+          description: date of last update
+          type: string
+        uploader:
+          description: where was this uploaded (channel?)
+          type: string
+        download_count:
+          description: the number of downloads
+          type: integer
   securitySchemes:
     jwt:
       type: http

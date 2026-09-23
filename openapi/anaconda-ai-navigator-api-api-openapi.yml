@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: AI Navigator AI Navigator API API
+  title: AI Navigator API
   version: 1.0.0
   description: API documentation for AI Navigator
 security:
@@ -16,6 +16,10 @@ paths:
           description: Returns version details for AI Navigator, Mamba, and LlamaCPP
       tags:
       - AI Navigator API
+      summary: Get api
+      x-summary-source: derived
+      operationId: getApi
+      x-operation-id-source: derived
 components:
   securitySchemes:
     bearerAuth:

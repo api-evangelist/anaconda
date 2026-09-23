@@ -1,8 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Anaconda Servers API
+  title: AI Navigator Servers API
   version: 1.0.0
-  description: 'Operations tagged Servers across 2 of this provider''s published API definitions: anaconda-ai-navigator-openapi-original.json, anaconda-desktop-openapi-original.json. Each path carries the servers of the definition it was published in.'
+  description: API documentation for AI Navigator
 security:
 - bearerAuth: []
 tags:
@@ -27,6 +27,8 @@ paths:
                       message:
                         type: string
                         example: /api/servers/health ok
+      operationId: getApiServersHealth
+      x-operation-id-source: derived
   /api/servers:
     get:
       summary: Get all servers
@@ -83,6 +85,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: getApiServers
+      x-operation-id-source: derived
     post:
       summary: Create a new server
       tags:
@@ -121,6 +125,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: postApiServers
+      x-operation-id-source: derived
   /api/servers/{serverId}:
     get:
       summary: Get server details by ID
@@ -161,6 +167,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: getApiServersByServerId
+      x-operation-id-source: derived
     patch:
       summary: Control server state (start/stop)
       tags:
@@ -234,6 +242,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: patchApiServersByServerId
+      x-operation-id-source: derived
     delete:
       summary: Delete a server
       tags:
@@ -289,26 +299,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: deleteApiServersByServerId
+      x-operation-id-source: derived
 components:
   schemas:
-    Error:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              type: string
-              enum:
-              - INVALID_REQUEST
-              - DATABASE_NOT_RUNNING
-              - INTERNAL_SERVER_ERROR
-              - INVALID_SERVER_ID
-              - SERVER_NOT_RUNNING
-              - SERVER_RUNNING
-              - INTERNAL_SERVER_ERROR
-            message:
-              type: string
     ServerAction:
       type: object
       required:
@@ -319,28 +313,6 @@ components:
           enum:
           - start
           - stop
-    Server:
-      type: object
-      required:
-      - serverConfig
-      properties:
-        serverConfig:
-          type: object
-          required:
-          - modelFileName
-          properties:
-            modelFileName:
-              type: string
-            apiParams:
-              type: object
-            loadParams:
-              type: object
-            inferParams:
-              type: object
-            logsDir:
-              type: string
-        startServerOnCreate:
-          type: boolean
     ServerDetails:
       type: object
       properties:
@@ -397,12 +369,49 @@ components:
         id:
           type: string
           description: Unique server identifier
+    Server:
+      type: object
+      required:
+      - serverConfig
+      properties:
+        serverConfig:
+          type: object
+          required:
+          - modelFileName
+          properties:
+            modelFileName:
+              type: string
+            apiParams:
+              type: object
+            loadParams:
+              type: object
+            inferParams:
+              type: object
+            logsDir:
+              type: string
+        startServerOnCreate:
+          type: boolean
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              enum:
+              - INVALID_REQUEST
+              - DATABASE_NOT_RUNNING
+              - INTERNAL_SERVER_ERROR
+              - INVALID_SERVER_ID
+              - SERVER_NOT_RUNNING
+              - SERVER_RUNNING
+              - INTERNAL_SERVER_ERROR
+            message:
+              type: string
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: UUID
       description: Enter your API key here
-x-refined-from:
-- anaconda-ai-navigator-openapi-original.json
-- anaconda-desktop-openapi-original.json

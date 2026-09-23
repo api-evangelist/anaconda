@@ -5,15 +5,27 @@ info:
 servers:
 - url: https://api.anaconda.cloud/api
 tags:
-- name: reports
+- name: Reports
 paths:
   /reports/artifact_downloads:
     post:
       tags:
-      - reports
+      - Reports
       summary: Endpoint to get artifact downloaded event reports
       operationId: repo.endpoints.audit_logs.artifact_download.generate_artifact_downloads_report
-      description: "## Generates artifact downloaded report for records satisfying given filter conditions.\n* This feature is only available for admin users.\n* from_date, to_date and download_as are mandatory fields.\n* usernames list and channel names list are optional fields.\n* Example: If you enter a date duration, give list of channel names, list of user names in the request, \n you get a report of artifact downloaded details downloaded during that duration AND (from the channel names\n given OR downloaded by what users specified).\n"
+      description: '## Generates artifact downloaded report for records satisfying given filter conditions.
+
+        * This feature is only available for admin users.
+
+        * from_date, to_date and download_as are mandatory fields.
+
+        * usernames list and channel names list are optional fields.
+
+        * Example: If you enter a date duration, give list of channel names, list of user names in the request,
+
+        you get a report of artifact downloaded details downloaded during that duration AND (from the channel names
+
+        given OR downloaded by what users specified).'
       requestBody:
         required: true
         content:
@@ -46,14 +58,14 @@ paths:
       - user_token: []
 components:
   responses:
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
+    InternalServerError:
+      description: Internal server error
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Access is forbidden
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
       content:
         application/json:
           schema:
@@ -64,13 +76,29 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    InternalServerError:
-      description: Internal server error
+    Forbidden:
+      description: Access is forbidden
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
   schemas:
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
     ArtifactDownloadReportResponse:
       type: object
       description: Artifact Download Report response
@@ -133,6 +161,15 @@ components:
                 type: string
         user_agent_headers:
           type: string
+    CVE_status:
+      type: string
+      enum:
+      - reported
+      - active
+      - mitigated
+      - cleared
+      - disputed
+      - unknown
     ArtifactDownloadReportRequest:
       type: object
       description: Artifact download report request to be downloaded from a  given start date to a given end date channel id and user id filters are optional
@@ -169,31 +206,6 @@ components:
           items:
             type: string
           description: List of user names
-    ErrorResponse:
-      type: object
-      description: The metadata contained in an error response
-      properties:
-        code:
-          type: string
-          description: Internal error code. Could be used to show corresponding message text from a message catalog
-          example: bad-parameter
-        message:
-          type: string
-          description: Short human-readable error message. Used mainly for logging
-          example: Bad request parameter for 'sort'
-        status:
-          type: integer
-          description: The HTTP Status code
-          example: 401
-    CVE_status:
-      type: string
-      enum:
-      - reported
-      - active
-      - mitigated
-      - cleared
-      - disputed
-      - unknown
   securitySchemes:
     jwt:
       type: http

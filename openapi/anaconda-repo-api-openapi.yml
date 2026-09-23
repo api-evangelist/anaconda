@@ -22,6 +22,8 @@ paths:
           description: No content
       tags:
       - Repo
+      summary: Repo endpoints docker publish events
+      x-summary-source: derived
   /repo/docker/repositories/{channel_id}/{image_name}:
     get:
       x-internal: true
@@ -49,16 +51,18 @@ paths:
       - user_token: []
       tags:
       - Repo
+      summary: Repo endpoints docker get repository
+      x-summary-source: derived
 components:
   responses:
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
+    Forbidden:
+      description: Access is forbidden
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Access is forbidden
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
       content:
         application/json:
           schema:
