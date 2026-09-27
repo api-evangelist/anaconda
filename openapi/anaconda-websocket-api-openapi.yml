@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   version: '6.5'
-  title: Anaconda Server Websocket API
+  title: Anaconda Server WebSocket API
 servers:
 - url: https://api.anaconda.cloud/api
 tags:
@@ -92,82 +92,6 @@ paths:
       x-summary-source: derived
 components:
   parameters:
-    cve-name-query:
-      in: query
-      name: cve_name
-      description: the exact CVE id to search on
-      example: CVE-2018-1000805
-      schema:
-        type: string
-    max_cve_score-query:
-      in: query
-      name: max_score
-      description: Returns files below requesed max_cve_score
-      schema:
-        type: number
-        minimum: 0
-        maximum: 10
-    subchannel-parameter:
-      name: subchannel_name
-      in: path
-      required: true
-      schema:
-        type: string
-        pattern: ^[a-z][a-z0-9_-]*$
-    min_cve_score-query:
-      in: query
-      name: min_score
-      description: Returns the CVE with at least provided minimum score
-      schema:
-        type: number
-        minimum: 0
-        maximum: 10
-    cve_status-query:
-      in: query
-      name: status
-      description: CVE artifact status (may be comma-separated)
-      schema:
-        type: array
-        items:
-          $ref: '#/components/schemas/CVE_status'
-    channel-parameter:
-      name: channel_name
-      in: path
-      required: true
-      schema:
-        type: string
-        pattern: ^[a-z][a-z0-9_-]*$
-    search-query:
-      in: query
-      name: q
-      description: the string to search on
-      schema:
-        type: string
-    architectures-query:
-      in: query
-      name: architectures
-      description: the package architectures list to search on
-      schema:
-        type: array
-        example:
-        - linux-64
-        - osx-64
-        - win-32
-        - win-64
-        items:
-          type: string
-    version-query:
-      in: query
-      name: version
-      description: Package Version
-      schema:
-        type: string
-    artifact_name-query:
-      in: query
-      name: artifact
-      description: package name to search on
-      schema:
-        type: string
     event-types-query:
       in: query
       name: event_types
@@ -191,7 +115,95 @@ components:
           - artifact_generated
           - artifact_metadata_updated
           - artifact_downloaded
+    max_cve_score-query:
+      in: query
+      name: max_score
+      description: Returns files below requesed max_cve_score
+      schema:
+        type: number
+        minimum: 0
+        maximum: 10
+    artifact_name-query:
+      in: query
+      name: artifact
+      description: package name to search on
+      schema:
+        type: string
+    subchannel-parameter:
+      name: subchannel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
+    architectures-query:
+      in: query
+      name: architectures
+      description: the package architectures list to search on
+      schema:
+        type: array
+        example:
+        - linux-64
+        - osx-64
+        - win-32
+        - win-64
+        items:
+          type: string
+    search-query:
+      in: query
+      name: q
+      description: the string to search on
+      schema:
+        type: string
+    min_cve_score-query:
+      in: query
+      name: min_score
+      description: Returns the CVE with at least provided minimum score
+      schema:
+        type: number
+        minimum: 0
+        maximum: 10
+    version-query:
+      in: query
+      name: version
+      description: Package Version
+      schema:
+        type: string
+    cve_status-query:
+      in: query
+      name: status
+      description: CVE artifact status (may be comma-separated)
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/CVE_status'
+    cve-name-query:
+      in: query
+      name: cve_name
+      description: the exact CVE id to search on
+      example: CVE-2018-1000805
+      schema:
+        type: string
+    channel-parameter:
+      name: channel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
   schemas:
+    ArtifactFamily:
+      type: string
+      enum:
+      - anaconda_project
+      - anaconda_env
+      - cve
+      - conda
+      - python
+      - cran
+      - notebook
+      - docker
+      - sbom
     CVE:
       type: object
       description: CVE information
@@ -367,43 +379,6 @@ components:
           type: array
           items:
             type: string
-    ErrorResponse:
-      type: object
-      description: The metadata contained in an error response
-      properties:
-        code:
-          type: string
-          description: Internal error code. Could be used to show corresponding message text from a message catalog
-          example: bad-parameter
-        message:
-          type: string
-          description: Short human-readable error message. Used mainly for logging
-          example: Bad request parameter for 'sort'
-        status:
-          type: integer
-          description: The HTTP Status code
-          example: 401
-    ArtifactFamily:
-      type: string
-      enum:
-      - anaconda_project
-      - anaconda_env
-      - cve
-      - conda
-      - python
-      - cran
-      - notebook
-      - docker
-      - sbom
-    CVE_status:
-      type: string
-      enum:
-      - reported
-      - active
-      - mitigated
-      - cleared
-      - disputed
-      - unknown
     AccountHistory:
       type: object
       description: Account events history
@@ -434,6 +409,31 @@ components:
               created:
                 type: number
                 description: timestamp of log creation
+    CVE_status:
+      type: string
+      enum:
+      - reported
+      - active
+      - mitigated
+      - cleared
+      - disputed
+      - unknown
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
   responses:
     BadRequest:
       description: Server cannot execute request due to something that is perceived to be a client error

@@ -291,89 +291,7 @@ paths:
       - Artifacts
       security: []
 components:
-  responses:
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    BadRequest:
-      description: Server cannot execute request due to something that is perceived to be a client error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Access is forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   parameters:
-    only_names-query:
-      in: query
-      name: only_names
-      description: list of packages, search for. exact names, separated by comma
-      schema:
-        type: array
-        items:
-          type: string
-    limit-query:
-      in: query
-      name: limit
-      required: false
-      schema:
-        type: integer
-        default: 100
-      description: the number of results in the result set
-    root_version-parameter:
-      name: root_version
-      in: path
-      required: true
-      schema:
-        type: integer
-        minimum: 0
-        maximum: 1000
-      description: the number of results in the result set
-    search-query:
-      in: query
-      name: q
-      description: the string to search on
-      schema:
-        type: string
-    platform-query:
-      name: platform
-      in: query
-      schema:
-        type: string
-      description: filter for the platform
-    created-query:
-      in: query
-      name: created
-      description: timestamp start boundary for when created. I guess this could be either "only artifacts created on this exact date" or "artifacts created on this date and newer"
-      schema:
-        type: integer
-    artifact_name-parameter:
-      name: artifact_name
-      in: path
-      required: true
-      description: the unique name of the artifact
-      schema:
-        type: string
-        example: numpy
     ckey-parameter:
       name: ckey
       in: path
@@ -381,13 +299,6 @@ components:
       schema:
         type: string
         format: path
-    channel-parameter:
-      name: channel_name
-      in: path
-      required: true
-      schema:
-        type: string
-        pattern: ^[a-z][a-z0-9_-]*$
     artifact_family-query:
       name: artifact_family
       in: query
@@ -404,6 +315,48 @@ components:
         enum:
         - view
         - download
+    artifact_name-parameter:
+      name: artifact_name
+      in: path
+      required: true
+      description: the unique name of the artifact
+      schema:
+        type: string
+        example: numpy
+    created-query:
+      in: query
+      name: created
+      description: timestamp start boundary for when created. I guess this could be either "only artifacts created on this exact date" or "artifacts created on this date and newer"
+      schema:
+        type: integer
+    limit-query:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 100
+      description: the number of results in the result set
+    artifact_family-parameter:
+      name: artifact_family
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/ArtifactFamily'
+    only_names-query:
+      in: query
+      name: only_names
+      description: list of packages, search for. exact names, separated by comma
+      schema:
+        type: array
+        items:
+          type: string
+    search-query:
+      in: query
+      name: q
+      description: the string to search on
+      schema:
+        type: string
     offset-query:
       in: query
       name: offset
@@ -412,12 +365,27 @@ components:
         type: integer
         default: 0
       description: the offset of the result set
-    artifact_family-parameter:
-      name: artifact_family
+    platform-query:
+      name: platform
+      in: query
+      schema:
+        type: string
+      description: filter for the platform
+    updated-query:
+      in: query
+      name: updated
+      description: timestamp end boundary
+      schema:
+        type: integer
+    root_version-parameter:
+      name: root_version
       in: path
       required: true
       schema:
-        $ref: '#/components/schemas/ArtifactFamily'
+        type: integer
+        minimum: 0
+        maximum: 1000
+      description: the number of results in the result set
     artifact-sort-query:
       in: query
       name: sort
@@ -433,12 +401,13 @@ components:
           - -download_count
           - updated_at
           - -updated_at
-    updated-query:
-      in: query
-      name: updated
-      description: timestamp end boundary
+    channel-parameter:
+      name: channel_name
+      in: path
+      required: true
       schema:
-        type: integer
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
   schemas:
     ChannelPrivacy:
       description: channel privacy channel
@@ -447,9 +416,6 @@ components:
       - private
       - authenticated
       - public
-    ArtifactMetadata:
-      type: object
-      description: Artifact's metadata
     Artifact:
       type: object
       description: The object stored in Repo in as few properties as possible
@@ -477,32 +443,35 @@ components:
           description: family specific fields such as base and version
         updated_at:
           type: string
-    UploadRequest:
+    ArtifactMetadata:
       type: object
-      description: The information that proxy sends us after successful upload
-      required:
-      - channel
-      - name
-      - server_temp_path
-      - server_sha256
-      - server_md5
-      - server_size
-      - client_fields
+      description: Artifact's metadata
+    ArtifactVersion:
+      type: object
+      description: The version or point-in-time that this artifact existed and all it's associated metadata
       properties:
-        channel:
+        id:
           type: string
+        version:
+          type: integer
         name:
           type: string
-        server_temp_path:
+        file_type:
+          description: type of file
+          example: conda
           type: string
-        server_sha256:
+        created_at:
+          description: the date the file was created
           type: string
-        server_md5:
+        updated_at:
+          description: date of last update
           type: string
-        server_size:
+        uploader:
+          description: where was this uploaded (channel?)
+          type: string
+        download_count:
+          description: the number of downloads
           type: integer
-        client_fields:
-          type: object
     ErrorResponse:
       type: object
       description: The metadata contained in an error response
@@ -531,32 +500,63 @@ components:
       - notebook
       - docker
       - sbom
-    ArtifactVersion:
+    UploadRequest:
       type: object
-      description: The version or point-in-time that this artifact existed and all it's associated metadata
+      description: The information that proxy sends us after successful upload
+      required:
+      - channel
+      - name
+      - server_temp_path
+      - server_sha256
+      - server_md5
+      - server_size
+      - client_fields
       properties:
-        id:
+        channel:
           type: string
-        version:
-          type: integer
         name:
           type: string
-        file_type:
-          description: type of file
-          example: conda
+        server_temp_path:
           type: string
-        created_at:
-          description: the date the file was created
+        server_sha256:
           type: string
-        updated_at:
-          description: date of last update
+        server_md5:
           type: string
-        uploader:
-          description: where was this uploaded (channel?)
-          type: string
-        download_count:
-          description: the number of downloads
+        server_size:
           type: integer
+        client_fields:
+          type: object
+  responses:
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     jwt:
       type: http

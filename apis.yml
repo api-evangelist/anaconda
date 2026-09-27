@@ -50,7 +50,7 @@ modified: '2026-09-16'
 tags:
 - Company
 - Data Science
-- Machine-Learning
+- Machine Learning
 - Artificial Intelligence
 - Package Management
 - Python
@@ -73,6 +73,7 @@ tags_raw:
 - Package Registry
 - Conda
 - MCP
+- Machine-Learning
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

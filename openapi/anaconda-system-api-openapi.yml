@@ -269,8 +269,8 @@ paths:
       - user_token: []
 components:
   responses:
-    Forbidden:
-      description: Access is forbidden
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
       content:
         application/json:
           schema:
@@ -281,19 +281,70 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     BadRequest:
       description: Server cannot execute request due to something that is perceived to be a client error
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   schemas:
+    SystemSettings:
+      type: object
+      additionalProperties: false
+      properties:
+        user_channel_autocreate:
+          type: boolean
+          description: create a default user channel on first login
+        show_intro:
+          type: boolean
+          description: show intro screen after first installation or settings reset
+        cve_channel_id:
+          type:
+          - string
+          - 'null'
+          description: ID of global CVE channel
+        anaconda_ident_settings:
+          type:
+          - object
+          - 'null'
+          properties:
+            enabled:
+              type: boolean
+              description: Should anaconda-ident be enabled? If yes, then true, else false
+            enable_from:
+              type: string
+              format: date-time
+              description: From when should anaconda-ident be made mandatory
+            updated_by:
+              type: string
+              description: Username of admin updating this setting
+            selected_tokens:
+              type: array
+              description: List of tokens selected by admin for anaconda-ident
+              items:
+                type: string
+                enum:
+                - client_token
+                - session_token
+                - environment_token
+                - username
+                - hostname
+                - environment
+                - organization
+    ProductLicenseRequest:
+      type: object
+      required:
+      - license_key
+      properties:
+        license_key:
+          type: string
+          minLength: 1
     OpenMetrics:
       type: array
       items:
@@ -325,6 +376,38 @@ components:
                   oneOf:
                   - type: string
                   - type: number
+    ProductLicenseComplianceGroup:
+      type: array
+      items:
+        type: string
+        enum:
+        - users
+        - channels
+        - instances.api
+        - instances.dispatcher
+        - instances.worker
+    System:
+      type: object
+      properties:
+        status:
+          type: string
+        service_name:
+          type: string
+        version:
+          type: string
+        product_version:
+          type: string
+        errors:
+          type: array
+          items:
+            type: string
+        queue_status:
+          type: object
+          properties:
+            queue_name:
+              type: integer
+              description: Number of messages in the queue
+              example: 12
     ProductLicense:
       type: object
       properties:
@@ -381,22 +464,6 @@ components:
           $ref: '#/components/schemas/ProductLicenseMetrics'
         compliance:
           $ref: '#/components/schemas/ProductLicenseCompliance'
-    ErrorResponse:
-      type: object
-      description: The metadata contained in an error response
-      properties:
-        code:
-          type: string
-          description: Internal error code. Could be used to show corresponding message text from a message catalog
-          example: bad-parameter
-        message:
-          type: string
-          description: Short human-readable error message. Used mainly for logging
-          example: Bad request parameter for 'sort'
-        status:
-          type: integer
-          description: The HTTP Status code
-          example: 401
     ProductLicenseCompliance:
       type: object
       description: Is used in definining compliance checks for different group. warn_limit is triggered when reached 80% of the quota
@@ -409,24 +476,6 @@ components:
           $ref: '#/components/schemas/ProductLicenseComplianceGroup'
         no_data:
           $ref: '#/components/schemas/ProductLicenseComplianceGroup'
-    ProductLicenseRequest:
-      type: object
-      required:
-      - license_key
-      properties:
-        license_key:
-          type: string
-          minLength: 1
-    ProductLicenseComplianceGroup:
-      type: array
-      items:
-        type: string
-        enum:
-        - users
-        - channels
-        - instances.api
-        - instances.dispatcher
-        - instances.worker
     ProductLicenseMetrics:
       type: object
       description: Is used in definining limits as well as current compliance metrics
@@ -463,28 +512,6 @@ components:
                     type: string
                   blob_size:
                     type: integer
-    System:
-      type: object
-      properties:
-        status:
-          type: string
-        service_name:
-          type: string
-        version:
-          type: string
-        product_version:
-          type: string
-        errors:
-          type: array
-          items:
-            type: string
-        queue_status:
-          type: object
-          properties:
-            queue_name:
-              type: integer
-              description: Number of messages in the queue
-              example: 12
     CleanupStats:
       type: object
       description: Cleanup stats
@@ -494,49 +521,22 @@ components:
         space_reclaimed:
           type: number
           description: Space reclaimed in bytes after cleanup
-    SystemSettings:
+    ErrorResponse:
       type: object
-      additionalProperties: false
+      description: The metadata contained in an error response
       properties:
-        user_channel_autocreate:
-          type: boolean
-          description: create a default user channel on first login
-        show_intro:
-          type: boolean
-          description: show intro screen after first installation or settings reset
-        cve_channel_id:
-          type:
-          - string
-          - 'null'
-          description: ID of global CVE channel
-        anaconda_ident_settings:
-          type:
-          - object
-          - 'null'
-          properties:
-            enabled:
-              type: boolean
-              description: Should anaconda-ident be enabled? If yes, then true, else false
-            enable_from:
-              type: string
-              format: date-time
-              description: From when should anaconda-ident be made mandatory
-            updated_by:
-              type: string
-              description: Username of admin updating this setting
-            selected_tokens:
-              type: array
-              description: List of tokens selected by admin for anaconda-ident
-              items:
-                type: string
-                enum:
-                - client_token
-                - session_token
-                - environment_token
-                - username
-                - hostname
-                - environment
-                - organization
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
   securitySchemes:
     jwt:
       type: http

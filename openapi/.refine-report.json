@@ -30,9 +30,7 @@
     "anaconda-users-api-openapi.yml",
     "anaconda-websocket-api-openapi.yml"
   ],
-  "archived": [
-    "deleted 1 superseded output(s) from the previous generation"
-  ],
+  "archived": [],
   "errors": [
     "anaconda-ai-navigator-openapi-original.json: dangling $ref: #/components/schemas/TableInfo"
   ],
@@ -67,8 +65,7 @@
     "anaconda-server-openapi-original.json: declared missing tag: mirrors",
     "anaconda-server-openapi-original.json: declared missing tag: reports",
     "anaconda-server-openapi-original.json: declared missing tag: websocket",
-    "superseded outputs removed: anaconda-cv-es-api-openapi.yml",
-    "apis.yml register: written (+1 apis, 24 total)"
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "_original/anaconda-desktop-openapi-original.json: archived document superseded by a larger archived document",
@@ -78,7 +75,7 @@
     "anaconda-audit-logs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "anaconda-auth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "anaconda-channels-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "anaconda-cv-es-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anaconda-cves-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "anaconda-diagnosis-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "anaconda-docs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "anaconda-files-api-openapi.yml: previously refined output, superseded by openapi/_original/",

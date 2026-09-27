@@ -499,47 +499,14 @@ paths:
       - jwt: []
 components:
   schemas:
-    ChannelGroupRequest:
-      type: object
-      required:
-      - group_id
-      - permission
-      properties:
-        group_id:
-          type: string
-          description: group_id to add
-        permission:
-          type: string
-          enum:
-          - read
-          - write
-          - manage
-    GroupRequest:
-      type: object
-      required:
-      - name
-      - description
-      properties:
-        name:
-          type: string
-          description: the name of the group
-          example: ui-team
-          pattern: ^[A-Za-z0-9_\-\/].*$
-        description:
-          type: string
-          description: the description of the group
-          example: ui-team description
-    VirtualChannelSource:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          pattern: ^[a-z][a-z0-9_\-]*$
-        parent_name:
-          type: string
-          pattern: ^[a-z][a-z0-9_\-]*$
+    FilterExcludeSpecs:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+      description: 'A list of MatchSpec strings, for excluding specific packages. General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
+
+        '
     ChannelPrivacy:
       description: channel privacy channel
       type: string
@@ -547,49 +514,6 @@ components:
       - private
       - authenticated
       - public
-    ChannelFilters:
-      type: object
-      description: 'Filter directives for mirroring operation. Fields are optional. Can''t have include and exclude licenses together. This attribute is not returned by default in channels list
-
-        '
-      additionalProperties: false
-      properties:
-        conda:
-          type: object
-          additionalProperties: false
-          properties:
-            include_licenses:
-              $ref: '#/components/schemas/FilterLicenses'
-            exclude_licenses:
-              $ref: '#/components/schemas/FilterLicenses'
-            include_specs:
-              $ref: '#/components/schemas/FilterIncludeSpecs'
-            exclude_specs:
-              $ref: '#/components/schemas/FilterExcludeSpecs'
-        cran:
-          type: object
-          additionalProperties: false
-          properties:
-            include_licenses:
-              $ref: '#/components/schemas/FilterLicenses'
-            exclude_licenses:
-              $ref: '#/components/schemas/FilterLicenses'
-            include_specs:
-              $ref: '#/components/schemas/FilterIncludeSpecs'
-            exclude_specs:
-              $ref: '#/components/schemas/FilterExcludeSpecs'
-        python:
-          type: object
-          additionalProperties: false
-          properties:
-            include_licenses:
-              $ref: '#/components/schemas/FilterLicenses'
-            exclude_licenses:
-              $ref: '#/components/schemas/FilterLicenses'
-            include_specs:
-              $ref: '#/components/schemas/FilterIncludeSpecs'
-            exclude_specs:
-              $ref: '#/components/schemas/FilterExcludeSpecs'
     Subchannel:
       type: object
       description: Nested channel object
@@ -651,6 +575,110 @@ components:
         updated_at:
           type: string
           description: when the group was updated
+    GroupRequest:
+      type: object
+      required:
+      - name
+      - description
+      properties:
+        name:
+          type: string
+          description: the name of the group
+          example: ui-team
+          pattern: ^[A-Za-z0-9_\-\/].*$
+        description:
+          type: string
+          description: the description of the group
+          example: ui-team description
+    ChannelGroupPermissions:
+      type: object
+      description: group members permissions to channel
+      required:
+      - permission
+      properties:
+        permission:
+          type: string
+          enum:
+          - read
+          - write
+          - manage
+    ChannelFilters:
+      type: object
+      description: 'Filter directives for mirroring operation. Fields are optional. Can''t have include and exclude licenses together. This attribute is not returned by default in channels list
+
+        '
+      additionalProperties: false
+      properties:
+        conda:
+          type: object
+          additionalProperties: false
+          properties:
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+        cran:
+          type: object
+          additionalProperties: false
+          properties:
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+        python:
+          type: object
+          additionalProperties: false
+          properties:
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+    FilterLicenses:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+        enum:
+        - agpl
+        - gpl2
+        - gpl3
+        - lgpl
+        - bsd
+        - mit
+        - apache
+        - psf
+        - public_domain
+        - proprietary
+        - other
+        - none
+      description: List of license familities to look for. Empty array means all licenses
+    ChannelGroupRequest:
+      type: object
+      required:
+      - group_id
+      - permission
+      properties:
+        group_id:
+          type: string
+          description: group_id to add
+        permission:
+          type: string
+          enum:
+          - read
+          - write
+          - manage
     Group:
       type: object
       description: Logical collection of users within a channel
@@ -687,37 +715,6 @@ components:
           type: boolean
           description: remote group
           example: false
-    FilterExcludeSpecs:
-      type: array
-      uniqueItems: true
-      items:
-        type: string
-      description: 'A list of MatchSpec strings, for excluding specific packages. General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
-
-        '
-    ErrorResponse:
-      type: object
-      description: The metadata contained in an error response
-      properties:
-        code:
-          type: string
-          description: Internal error code. Could be used to show corresponding message text from a message catalog
-          example: bad-parameter
-        message:
-          type: string
-          description: Short human-readable error message. Used mainly for logging
-          example: Bad request parameter for 'sort'
-        status:
-          type: integer
-          description: The HTTP Status code
-          example: 401
-    ChannelType:
-      description: channel type
-      type: string
-      default: default
-      enum:
-      - default
-      - virtual
     Channel:
       type: object
       description: Channel object
@@ -759,37 +756,29 @@ components:
           type: number
         filters:
           $ref: '#/components/schemas/ChannelFilters'
-    FilterLicenses:
-      type: array
-      uniqueItems: true
-      items:
-        type: string
-        enum:
-        - agpl
-        - gpl2
-        - gpl3
-        - lgpl
-        - bsd
-        - mit
-        - apache
-        - psf
-        - public_domain
-        - proprietary
-        - other
-        - none
-      description: List of license familities to look for. Empty array means all licenses
-    ChannelGroupPermissions:
+    ErrorResponse:
       type: object
-      description: group members permissions to channel
-      required:
-      - permission
+      description: The metadata contained in an error response
       properties:
-        permission:
+        code:
           type: string
-          enum:
-          - read
-          - write
-          - manage
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+    ChannelType:
+      description: channel type
+      type: string
+      default: default
+      enum:
+      - default
+      - virtual
     ChannelIndexingBehavior:
       description: channel indexing behavior
       type: string
@@ -805,44 +794,26 @@ components:
       description: 'A list of MatchSpec strings, for including from excluded list General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
 
         '
-  responses:
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Conflict:
-      description: Creating/updating resource raises a conflict
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    BadRequest:
-      description: Server cannot execute request due to something that is perceived to be a client error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Access is forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
+    VirtualChannelSource:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        parent_name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
   parameters:
+    with-user-counts-query:
+      in: query
+      name: with_user_counts
+      description: Skips the user counts for groups all groups
+      required: false
+      schema:
+        type: boolean
+        default: true
     channel-sort-query:
       in: query
       name: sort
@@ -856,20 +827,6 @@ components:
           - -name
           - updated_at
           - -updated_at
-    group_id-parameter:
-      name: group_id
-      in: path
-      required: true
-      schema:
-        type: string
-        pattern: ^[a-z0-9-]+$
-    subchannel-parameter:
-      name: subchannel_name
-      in: path
-      required: true
-      schema:
-        type: string
-        pattern: ^[a-z][a-z0-9_-]*$
     limit-query:
       in: query
       name: limit
@@ -878,27 +835,20 @@ components:
         type: integer
         default: 100
       description: the number of results in the result set
-    with-user-counts-query:
-      in: query
-      name: with_user_counts
-      description: Skips the user counts for groups all groups
-      required: false
-      schema:
-        type: boolean
-        default: true
-    channel-parameter:
-      name: channel_name
+    subchannel-parameter:
+      name: subchannel_name
       in: path
       required: true
       schema:
         type: string
         pattern: ^[a-z][a-z0-9_-]*$
-    user_id-parameter:
-      name: user_id
+    group_id-parameter:
+      name: group_id
       in: path
       required: true
       schema:
         type: string
+        pattern: ^[a-z0-9-]+$
     offset-query:
       in: query
       name: offset
@@ -907,6 +857,56 @@ components:
         type: integer
         default: 0
       description: the offset of the result set
+    user_id-parameter:
+      name: user_id
+      in: path
+      required: true
+      schema:
+        type: string
+    channel-parameter:
+      name: channel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
+  responses:
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: Creating/updating resource raises a conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     jwt:
       type: http

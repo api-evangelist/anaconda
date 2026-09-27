@@ -42,8 +42,8 @@ paths:
       - user_token: []
 components:
   responses:
-    Forbidden:
-      description: Access is forbidden
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
       content:
         application/json:
           schema:
@@ -54,21 +54,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
+    Forbidden:
+      description: Access is forbidden
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
   parameters:
-    limit-query:
-      in: query
-      name: limit
-      required: false
-      schema:
-        type: integer
-        default: 100
-      description: the number of results in the result set
     offset-query:
       in: query
       name: offset
@@ -98,30 +90,15 @@ components:
           - -updated_at
           - state
           - -state
+    limit-query:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 100
+      description: the number of results in the result set
   schemas:
-    ErrorResponse:
-      type: object
-      description: The metadata contained in an error response
-      properties:
-        code:
-          type: string
-          description: Internal error code. Could be used to show corresponding message text from a message catalog
-          example: bad-parameter
-        message:
-          type: string
-          description: Short human-readable error message. Used mainly for logging
-          example: Bad request parameter for 'sort'
-        status:
-          type: integer
-          description: The HTTP Status code
-          example: 401
-    ChannelPrivacy:
-      description: channel privacy channel
-      type: string
-      enum:
-      - private
-      - authenticated
-      - public
     MirrorSyncState:
       type: object
       additionalProperties: false
@@ -204,6 +181,13 @@ components:
         bytes_transfered:
           type: integer
           description: Total number of bytes transfered during active mirroring
+    ChannelPrivacy:
+      description: channel privacy channel
+      type: string
+      enum:
+      - private
+      - authenticated
+      - public
     MirrorWithChannel:
       type: object
       required:
@@ -282,6 +266,22 @@ components:
               pattern: ^[a-z][a-z0-9_\-]*$
             privacy:
               $ref: '#/components/schemas/ChannelPrivacy'
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
   securitySchemes:
     jwt:
       type: http

@@ -189,6 +189,59 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    DownloadStatus:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - status
+          properties:
+            status:
+              type: string
+              enum:
+              - in_progress
+              - paused
+              - completed
+              description: Current status of the download
+            progress:
+              $ref: '#/components/schemas/Download'
+              description: Download progress information (only when status is in_progress or paused)
+            localPath:
+              type: string
+              description: Local path where the file is stored (only when status is completed)
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              enum:
+              - INVALID_REQUEST
+              - DATABASE_NOT_RUNNING
+              - INTERNAL_SERVER_ERROR
+              - INVALID_SERVER_ID
+              - SERVER_NOT_RUNNING
+              - SERVER_RUNNING
+              - INTERNAL_SERVER_ERROR
+            message:
+              type: string
+    DownloadAction:
+      type: object
+      required:
+      - action
+      properties:
+        action:
+          type: string
+          enum:
+          - start
+          - pause
+          - resume
+          description: Action to perform on the download
     ModelFile:
       type: object
       required:
@@ -245,18 +298,6 @@ components:
             localPath:
               type: string
               description: Local path where the file is stored (only when status is completed)
-    DownloadAction:
-      type: object
-      required:
-      - action
-      properties:
-        action:
-          type: string
-          enum:
-          - start
-          - pause
-          - resume
-          description: Action to perform on the download
     Download:
       type: object
       required:
@@ -297,47 +338,6 @@ components:
         averageMbps:
           type: number
           description: Average download speed in Mbps
-    DownloadStatus:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: object
-          required:
-          - status
-          properties:
-            status:
-              type: string
-              enum:
-              - in_progress
-              - paused
-              - completed
-              description: Current status of the download
-            progress:
-              $ref: '#/components/schemas/Download'
-              description: Download progress information (only when status is in_progress or paused)
-            localPath:
-              type: string
-              description: Local path where the file is stored (only when status is completed)
-    Error:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              type: string
-              enum:
-              - INVALID_REQUEST
-              - DATABASE_NOT_RUNNING
-              - INTERNAL_SERVER_ERROR
-              - INVALID_SERVER_ID
-              - SERVER_NOT_RUNNING
-              - SERVER_RUNNING
-              - INTERNAL_SERVER_ERROR
-            message:
-              type: string
   securitySchemes:
     bearerAuth:
       type: http

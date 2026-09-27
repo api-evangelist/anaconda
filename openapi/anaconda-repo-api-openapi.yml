@@ -55,14 +55,14 @@ paths:
       x-summary-source: derived
 components:
   responses:
-    Forbidden:
-      description: Access is forbidden
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
+    Forbidden:
+      description: Access is forbidden
       content:
         application/json:
           schema:

@@ -58,14 +58,14 @@ paths:
       - user_token: []
 components:
   responses:
-    InternalServerError:
-      description: Internal server error
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
+    InternalServerError:
+      description: Internal server error
       content:
         application/json:
           schema:
@@ -83,22 +83,42 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
   schemas:
-    ErrorResponse:
+    ArtifactDownloadReportRequest:
       type: object
-      description: The metadata contained in an error response
+      description: Artifact download report request to be downloaded from a  given start date to a given end date channel id and user id filters are optional
+      required:
+      - from_date
+      - to_date
+      - download_as
       properties:
-        code:
+        from_date:
           type: string
-          description: Internal error code. Could be used to show corresponding message text from a message catalog
-          example: bad-parameter
-        message:
+          format: date
+          description: "* Report start date. \n* Supported date formats:\n  - '%Y-%m-%d'\n"
+        to_date:
           type: string
-          description: Short human-readable error message. Used mainly for logging
-          example: Bad request parameter for 'sort'
-        status:
-          type: integer
-          description: The HTTP Status code
-          example: 401
+          format: date
+          description: "* Report end date. \n* Supported date formats:\n  - '%Y-%m-%d'\n"
+        download_as:
+          type: string
+          description: "* Specifies the format of report download file. \n* The report name will follow the convention\n  ArtifactsReport_{timestamp('%Y%m%d_%H%M%S')}\n"
+          enum:
+          - json
+          - csv
+        channel_names:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of Channel names
+        user_names:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of user names
     ArtifactDownloadReportResponse:
       type: object
       description: Artifact Download Report response
@@ -170,42 +190,22 @@ components:
       - cleared
       - disputed
       - unknown
-    ArtifactDownloadReportRequest:
+    ErrorResponse:
       type: object
-      description: Artifact download report request to be downloaded from a  given start date to a given end date channel id and user id filters are optional
-      required:
-      - from_date
-      - to_date
-      - download_as
+      description: The metadata contained in an error response
       properties:
-        from_date:
+        code:
           type: string
-          format: date
-          description: "* Report start date. \n* Supported date formats:\n  - '%Y-%m-%d'\n"
-        to_date:
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
           type: string
-          format: date
-          description: "* Report end date. \n* Supported date formats:\n  - '%Y-%m-%d'\n"
-        download_as:
-          type: string
-          description: "* Specifies the format of report download file. \n* The report name will follow the convention\n  ArtifactsReport_{timestamp('%Y%m%d_%H%M%S')}\n"
-          enum:
-          - json
-          - csv
-        channel_names:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: List of Channel names
-        user_names:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: List of user names
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
   securitySchemes:
     jwt:
       type: http

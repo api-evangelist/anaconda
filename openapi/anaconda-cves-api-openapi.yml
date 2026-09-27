@@ -828,29 +828,6 @@ paths:
       - user_token: []
 components:
   parameters:
-    to-date-parameter:
-      name: to_date
-      description: ending timestamp for filtering data
-      in: query
-      schema:
-        type: string
-        format: date
-        description: upper date YYYY-mm-dd
-    min_cve_score-query:
-      in: query
-      name: min_score
-      description: Returns the CVE with at least provided minimum score
-      schema:
-        type: number
-        minimum: 0
-        maximum: 10
-    min_packages_count-query:
-      in: query
-      name: min_packages_count
-      description: Returns the CVE with at least provided minimum score
-      schema:
-        type: integer
-        minimum: 0
     max_cve_score-query:
       in: query
       name: max_score
@@ -859,28 +836,28 @@ components:
         type: number
         minimum: 0
         maximum: 10
-    subchannel-parameter:
-      name: subchannel_name
-      in: path
-      required: true
+    artifact_name-query:
+      in: query
+      name: artifact
+      description: package name to search on
       schema:
         type: string
-        pattern: ^[a-z][a-z0-9_-]*$
-    min-impact-score-query:
+    max-impact-score-query:
       in: query
-      name: min_score
-      description: Returns the CVE Notifications with at least provided minimum impact score
+      name: max_score
+      description: Returns the CVE Notifications below provided maximum impact score
       schema:
         type: number
         minimum: 0
         maximum: 10
-    use_blob-query:
+    min_cve_score-query:
       in: query
-      name: use_blob
-      required: false
+      name: min_score
+      description: Returns the CVE with at least provided minimum score
       schema:
-        type: boolean
-        default: false
+        type: number
+        minimum: 0
+        maximum: 10
     cve_status-query:
       in: query
       name: status
@@ -889,34 +866,6 @@ components:
         type: array
         items:
           $ref: '#/components/schemas/CVE_status'
-    limit-query:
-      in: query
-      name: limit
-      required: false
-      schema:
-        type: integer
-        default: 100
-      description: the number of results in the result set
-    sha256s-query:
-      in: query
-      name: sha256s
-      description: list of sha256 (may be comma-separated)
-      schema:
-        type: array
-        items:
-          type: string
-    search-query:
-      in: query
-      name: q
-      description: the string to search on
-      schema:
-        type: string
-    artifact_name-query:
-      in: query
-      name: artifact
-      description: package name to search on
-      schema:
-        type: string
     artifact_name-parameter:
       name: artifact_name
       in: path
@@ -925,36 +874,59 @@ components:
       schema:
         type: string
         example: numpy
-    cve_id-parameter:
-      name: cve_id
-      in: path
-      required: true
-      schema:
-        type: string
-        minLength: 1
-    cve-notifications-event-type-query:
+    with_cve_counts_by_severity-query:
       in: query
-      name: event_types
-      description: filter CVE Notifications by event types
+      name: with_cve_counts_by_severity
+      required: false
+      schema:
+        type: boolean
+        default: false
+      description: return cve counts by severity.
+    use_blob-query:
+      in: query
+      name: use_blob
+      required: false
+      schema:
+        type: boolean
+        default: false
+    min_packages_count-query:
+      in: query
+      name: min_packages_count
+      description: Returns the CVE with at least provided minimum score
+      schema:
+        type: integer
+        minimum: 0
+    sha256s-query:
+      in: query
+      name: sha256s
+      description: list of sha256 (may be comma-separated)
       schema:
         type: array
         items:
-          $ref: '#/components/schemas/CVEsNotificationEventTypes'
-    channel-parameter:
-      name: channel_name
-      in: path
-      required: true
-      schema:
-        type: string
-        pattern: ^[a-z][a-z0-9_-]*$
-    from-date-parameter:
-      name: from_date
-      description: starting timestamp for filtering data
+          type: string
+    min-download-count-query:
       in: query
+      name: min_download_count
+      description: Displays notifications only for packages with provided minimum number of downloads
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+    limit-query:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 100
+      description: the number of results in the result set
+    cve-name-query:
+      in: query
+      name: cve_name
+      description: the exact CVE id to search on
+      example: CVE-2018-1000805
       schema:
         type: string
-        format: date
-        description: bottom date YYYY-mm-dd
     architectures-query:
       in: query
       name: architectures
@@ -968,6 +940,20 @@ components:
         - win-64
         items:
           type: string
+    from-date-parameter:
+      name: from_date
+      description: starting timestamp for filtering data
+      in: query
+      schema:
+        type: string
+        format: date
+        description: bottom date YYYY-mm-dd
+    artifact_family-parameter:
+      name: artifact_family
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/ArtifactFamily'
     cve-sort-query:
       in: query
       name: sort
@@ -985,36 +971,32 @@ components:
           - -modified_at
           - created_at
           - -created_at
-    min-download-count-query:
-      in: query
-      name: min_download_count
-      description: Displays notifications only for packages with provided minimum number of downloads
-      schema:
-        type: integer
-        minimum: 0
-        default: 0
-    cve-name-query:
-      in: query
-      name: cve_name
-      description: the exact CVE id to search on
-      example: CVE-2018-1000805
+    subchannel-parameter:
+      name: subchannel_name
+      in: path
+      required: true
       schema:
         type: string
-    timestamp-parameter:
-      name: timestamp
-      description: exact timestamp for filtering data
+        pattern: ^[a-z][a-z0-9_-]*$
+    search-query:
       in: query
+      name: q
+      description: the string to search on
       schema:
         type: string
-        format: date-time
-    with_cve_counts_by_severity-query:
+    version-query:
       in: query
-      name: with_cve_counts_by_severity
-      required: false
+      name: version
+      description: Package Version
       schema:
-        type: boolean
-        default: false
-      description: return cve counts by severity.
+        type: string
+    cve_id-parameter:
+      name: cve_id
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 1
     offset-query:
       in: query
       name: offset
@@ -1023,58 +1005,120 @@ components:
         type: integer
         default: 0
       description: the offset of the result set
-    artifact_family-parameter:
-      name: artifact_family
+    timestamp-parameter:
+      name: timestamp
+      description: exact timestamp for filtering data
+      in: query
+      schema:
+        type: string
+        format: date-time
+    cve-notifications-event-type-query:
+      in: query
+      name: event_types
+      description: filter CVE Notifications by event types
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/CVEsNotificationEventTypes'
+    channel-parameter:
+      name: channel_name
       in: path
       required: true
       schema:
-        $ref: '#/components/schemas/ArtifactFamily'
-    version-query:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
+    to-date-parameter:
+      name: to_date
+      description: ending timestamp for filtering data
       in: query
-      name: version
-      description: Package Version
       schema:
         type: string
-    max-impact-score-query:
+        format: date
+        description: upper date YYYY-mm-dd
+    min-impact-score-query:
       in: query
-      name: max_score
-      description: Returns the CVE Notifications below provided maximum impact score
+      name: min_score
+      description: Returns the CVE Notifications with at least provided minimum impact score
       schema:
         type: number
         minimum: 0
         maximum: 10
-  responses:
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    BadRequest:
-      description: Server cannot execute request due to something that is perceived to be a client error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Access is forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   schemas:
+    CVEsBySeverity:
+      type: object
+      description: CVE counts grouped by severity based on NVD classification
+      properties:
+        critical:
+          type: integer
+        high:
+          type: integer
+        medium:
+          type: integer
+        low:
+          type: integer
+        none:
+          type: integer
+    CVENotificationsTimestamp:
+      required:
+      - timestamp
+      additionalProperties: false
+      type: object
+      description: Timestamp for Generation of CVE Notifications
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+    CVEsNotificationEventTypes:
+      type: string
+      enum:
+      - score_increased
+      - score_decreased
+      - status_changed
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+    ChannelCveHistory:
+      type: array
+      description: List of cve histories
+      items:
+        $ref: '#/components/schemas/CVENotificationsHistory'
+    CVENotificationsHistory:
+      type: object
+      description: The object representing cve notification
+      properties:
+        file_name:
+          type: string
+        platform:
+          type: string
+        artifact_family:
+          $ref: '#/components/schemas/ArtifactFamily'
+        cves_count:
+          type: number
+        old_max_score:
+          type: number
+        new_max_score:
+          type: number
+        notification_changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CVENotificationChanges'
+        number_of_downloads:
+          type: number
+        created_at:
+          type: string
     CVEPackage:
       type: object
       description: CVE Package information
@@ -1104,6 +1148,18 @@ components:
         blob_size:
           type: string
           example: 1234
+    ArtifactFamily:
+      type: string
+      enum:
+      - anaconda_project
+      - anaconda_env
+      - cve
+      - conda
+      - python
+      - cran
+      - notebook
+      - docker
+      - sbom
     CVEsReport:
       type: object
       description: CVE Package information
@@ -1136,102 +1192,6 @@ components:
               anaconda_modified_at:
                 description: latest date when the CVE was curated by Anaconda
                 type: string
-    CVEsNotificationEventTypes:
-      type: string
-      enum:
-      - score_increased
-      - score_decreased
-      - status_changed
-    CVENotificationsTimestamp:
-      required:
-      - timestamp
-      additionalProperties: false
-      type: object
-      description: Timestamp for Generation of CVE Notifications
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-    CVEsBySeverity:
-      type: object
-      description: CVE counts grouped by severity based on NVD classification
-      properties:
-        critical:
-          type: integer
-        high:
-          type: integer
-        medium:
-          type: integer
-        low:
-          type: integer
-        none:
-          type: integer
-    CVE_status:
-      type: string
-      enum:
-      - reported
-      - active
-      - mitigated
-      - cleared
-      - disputed
-      - unknown
-    ChannelCveHistory:
-      type: array
-      description: List of cve histories
-      items:
-        $ref: '#/components/schemas/CVENotificationsHistory'
-    ErrorResponse:
-      type: object
-      description: The metadata contained in an error response
-      properties:
-        code:
-          type: string
-          description: Internal error code. Could be used to show corresponding message text from a message catalog
-          example: bad-parameter
-        message:
-          type: string
-          description: Short human-readable error message. Used mainly for logging
-          example: Bad request parameter for 'sort'
-        status:
-          type: integer
-          description: The HTTP Status code
-          example: 401
-    CVENotificationsHistory:
-      type: object
-      description: The object representing cve notification
-      properties:
-        file_name:
-          type: string
-        platform:
-          type: string
-        artifact_family:
-          $ref: '#/components/schemas/ArtifactFamily'
-        cves_count:
-          type: number
-        old_max_score:
-          type: number
-        new_max_score:
-          type: number
-        notification_changes:
-          type: array
-          items:
-            $ref: '#/components/schemas/CVENotificationChanges'
-        number_of_downloads:
-          type: number
-        created_at:
-          type: string
-    ArtifactFamily:
-      type: string
-      enum:
-      - anaconda_project
-      - anaconda_env
-      - cve
-      - conda
-      - python
-      - cran
-      - notebook
-      - docker
-      - sbom
     CVE:
       type: object
       description: CVE information
@@ -1425,6 +1385,46 @@ components:
           type: string
         new_status:
           type: string
+    CVE_status:
+      type: string
+      enum:
+      - reported
+      - active
+      - mitigated
+      - cleared
+      - disputed
+      - unknown
+  responses:
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     jwt:
       type: http

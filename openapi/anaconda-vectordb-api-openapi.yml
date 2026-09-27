@@ -195,67 +195,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    CreateTableResponse:
-      type: object
-      required:
-      - name
-      - schema
-      - numRows
-      properties:
-        name:
-          type: string
-          description: Name of the created table
-        schema:
-          type: object
-          description: Schema of the created table
-          properties:
-            columns:
-              type: array
-              items:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: Column name
-                  type:
-                    type: string
-                    description: Column data type
-                  constraints:
-                    type: array
-                    items:
-                      type: string
-                    description: Column constraints
-        numRows:
-          type: integer
-          description: Number of rows inserted
-    VectorDB:
-      type: object
-      required:
-      - running
-      - host
-      - port
-      - database
-      - user
-      - password
-      properties:
-        running:
-          type: boolean
-          description: Whether the vector database is running
-        host:
-          type: string
-          description: Database host address
-        port:
-          type: integer
-          description: Database port number
-        database:
-          type: string
-          description: Database name
-        user:
-          type: string
-          description: Database username
-        password:
-          type: string
-          description: Database password
     VectorDBAction:
       type: object
       required:
@@ -315,6 +254,67 @@ components:
               - INTERNAL_SERVER_ERROR
             message:
               type: string
+    VectorDB:
+      type: object
+      required:
+      - running
+      - host
+      - port
+      - database
+      - user
+      - password
+      properties:
+        running:
+          type: boolean
+          description: Whether the vector database is running
+        host:
+          type: string
+          description: Database host address
+        port:
+          type: integer
+          description: Database port number
+        database:
+          type: string
+          description: Database name
+        user:
+          type: string
+          description: Database username
+        password:
+          type: string
+          description: Database password
+    CreateTableResponse:
+      type: object
+      required:
+      - name
+      - schema
+      - numRows
+      properties:
+        name:
+          type: string
+          description: Name of the created table
+        schema:
+          type: object
+          description: Schema of the created table
+          properties:
+            columns:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Column name
+                  type:
+                    type: string
+                    description: Column data type
+                  constraints:
+                    type: array
+                    items:
+                      type: string
+                    description: Column constraints
+        numRows:
+          type: integer
+          description: Number of rows inserted
   securitySchemes:
     bearerAuth:
       type: http
