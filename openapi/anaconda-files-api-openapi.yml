@@ -189,29 +189,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    DownloadStatus:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: object
-          required:
-          - status
-          properties:
-            status:
-              type: string
-              enum:
-              - in_progress
-              - paused
-              - completed
-              description: Current status of the download
-            progress:
-              $ref: '#/components/schemas/Download'
-              description: Download progress information (only when status is in_progress or paused)
-            localPath:
-              type: string
-              description: Local path where the file is stored (only when status is completed)
     Error:
       type: object
       properties:
@@ -242,6 +219,46 @@ components:
           - pause
           - resume
           description: Action to perform on the download
+    Download:
+      type: object
+      required:
+      - fileId
+      - modelId
+      - filename
+      - downloadedRatio
+      - transferredBytes
+      - totalBytes
+      - paused
+      - downloadTimeTaken
+      - averageMbps
+      properties:
+        fileId:
+          type: string
+          description: ID of the file being downloaded
+        modelId:
+          type: string
+          description: ID of the model being downloaded
+        filename:
+          type: string
+          description: Name of the file being downloaded
+        downloadedRatio:
+          type: number
+          description: Percentage of download completion (0-1)
+        transferredBytes:
+          type: number
+          description: Number of bytes transferred
+        totalBytes:
+          type: number
+          description: Total size of the file in bytes
+        paused:
+          type: boolean
+          description: Whether the download is paused
+        downloadTimeTaken:
+          type: number
+          description: Time taken for download in milliseconds
+        averageMbps:
+          type: number
+          description: Average download speed in Mbps
     ModelFile:
       type: object
       required:
@@ -298,46 +315,29 @@ components:
             localPath:
               type: string
               description: Local path where the file is stored (only when status is completed)
-    Download:
+    DownloadStatus:
       type: object
       required:
-      - fileId
-      - modelId
-      - filename
-      - downloadedRatio
-      - transferredBytes
-      - totalBytes
-      - paused
-      - downloadTimeTaken
-      - averageMbps
+      - data
       properties:
-        fileId:
-          type: string
-          description: ID of the file being downloaded
-        modelId:
-          type: string
-          description: ID of the model being downloaded
-        filename:
-          type: string
-          description: Name of the file being downloaded
-        downloadedRatio:
-          type: number
-          description: Percentage of download completion (0-1)
-        transferredBytes:
-          type: number
-          description: Number of bytes transferred
-        totalBytes:
-          type: number
-          description: Total size of the file in bytes
-        paused:
-          type: boolean
-          description: Whether the download is paused
-        downloadTimeTaken:
-          type: number
-          description: Time taken for download in milliseconds
-        averageMbps:
-          type: number
-          description: Average download speed in Mbps
+        data:
+          type: object
+          required:
+          - status
+          properties:
+            status:
+              type: string
+              enum:
+              - in_progress
+              - paused
+              - completed
+              description: Current status of the download
+            progress:
+              $ref: '#/components/schemas/Download'
+              description: Download progress information (only when status is in_progress or paused)
+            localPath:
+              type: string
+              description: Local path where the file is stored (only when status is completed)
   securitySchemes:
     bearerAuth:
       type: http

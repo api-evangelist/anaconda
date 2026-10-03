@@ -395,57 +395,20 @@ paths:
       - Audit Logs
 components:
   schemas:
-    ExportRequest:
-      description: '**Request body** for creating a new export job that filters audit logs and
-
-        writes them in JSON Lines format.
+    HTTPValidationError:
+      description: '**Error response** returned when the request fails validation.
 
         '
       properties:
-        from_date:
-          anyOf:
-          - format: date-time
-            type: string
-            example: <timestamp>
-          - type: 'null'
-          description: 'Lower bound (inclusive) for filtering audit logs by `occurred_at`.
-
-            Only events with `occurred_at >= from_date` are exported.
-
-            '
-          title: From Date
-        q:
-          default: []
-          description: 'Search filters in the format `column_name:search_string1,search_string2`.
-
-
-            Multiple values for a single column are separated by commas. To combine
-
-            multiple `q` entries, use `search_operator`.
+        detail:
+          description: 'List of validation errors describing which fields are invalid and why.
 
             '
           items:
-            type: string
-          title: Q
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
           type: array
-        search_operator:
-          default: or
-          description: "Logical operator used to combine multiple `q` filters:\n\n- `or` — export logs that match **any** search condition  \n- `and` — export logs that match **all** search conditions\n"
-          title: Search Operator
-          type: string
-        to_date:
-          anyOf:
-          - format: date-time
-            type: string
-            example: <timestamp>
-          - type: 'null'
-          description: 'Upper bound (inclusive) for filtering audit logs by `occurred_at`.
-
-            Only events with `occurred_at <= to_date` are exported.
-
-            '
-          title: To Date
-      title: ExportRequest
+      title: HTTPValidationError
       type: object
     AuditLogResponse:
       description: '**Response** representation of an audit log entry, including core fields and
@@ -597,6 +560,58 @@ components:
       - message
       title: AuditLogResponse
       type: object
+    ExportRequest:
+      description: '**Request body** for creating a new export job that filters audit logs and
+
+        writes them in JSON Lines format.
+
+        '
+      properties:
+        from_date:
+          anyOf:
+          - format: date-time
+            type: string
+            example: <timestamp>
+          - type: 'null'
+          description: 'Lower bound (inclusive) for filtering audit logs by `occurred_at`.
+
+            Only events with `occurred_at >= from_date` are exported.
+
+            '
+          title: From Date
+        q:
+          default: []
+          description: 'Search filters in the format `column_name:search_string1,search_string2`.
+
+
+            Multiple values for a single column are separated by commas. To combine
+
+            multiple `q` entries, use `search_operator`.
+
+            '
+          items:
+            type: string
+          title: Q
+          type: array
+        search_operator:
+          default: or
+          description: "Logical operator used to combine multiple `q` filters:\n\n- `or` — export logs that match **any** search condition  \n- `and` — export logs that match **all** search conditions\n"
+          title: Search Operator
+          type: string
+        to_date:
+          anyOf:
+          - format: date-time
+            type: string
+            example: <timestamp>
+          - type: 'null'
+          description: 'Upper bound (inclusive) for filtering audit logs by `occurred_at`.
+
+            Only events with `occurred_at <= to_date` are exported.
+
+            '
+          title: To Date
+      title: ExportRequest
+      type: object
     ValidationError:
       description: '**Validation error** describing an issue with a specific part of the request.
 
@@ -631,47 +646,6 @@ components:
       - msg
       - type
       title: ValidationError
-      type: object
-    HTTPValidationError:
-      description: '**Error response** returned when the request fails validation.
-
-        '
-      properties:
-        detail:
-          description: 'List of validation errors describing which fields are invalid and why.
-
-            '
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
-    PaginatedResponse_AuditLogResponse_:
-      description: '**Paginated response** that wraps a list of audit log entries and the total
-
-        number of matching records.
-
-        '
-      properties:
-        items:
-          description: 'Page of audit log entries returned for the current request.
-
-            '
-          items:
-            $ref: '#/components/schemas/AuditLogResponse'
-          title: Items
-          type: array
-        total_count:
-          description: 'Total number of audit log entries matching the query, across all pages.
-
-            '
-          title: Total Count
-          type: integer
-      required:
-      - items
-      - total_count
-      title: PaginatedResponse[AuditLogResponse]
       type: object
     ExportJobResponse:
       description: '**Response** containing the state of a bulk export job and, when complete,
@@ -753,6 +727,32 @@ components:
       - status
       - created_at
       title: ExportJobResponse
+      type: object
+    PaginatedResponse_AuditLogResponse_:
+      description: '**Paginated response** that wraps a list of audit log entries and the total
+
+        number of matching records.
+
+        '
+      properties:
+        items:
+          description: 'Page of audit log entries returned for the current request.
+
+            '
+          items:
+            $ref: '#/components/schemas/AuditLogResponse'
+          title: Items
+          type: array
+        total_count:
+          description: 'Total number of audit log entries matching the query, across all pages.
+
+            '
+          title: Total Count
+          type: integer
+      required:
+      - items
+      - total_count
+      title: PaginatedResponse[AuditLogResponse]
       type: object
   securitySchemes:
     JWT_or_Access_Token:

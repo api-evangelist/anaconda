@@ -303,6 +303,38 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    Server:
+      type: object
+      required:
+      - serverConfig
+      properties:
+        serverConfig:
+          type: object
+          required:
+          - modelFileName
+          properties:
+            modelFileName:
+              type: string
+            apiParams:
+              type: object
+            loadParams:
+              type: object
+            inferParams:
+              type: object
+            logsDir:
+              type: string
+        startServerOnCreate:
+          type: boolean
+    ServerAction:
+      type: object
+      required:
+      - action
+      properties:
+        action:
+          type: string
+          enum:
+          - start
+          - stop
     ServerDetails:
       type: object
       properties:
@@ -359,28 +391,6 @@ components:
         id:
           type: string
           description: Unique server identifier
-    Server:
-      type: object
-      required:
-      - serverConfig
-      properties:
-        serverConfig:
-          type: object
-          required:
-          - modelFileName
-          properties:
-            modelFileName:
-              type: string
-            apiParams:
-              type: object
-            loadParams:
-              type: object
-            inferParams:
-              type: object
-            logsDir:
-              type: string
-        startServerOnCreate:
-          type: boolean
     Error:
       type: object
       properties:
@@ -399,16 +409,6 @@ components:
               - INTERNAL_SERVER_ERROR
             message:
               type: string
-    ServerAction:
-      type: object
-      required:
-      - action
-      properties:
-        action:
-          type: string
-          enum:
-          - start
-          - stop
   securitySchemes:
     bearerAuth:
       type: http

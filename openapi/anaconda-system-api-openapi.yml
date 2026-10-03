@@ -268,32 +268,34 @@ paths:
       - jwt: []
       - user_token: []
 components:
-  responses:
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    BadRequest:
-      description: Server cannot execute request due to something that is perceived to be a client error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Access is forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   schemas:
+    ProductLicenseComplianceGroup:
+      type: array
+      items:
+        type: string
+        enum:
+        - users
+        - channels
+        - instances.api
+        - instances.dispatcher
+        - instances.worker
+    SystemStats:
+      type: object
+      properties:
+        blob_size:
+          type: object
+          properties:
+            total:
+              type: integer
+            by_artifact_family:
+              type: array
+              items:
+                type: object
+                properties:
+                  artifact_family:
+                    type: string
+                  blob_size:
+                    type: integer
     SystemSettings:
       type: object
       additionalProperties: false
@@ -337,14 +339,43 @@ components:
                 - hostname
                 - environment
                 - organization
-    ProductLicenseRequest:
+    ErrorResponse:
       type: object
-      required:
-      - license_key
+      description: The metadata contained in an error response
       properties:
-        license_key:
+        code:
           type: string
-          minLength: 1
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+    ProductLicenseCompliance:
+      type: object
+      description: Is used in definining compliance checks for different group. warn_limit is triggered when reached 80% of the quota
+      properties:
+        ok:
+          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
+        warn_limit:
+          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
+        over_quota:
+          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
+        no_data:
+          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
+    CleanupStats:
+      type: object
+      description: Cleanup stats
+      properties:
+        blob_count:
+          type: number
+        space_reclaimed:
+          type: number
+          description: Space reclaimed in bytes after cleanup
     OpenMetrics:
       type: array
       items:
@@ -376,16 +407,25 @@ components:
                   oneOf:
                   - type: string
                   - type: number
-    ProductLicenseComplianceGroup:
-      type: array
-      items:
-        type: string
-        enum:
-        - users
-        - channels
-        - instances.api
-        - instances.dispatcher
-        - instances.worker
+    ProductLicenseMetrics:
+      type: object
+      description: Is used in definining limits as well as current compliance metrics
+      properties:
+        instances:
+          type: object
+          properties:
+            api:
+              type: integer
+            worker:
+              type: integer
+            dispatcher:
+              type: integer
+        users:
+          type: integer
+        channels:
+          type: integer
+        mirrors:
+          type: integer
     System:
       type: object
       properties:
@@ -408,6 +448,14 @@ components:
               type: integer
               description: Number of messages in the queue
               example: 12
+    ProductLicenseRequest:
+      type: object
+      required:
+      - license_key
+      properties:
+        license_key:
+          type: string
+          minLength: 1
     ProductLicense:
       type: object
       properties:
@@ -464,79 +512,31 @@ components:
           $ref: '#/components/schemas/ProductLicenseMetrics'
         compliance:
           $ref: '#/components/schemas/ProductLicenseCompliance'
-    ProductLicenseCompliance:
-      type: object
-      description: Is used in definining compliance checks for different group. warn_limit is triggered when reached 80% of the quota
-      properties:
-        ok:
-          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
-        warn_limit:
-          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
-        over_quota:
-          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
-        no_data:
-          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
-    ProductLicenseMetrics:
-      type: object
-      description: Is used in definining limits as well as current compliance metrics
-      properties:
-        instances:
-          type: object
-          properties:
-            api:
-              type: integer
-            worker:
-              type: integer
-            dispatcher:
-              type: integer
-        users:
-          type: integer
-        channels:
-          type: integer
-        mirrors:
-          type: integer
-    SystemStats:
-      type: object
-      properties:
-        blob_size:
-          type: object
-          properties:
-            total:
-              type: integer
-            by_artifact_family:
-              type: array
-              items:
-                type: object
-                properties:
-                  artifact_family:
-                    type: string
-                  blob_size:
-                    type: integer
-    CleanupStats:
-      type: object
-      description: Cleanup stats
-      properties:
-        blob_count:
-          type: number
-        space_reclaimed:
-          type: number
-          description: Space reclaimed in bytes after cleanup
-    ErrorResponse:
-      type: object
-      description: The metadata contained in an error response
-      properties:
-        code:
-          type: string
-          description: Internal error code. Could be used to show corresponding message text from a message catalog
-          example: bad-parameter
-        message:
-          type: string
-          description: Short human-readable error message. Used mainly for logging
-          example: Bad request parameter for 'sort'
-        status:
-          type: integer
-          description: The HTTP Status code
-          example: 401
+  responses:
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     jwt:
       type: http

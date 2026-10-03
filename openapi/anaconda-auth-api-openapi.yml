@@ -91,25 +91,6 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthenticated'
 components:
-  responses:
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    BadRequest:
-      description: Server cannot execute request due to something that is perceived to be a client error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   schemas:
     LoginRequest:
       type: object
@@ -125,11 +106,6 @@ components:
         password:
           type: string
           minLength: 1
-    LoginResponse:
-      type: object
-      properties:
-        token:
-          type: string
     ErrorResponse:
       type: object
       description: The metadata contained in an error response
@@ -146,6 +122,30 @@ components:
           type: integer
           description: The HTTP Status code
           example: 401
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+  responses:
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     jwt:
       type: http

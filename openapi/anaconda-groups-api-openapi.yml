@@ -499,21 +499,6 @@ paths:
       - jwt: []
 components:
   schemas:
-    FilterExcludeSpecs:
-      type: array
-      uniqueItems: true
-      items:
-        type: string
-      description: 'A list of MatchSpec strings, for excluding specific packages. General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
-
-        '
-    ChannelPrivacy:
-      description: channel privacy channel
-      type: string
-      enum:
-      - private
-      - authenticated
-      - public
     Subchannel:
       type: object
       description: Nested channel object
@@ -546,56 +531,15 @@ components:
         updated:
           description: date of last update
           type: string
-    ChannelGroup:
+    ChannelGroupRequest:
       type: object
-      description: Channel group relationship metadata
+      required:
+      - group_id
+      - permission
       properties:
         group_id:
           type: string
-          description: the assigned group_id
-        name:
-          type: string
-          description: the assigned group name
-          pattern: ^[A-Za-z0-9_\-\/].*$
-        description:
-          type: string
-          description: the assigned group description
-        permission:
-          type: string
-          enum:
-          - read
-          - write
-          - manage
-        persistent:
-          type: boolean
-          description: the persistent groups could not be deleted
-        created_at:
-          type: string
-          description: when the group was created
-        updated_at:
-          type: string
-          description: when the group was updated
-    GroupRequest:
-      type: object
-      required:
-      - name
-      - description
-      properties:
-        name:
-          type: string
-          description: the name of the group
-          example: ui-team
-          pattern: ^[A-Za-z0-9_\-\/].*$
-        description:
-          type: string
-          description: the description of the group
-          example: ui-team description
-    ChannelGroupPermissions:
-      type: object
-      description: group members permissions to channel
-      required:
-      - permission
-      properties:
+          description: group_id to add
         permission:
           type: string
           enum:
@@ -645,40 +589,13 @@ components:
               $ref: '#/components/schemas/FilterIncludeSpecs'
             exclude_specs:
               $ref: '#/components/schemas/FilterExcludeSpecs'
-    FilterLicenses:
-      type: array
-      uniqueItems: true
-      items:
-        type: string
-        enum:
-        - agpl
-        - gpl2
-        - gpl3
-        - lgpl
-        - bsd
-        - mit
-        - apache
-        - psf
-        - public_domain
-        - proprietary
-        - other
-        - none
-      description: List of license familities to look for. Empty array means all licenses
-    ChannelGroupRequest:
-      type: object
-      required:
-      - group_id
-      - permission
-      properties:
-        group_id:
-          type: string
-          description: group_id to add
-        permission:
-          type: string
-          enum:
-          - read
-          - write
-          - manage
+    ChannelType:
+      description: channel type
+      type: string
+      default: default
+      enum:
+      - default
+      - virtual
     Group:
       type: object
       description: Logical collection of users within a channel
@@ -756,6 +673,104 @@ components:
           type: number
         filters:
           $ref: '#/components/schemas/ChannelFilters'
+    FilterLicenses:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+        enum:
+        - agpl
+        - gpl2
+        - gpl3
+        - lgpl
+        - bsd
+        - mit
+        - apache
+        - psf
+        - public_domain
+        - proprietary
+        - other
+        - none
+      description: List of license familities to look for. Empty array means all licenses
+    FilterExcludeSpecs:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+      description: 'A list of MatchSpec strings, for excluding specific packages. General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
+
+        '
+    FilterIncludeSpecs:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+      description: 'A list of MatchSpec strings, for including from excluded list General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
+
+        '
+    ChannelGroupPermissions:
+      type: object
+      description: group members permissions to channel
+      required:
+      - permission
+      properties:
+        permission:
+          type: string
+          enum:
+          - read
+          - write
+          - manage
+    ChannelGroup:
+      type: object
+      description: Channel group relationship metadata
+      properties:
+        group_id:
+          type: string
+          description: the assigned group_id
+        name:
+          type: string
+          description: the assigned group name
+          pattern: ^[A-Za-z0-9_\-\/].*$
+        description:
+          type: string
+          description: the assigned group description
+        permission:
+          type: string
+          enum:
+          - read
+          - write
+          - manage
+        persistent:
+          type: boolean
+          description: the persistent groups could not be deleted
+        created_at:
+          type: string
+          description: when the group was created
+        updated_at:
+          type: string
+          description: when the group was updated
+    ChannelPrivacy:
+      description: channel privacy channel
+      type: string
+      enum:
+      - private
+      - authenticated
+      - public
+    GroupRequest:
+      type: object
+      required:
+      - name
+      - description
+      properties:
+        name:
+          type: string
+          description: the name of the group
+          example: ui-team
+          pattern: ^[A-Za-z0-9_\-\/].*$
+        description:
+          type: string
+          description: the description of the group
+          example: ui-team description
     ErrorResponse:
       type: object
       description: The metadata contained in an error response
@@ -772,28 +787,6 @@ components:
           type: integer
           description: The HTTP Status code
           example: 401
-    ChannelType:
-      description: channel type
-      type: string
-      default: default
-      enum:
-      - default
-      - virtual
-    ChannelIndexingBehavior:
-      description: channel indexing behavior
-      type: string
-      default: default
-      enum:
-      - default
-      - frozen
-    FilterIncludeSpecs:
-      type: array
-      uniqueItems: true
-      items:
-        type: string
-      description: 'A list of MatchSpec strings, for including from excluded list General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
-
-        '
     VirtualChannelSource:
       type: object
       required:
@@ -805,7 +798,65 @@ components:
         parent_name:
           type: string
           pattern: ^[a-z][a-z0-9_\-]*$
+    ChannelIndexingBehavior:
+      description: channel indexing behavior
+      type: string
+      default: default
+      enum:
+      - default
+      - frozen
+  responses:
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: Creating/updating resource raises a conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   parameters:
+    channel-parameter:
+      name: channel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
+    subchannel-parameter:
+      name: subchannel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
     with-user-counts-query:
       in: query
       name: with_user_counts
@@ -835,13 +886,12 @@ components:
         type: integer
         default: 100
       description: the number of results in the result set
-    subchannel-parameter:
-      name: subchannel_name
+    user_id-parameter:
+      name: user_id
       in: path
       required: true
       schema:
         type: string
-        pattern: ^[a-z][a-z0-9_-]*$
     group_id-parameter:
       name: group_id
       in: path
@@ -857,56 +907,6 @@ components:
         type: integer
         default: 0
       description: the offset of the result set
-    user_id-parameter:
-      name: user_id
-      in: path
-      required: true
-      schema:
-        type: string
-    channel-parameter:
-      name: channel_name
-      in: path
-      required: true
-      schema:
-        type: string
-        pattern: ^[a-z][a-z0-9_-]*$
-  responses:
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Conflict:
-      description: Creating/updating resource raises a conflict
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Access is forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    BadRequest:
-      description: Server cannot execute request due to something that is perceived to be a client error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     jwt:
       type: http
