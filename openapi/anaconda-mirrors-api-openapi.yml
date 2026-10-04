@@ -41,64 +41,96 @@ paths:
       - jwt: []
       - user_token: []
 components:
-  responses:
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Access is forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-  parameters:
-    limit-query:
-      in: query
-      name: limit
-      required: false
-      schema:
-        type: integer
-        default: 100
-      description: the number of results in the result set
-    offset-query:
-      in: query
-      name: offset
-      required: false
-      schema:
-        type: integer
-        default: 0
-      description: the offset of the result set
-    mirror-sort-query:
-      in: query
-      name: sort
-      description: property to sort mirrors (may be comma-separated)
-      schema:
-        type: array
-        items:
-          type: string
-          enum:
-          - mirror_name
-          - -mirror_name
-          - created_at
-          - -created_at
-          - routes_mirrored
-          - -routes_mirrored
-          - mirror_type
-          - -mirror_type
-          - updated_at
-          - -updated_at
-          - state
-          - -state
   schemas:
+    ChannelPrivacy:
+      description: channel privacy channel
+      type: string
+      enum:
+      - private
+      - authenticated
+      - public
+    MirrorSyncState:
+      type: object
+      additionalProperties: false
+      description: State of current mirror synchronization
+      properties:
+        count:
+          type: object
+          additionalProperties: false
+          properties:
+            removed:
+              type: integer
+              description: Number of packages, removed from the channel
+            passive:
+              type: integer
+              description: Number of passively mirrored packages
+            active:
+              type: integer
+              description: Number of pulled packages
+            active_planned:
+              type: integer
+              description: Number of total planned packages for pulling
+            failed:
+              type: integer
+              description: Number of failed packages to pull
+            package_stat:
+              type: object
+              additionalProperties: false
+              properties:
+                primary:
+                  type: integer
+                  description: Number of primary packages listed in only specs mirrored
+                dependencies:
+                  type: integer
+                  description: Number of dependencies packages mirrored
+            mirror_filtered:
+              type: object
+              additionalProperties: false
+              properties:
+                cve:
+                  type: integer
+                  description: Number of packages removed because of CVE filter
+                date:
+                  type: integer
+                  description: Number of packages removed because of date filter
+                signed:
+                  type: integer
+                  description: Number of packages removed because of missing signatures
+                license:
+                  type: integer
+                  description: Number of packages removed because of license filter
+                only_specs:
+                  type: integer
+                  description: Number of packages removed because of "only packages" filter
+                exclude_specs:
+                  type: integer
+                  description: Number of packages removed because of exclude/include filter
+                duplicated_legacy_conda:
+                  type: integer
+                  description: \ Number of packages removed because of legacy package format and having corresponding .conda package
+            channel_filtered:
+              type: object
+              additionalProperties: false
+              properties:
+                license:
+                  type: integer
+                exclude_specs:
+                  type: integer
+        last_ckey:
+          type: string
+        last_exception:
+          type: string
+        total_steps_count:
+          type: integer
+        current_step_number:
+          type: integer
+        current_step_description:
+          type: string
+        current_step_percentage:
+          type: integer
+        bytes_transfered:
+          type: integer
+          description: Total number of bytes transfered during active mirroring
     MirrorWithChannel:
       type: object
       required:
@@ -193,95 +225,63 @@ components:
           type: integer
           description: The HTTP Status code
           example: 401
-    ChannelPrivacy:
-      description: channel privacy channel
-      type: string
-      enum:
-      - private
-      - authenticated
-      - public
-    MirrorSyncState:
-      type: object
-      additionalProperties: false
-      description: State of current mirror synchronization
-      properties:
-        count:
-          type: object
-          additionalProperties: false
-          properties:
-            removed:
-              type: integer
-              description: Number of packages, removed from the channel
-            passive:
-              type: integer
-              description: Number of passively mirrored packages
-            active:
-              type: integer
-              description: Number of pulled packages
-            active_planned:
-              type: integer
-              description: Number of total planned packages for pulling
-            failed:
-              type: integer
-              description: Number of failed packages to pull
-            package_stat:
-              type: object
-              additionalProperties: false
-              properties:
-                primary:
-                  type: integer
-                  description: Number of primary packages listed in only specs mirrored
-                dependencies:
-                  type: integer
-                  description: Number of dependencies packages mirrored
-            mirror_filtered:
-              type: object
-              additionalProperties: false
-              properties:
-                cve:
-                  type: integer
-                  description: Number of packages removed because of CVE filter
-                date:
-                  type: integer
-                  description: Number of packages removed because of date filter
-                signed:
-                  type: integer
-                  description: Number of packages removed because of missing signatures
-                license:
-                  type: integer
-                  description: Number of packages removed because of license filter
-                only_specs:
-                  type: integer
-                  description: Number of packages removed because of "only packages" filter
-                exclude_specs:
-                  type: integer
-                  description: Number of packages removed because of exclude/include filter
-                duplicated_legacy_conda:
-                  type: integer
-                  description: \ Number of packages removed because of legacy package format and having corresponding .conda package
-            channel_filtered:
-              type: object
-              additionalProperties: false
-              properties:
-                license:
-                  type: integer
-                exclude_specs:
-                  type: integer
-        last_ckey:
+  responses:
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  parameters:
+    mirror-sort-query:
+      in: query
+      name: sort
+      description: property to sort mirrors (may be comma-separated)
+      schema:
+        type: array
+        items:
           type: string
-        last_exception:
-          type: string
-        total_steps_count:
-          type: integer
-        current_step_number:
-          type: integer
-        current_step_description:
-          type: string
-        current_step_percentage:
-          type: integer
-        bytes_transfered:
-          type: integer
-          description: Total number of bytes transfered during active mirroring
+          enum:
+          - mirror_name
+          - -mirror_name
+          - created_at
+          - -created_at
+          - routes_mirrored
+          - -routes_mirrored
+          - mirror_type
+          - -mirror_type
+          - updated_at
+          - -updated_at
+          - state
+          - -state
+    offset-query:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+        default: 0
+      description: the offset of the result set
+    limit-query:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 100
+      description: the number of results in the result set
   securitySchemes:
     jwt:
       type: http

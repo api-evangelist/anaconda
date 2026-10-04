@@ -365,6 +365,125 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    Download:
+      type: object
+      required:
+      - fileId
+      - modelId
+      - filename
+      - downloadedRatio
+      - transferredBytes
+      - totalBytes
+      - paused
+      - downloadTimeTaken
+      - averageMbps
+      properties:
+        fileId:
+          type: string
+          description: ID of the file being downloaded
+        modelId:
+          type: string
+          description: ID of the model being downloaded
+        filename:
+          type: string
+          description: Name of the file being downloaded
+        downloadedRatio:
+          type: number
+          description: Percentage of download completion (0-1)
+        transferredBytes:
+          type: number
+          description: Number of bytes transferred
+        totalBytes:
+          type: number
+          description: Total size of the file in bytes
+        paused:
+          type: boolean
+          description: Whether the download is paused
+        downloadTimeTaken:
+          type: number
+          description: Time taken for download in milliseconds
+        averageMbps:
+          type: number
+          description: Average download speed in Mbps
+    DownloadStatus:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - status
+          properties:
+            status:
+              type: string
+              enum:
+              - in_progress
+              - paused
+              - completed
+              description: Current status of the download
+            progress:
+              $ref: '#/components/schemas/Download'
+              description: Download progress information (only when status is in_progress or paused)
+            localPath:
+              type: string
+              description: Local path where the file is stored (only when status is completed)
+    ModelFile:
+      type: object
+      required:
+      - id
+      - name
+      - downloadUrl
+      - sizeBytes
+      - sha256checksum
+      - quantization
+      - format
+      - maxRamUsage
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the model file
+        name:
+          type: string
+          description: Name of the model file
+        downloadUrl:
+          type: string
+          description: URL to download the model file
+        sizeBytes:
+          type: number
+          description: Size of the model file in bytes
+        sha256checksum:
+          type: string
+          description: SHA-256 hash of the model file for integrity verification
+        quantization:
+          type: string
+          description: Quantization method used for the model
+        format:
+          type: string
+          description: File format of the model
+        isDownloaded:
+          type: boolean
+          description: Whether the model file has been downloaded locally
+        maxRamUsage:
+          type: number
+          description: Maximum RAM required to run the model in bytes
+        downloadStatus:
+          type: object
+          description: Information about the download status of the file
+          properties:
+            status:
+              type: string
+              enum:
+              - not_started
+              - in_progress
+              - paused
+              - completed
+              description: Current status of the download
+            progress:
+              $ref: '#/components/schemas/Download'
+            localPath:
+              type: string
+              description: Local path where the file is stored (only when status is completed)
     Error:
       type: object
       properties:
@@ -383,6 +502,24 @@ components:
               - INTERNAL_SERVER_ERROR
             message:
               type: string
+    DownloadAction:
+      type: object
+      required:
+      - action
+      properties:
+        action:
+          type: string
+          enum:
+          - start
+          - pause
+          - resume
+          description: Action to perform on the download
+    TrainedFor:
+      type: string
+      enum:
+      - text-generation
+      - sentence-similarity
+      description: The primary task the model was trained for
     ModelSummary:
       type: object
       required:
@@ -440,143 +577,6 @@ components:
                   maxRamUsage:
                     type: number
                     description: Maximum RAM usage of the quantized model
-    DownloadAction:
-      type: object
-      required:
-      - action
-      properties:
-        action:
-          type: string
-          enum:
-          - start
-          - pause
-          - resume
-          description: Action to perform on the download
-    Download:
-      type: object
-      required:
-      - fileId
-      - modelId
-      - filename
-      - downloadedRatio
-      - transferredBytes
-      - totalBytes
-      - paused
-      - downloadTimeTaken
-      - averageMbps
-      properties:
-        fileId:
-          type: string
-          description: ID of the file being downloaded
-        modelId:
-          type: string
-          description: ID of the model being downloaded
-        filename:
-          type: string
-          description: Name of the file being downloaded
-        downloadedRatio:
-          type: number
-          description: Percentage of download completion (0-1)
-        transferredBytes:
-          type: number
-          description: Number of bytes transferred
-        totalBytes:
-          type: number
-          description: Total size of the file in bytes
-        paused:
-          type: boolean
-          description: Whether the download is paused
-        downloadTimeTaken:
-          type: number
-          description: Time taken for download in milliseconds
-        averageMbps:
-          type: number
-          description: Average download speed in Mbps
-    ModelFile:
-      type: object
-      required:
-      - id
-      - name
-      - downloadUrl
-      - sizeBytes
-      - sha256checksum
-      - quantization
-      - format
-      - maxRamUsage
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the model file
-        name:
-          type: string
-          description: Name of the model file
-        downloadUrl:
-          type: string
-          description: URL to download the model file
-        sizeBytes:
-          type: number
-          description: Size of the model file in bytes
-        sha256checksum:
-          type: string
-          description: SHA-256 hash of the model file for integrity verification
-        quantization:
-          type: string
-          description: Quantization method used for the model
-        format:
-          type: string
-          description: File format of the model
-        isDownloaded:
-          type: boolean
-          description: Whether the model file has been downloaded locally
-        maxRamUsage:
-          type: number
-          description: Maximum RAM required to run the model in bytes
-        downloadStatus:
-          type: object
-          description: Information about the download status of the file
-          properties:
-            status:
-              type: string
-              enum:
-              - not_started
-              - in_progress
-              - paused
-              - completed
-              description: Current status of the download
-            progress:
-              $ref: '#/components/schemas/Download'
-            localPath:
-              type: string
-              description: Local path where the file is stored (only when status is completed)
-    TrainedFor:
-      type: string
-      enum:
-      - text-generation
-      - sentence-similarity
-      description: The primary task the model was trained for
-    DownloadStatus:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: object
-          required:
-          - status
-          properties:
-            status:
-              type: string
-              enum:
-              - in_progress
-              - paused
-              - completed
-              description: Current status of the download
-            progress:
-              $ref: '#/components/schemas/Download'
-              description: Download progress information (only when status is in_progress or paused)
-            localPath:
-              type: string
-              description: Local path where the file is stored (only when status is completed)
   securitySchemes:
     bearerAuth:
       type: http

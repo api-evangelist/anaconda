@@ -395,21 +395,6 @@ paths:
       - Audit Logs
 components:
   schemas:
-    HTTPValidationError:
-      description: '**Error response** returned when the request fails validation.
-
-        '
-      properties:
-        detail:
-          description: 'List of validation errors describing which fields are invalid and why.
-
-            '
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          title: Detail
-          type: array
-      title: HTTPValidationError
-      type: object
     AuditLogResponse:
       description: '**Response** representation of an audit log entry, including core fields and
 
@@ -560,6 +545,41 @@ components:
       - message
       title: AuditLogResponse
       type: object
+    ValidationError:
+      description: '**Validation error** describing an issue with a specific part of the request.
+
+        '
+      properties:
+        loc:
+          description: 'Location of the validation error as a path of components, such as
+
+            `["body", "field_name"]` or `["query", "param_name"]`.
+
+            '
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          title: Location
+          type: array
+        msg:
+          description: 'Human-readable description of the validation error.
+
+            '
+          title: Message
+          type: string
+        type:
+          description: 'Machine-readable error type code.
+
+            '
+          title: Error Type
+          type: string
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+      type: object
     ExportRequest:
       description: '**Request body** for creating a new export job that filters audit logs and
 
@@ -612,40 +632,20 @@ components:
           title: To Date
       title: ExportRequest
       type: object
-    ValidationError:
-      description: '**Validation error** describing an issue with a specific part of the request.
+    HTTPValidationError:
+      description: '**Error response** returned when the request fails validation.
 
         '
       properties:
-        loc:
-          description: 'Location of the validation error as a path of components, such as
-
-            `["body", "field_name"]` or `["query", "param_name"]`.
+        detail:
+          description: 'List of validation errors describing which fields are invalid and why.
 
             '
           items:
-            anyOf:
-            - type: string
-            - type: integer
-          title: Location
+            $ref: '#/components/schemas/ValidationError'
+          title: Detail
           type: array
-        msg:
-          description: 'Human-readable description of the validation error.
-
-            '
-          title: Message
-          type: string
-        type:
-          description: 'Machine-readable error type code.
-
-            '
-          title: Error Type
-          type: string
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      title: HTTPValidationError
       type: object
     ExportJobResponse:
       description: '**Response** containing the state of a bulk export job and, when complete,

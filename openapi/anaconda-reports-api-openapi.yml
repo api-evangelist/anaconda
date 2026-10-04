@@ -58,67 +58,6 @@ paths:
       - user_token: []
 components:
   schemas:
-    ArtifactDownloadReportRequest:
-      type: object
-      description: Artifact download report request to be downloaded from a  given start date to a given end date channel id and user id filters are optional
-      required:
-      - from_date
-      - to_date
-      - download_as
-      properties:
-        from_date:
-          type: string
-          format: date
-          description: "* Report start date. \n* Supported date formats:\n  - '%Y-%m-%d'\n"
-        to_date:
-          type: string
-          format: date
-          description: "* Report end date. \n* Supported date formats:\n  - '%Y-%m-%d'\n"
-        download_as:
-          type: string
-          description: "* Specifies the format of report download file. \n* The report name will follow the convention\n  ArtifactsReport_{timestamp('%Y%m%d_%H%M%S')}\n"
-          enum:
-          - json
-          - csv
-        channel_names:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: List of Channel names
-        user_names:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: List of user names
-    CVE_status:
-      type: string
-      enum:
-      - reported
-      - active
-      - mitigated
-      - cleared
-      - disputed
-      - unknown
-    ErrorResponse:
-      type: object
-      description: The metadata contained in an error response
-      properties:
-        code:
-          type: string
-          description: Internal error code. Could be used to show corresponding message text from a message catalog
-          example: bad-parameter
-        message:
-          type: string
-          description: Short human-readable error message. Used mainly for logging
-          example: Bad request parameter for 'sort'
-        status:
-          type: integer
-          description: The HTTP Status code
-          example: 401
     ArtifactDownloadReportResponse:
       type: object
       description: Artifact Download Report response
@@ -181,6 +120,67 @@ components:
                 type: string
         user_agent_headers:
           type: string
+    CVE_status:
+      type: string
+      enum:
+      - reported
+      - active
+      - mitigated
+      - cleared
+      - disputed
+      - unknown
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+    ArtifactDownloadReportRequest:
+      type: object
+      description: Artifact download report request to be downloaded from a  given start date to a given end date channel id and user id filters are optional
+      required:
+      - from_date
+      - to_date
+      - download_as
+      properties:
+        from_date:
+          type: string
+          format: date
+          description: "* Report start date. \n* Supported date formats:\n  - '%Y-%m-%d'\n"
+        to_date:
+          type: string
+          format: date
+          description: "* Report end date. \n* Supported date formats:\n  - '%Y-%m-%d'\n"
+        download_as:
+          type: string
+          description: "* Specifies the format of report download file. \n* The report name will follow the convention\n  ArtifactsReport_{timestamp('%Y%m%d_%H%M%S')}\n"
+          enum:
+          - json
+          - csv
+        channel_names:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of Channel names
+        user_names:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of user names
   responses:
     InternalServerError:
       description: Internal server error

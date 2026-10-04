@@ -92,6 +92,11 @@ paths:
           $ref: '#/components/responses/Unauthenticated'
 components:
   schemas:
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
     LoginRequest:
       type: object
       additionalProperties: false
@@ -122,11 +127,6 @@ components:
           type: integer
           description: The HTTP Status code
           example: 401
-    LoginResponse:
-      type: object
-      properties:
-        token:
-          type: string
   responses:
     InternalServerError:
       description: Internal server error

@@ -506,97 +506,128 @@ paths:
       - user_token: []
 components:
   schemas:
-    UserTokenInfo:
+    ChannelPrivacy:
+      description: channel privacy channel
+      type: string
+      enum:
+      - private
+      - authenticated
+      - public
+    Channel:
       type: object
-      properties:
-        expires_at:
-          type: string
-        default_channel_name:
-          type: string
-        type:
-          type: string
-          enum:
-          - scope
-          - resource
-          description: scopes - when token was created scope-based, resource - when resources-based
-    UserResourceToken:
-      type: object
+      description: Channel object
+      required:
+      - name
       properties:
         id:
           type: string
-          description: Id of the token in the system, not a token itself!
         name:
           type: string
-        created_at:
+          pattern: ^[a-z][a-z0-9_\-]*$
+        parent:
           type: string
-        expires_at:
+          pattern: ^[a-z][a-z0-9_\-]*$
+          description: if present, the object is supposed to be a subchannel
+        description:
           type: string
-        metadata:
-          type: object
-        resources:
+        privacy:
+          $ref: '#/components/schemas/ChannelPrivacy'
+        channel_type:
+          $ref: '#/components/schemas/ChannelType'
+        indexing_behavior:
+          $ref: '#/components/schemas/ChannelIndexingBehavior'
+        sources:
           type: array
           items:
-            $ref: '#/components/schemas/UserTokenPermissionResourceItem'
-    UserTokenPermissionResourceItem:
+            $ref: '#/components/schemas/VirtualChannelSource'
+        created:
+          description: date created
+          type: string
+        updated:
+          description: date of last update
+          type: string
+        artifact_count:
+          description: number of artifacts the channel currently has
+          type: number
+        download_count:
+          description: number of downloads
+          type: number
+        filters:
+          $ref: '#/components/schemas/ChannelFilters'
+    UserTokenUpdateRequest:
       type: object
-      description: Represents a resource element, which user can access, for example specific channel. This enforces the default user authorization level.
-      required:
-      - resource_type
-      - resource_id
-      - permission
-      properties:
-        resource_type:
-          type: string
-          enum:
-          - channel
-          - subchannel
-          - artifact
-        resource_id:
-          type: string
-          description: resource name
-        permission:
-          type: string
-    UserPermission:
-      type: object
-      properties:
-        resource_type:
-          type: string
-        action:
-          type: string
-        permissions:
-          type: string
-    UserTokenCreateRequest:
-      oneOf:
-      - $ref: '#/components/schemas/UserTokenCreateResourceRequest'
-      - $ref: '#/components/schemas/UserTokenCreateScopedRequest'
-      description: The token could be created either `scope` or `resource` based.
-      example:
-        name: channel view token
-        expires_at: '2021-01-01'
-        scopes:
-        - channel:view
-        - subchannel:view
-    UserTokenCreateResourceRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - name
-      - resources
       properties:
         name:
           type: string
           minLength: 1
-        metadata:
-          type: object
         expires_at:
           type: string
           minLength: 1
-          pattern: ^\d{4}-\d{2}-\d{2}$
+          format: date
         resources:
           type: array
           items:
             $ref: '#/components/schemas/UserTokenPermissionResourceItem'
           minItems: 1
+    Account:
+      type: object
+      description: Data pertaining to an account
+      required:
+      - user_id
+      - username
+      - default_channel_name
+      properties:
+        user_id:
+          description: the user_id of the account
+          type: string
+        username:
+          description: the username of the user
+          type: string
+        default_channel_name:
+          description: user's default channel name
+          type: string
+        roles:
+          type: array
+          description: user roles
+          items:
+            type: string
+    FilterLicenses:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+        enum:
+        - agpl
+        - gpl2
+        - gpl3
+        - lgpl
+        - bsd
+        - mit
+        - apache
+        - psf
+        - public_domain
+        - proprietary
+        - other
+        - none
+      description: List of license familities to look for. Empty array means all licenses
+    FilterIncludeSpecs:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+      description: 'A list of MatchSpec strings, for including from excluded list General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
+
+        '
+    UserTokenList:
+      type: object
+      description: The list of user tokens, either `scope` or `resource` types.
+      properties:
+        items:
+          type: array
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/UserResourceToken'
+            - $ref: '#/components/schemas/UserScopeToken'
     User:
       type: object
       description: Use same structure for create and read
@@ -626,6 +657,152 @@ components:
             - author
             - admin
           description: "permissions types for users\n  * \"user\" - Allows for searching and downloading\n  * \"author\" - Allows for searching, downloading, uploading, and updating packages\n"
+    AccountAuditLog:
+      type: object
+      description: Activity performed by the account
+    UserTokenCreateScopedRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - scopes
+      properties:
+        name:
+          type: string
+          minLength: 1
+        metadata:
+          type: object
+        expires_at:
+          type: string
+          minLength: 1
+          format: date
+        scopes:
+          type: array
+          items:
+            type: string
+          minItems: 1
+    AccountHistory:
+      type: object
+      description: Account events history
+      additionalProperties: false
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              event_id:
+                type: string
+                description: Event identifier
+              event_type:
+                type: string
+                description: Event type
+                example: channel_created
+              data:
+                type: object
+                description: Event data
+                example: channel name, access level
+              meta:
+                type: object
+                description: the captured event context
+                example: user
+              created:
+                type: number
+                description: timestamp of log creation
+    UserResourceToken:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the token in the system, not a token itself!
+        name:
+          type: string
+        created_at:
+          type: string
+        expires_at:
+          type: string
+        metadata:
+          type: object
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserTokenPermissionResourceItem'
+    ChannelType:
+      description: channel type
+      type: string
+      default: default
+      enum:
+      - default
+      - virtual
+    AccountUpdateRequest:
+      type: object
+      description: Data pertaining to an account
+      required:
+      - default_channel_name
+      properties:
+        default_channel_name:
+          description: user's default channel name
+          type: string
+    UserTokenInfo:
+      type: object
+      properties:
+        expires_at:
+          type: string
+        default_channel_name:
+          type: string
+        type:
+          type: string
+          enum:
+          - scope
+          - resource
+          description: scopes - when token was created scope-based, resource - when resources-based
+    FilterExcludeSpecs:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+      description: 'A list of MatchSpec strings, for excluding specific packages. General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
+
+        '
+    UserTokenCreateRequest:
+      oneOf:
+      - $ref: '#/components/schemas/UserTokenCreateResourceRequest'
+      - $ref: '#/components/schemas/UserTokenCreateScopedRequest'
+      description: The token could be created either `scope` or `resource` based.
+      example:
+        name: channel view token
+        expires_at: '2021-01-01'
+        scopes:
+        - channel:view
+        - subchannel:view
+    ChannelIndexingBehavior:
+      description: channel indexing behavior
+      type: string
+      default: default
+      enum:
+      - default
+      - frozen
+    UserTokenPermissionResourceItem:
+      type: object
+      description: Represents a resource element, which user can access, for example specific channel. This enforces the default user authorization level.
+      required:
+      - resource_type
+      - resource_id
+      - permission
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - channel
+          - subchannel
+          - artifact
+        resource_id:
+          type: string
+          description: resource name
+        permission:
+          type: string
     ChannelFilters:
       type: object
       description: 'Filter directives for mirroring operation. Fields are optional. Can''t have include and exclude licenses together. This attribute is not returned by default in channels list
@@ -669,89 +846,23 @@ components:
               $ref: '#/components/schemas/FilterIncludeSpecs'
             exclude_specs:
               $ref: '#/components/schemas/FilterExcludeSpecs'
-    ChannelType:
-      description: channel type
-      type: string
-      default: default
-      enum:
-      - default
-      - virtual
-    Channel:
+    VirtualChannelSource:
       type: object
-      description: Channel object
       required:
       - name
       properties:
-        id:
-          type: string
         name:
           type: string
           pattern: ^[a-z][a-z0-9_\-]*$
-        parent:
+        parent_name:
           type: string
           pattern: ^[a-z][a-z0-9_\-]*$
-          description: if present, the object is supposed to be a subchannel
-        description:
-          type: string
-        privacy:
-          $ref: '#/components/schemas/ChannelPrivacy'
-        channel_type:
-          $ref: '#/components/schemas/ChannelType'
-        indexing_behavior:
-          $ref: '#/components/schemas/ChannelIndexingBehavior'
-        sources:
-          type: array
-          items:
-            $ref: '#/components/schemas/VirtualChannelSource'
-        created:
-          description: date created
-          type: string
-        updated:
-          description: date of last update
-          type: string
-        artifact_count:
-          description: number of artifacts the channel currently has
-          type: number
-        download_count:
-          description: number of downloads
-          type: number
-        filters:
-          $ref: '#/components/schemas/ChannelFilters'
-    UserTokenList:
-      type: object
-      description: The list of user tokens, either `scope` or `resource` types.
-      properties:
-        items:
-          type: array
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/UserResourceToken'
-            - $ref: '#/components/schemas/UserScopeToken'
-    FilterLicenses:
-      type: array
-      uniqueItems: true
-      items:
-        type: string
-        enum:
-        - agpl
-        - gpl2
-        - gpl3
-        - lgpl
-        - bsd
-        - mit
-        - apache
-        - psf
-        - public_domain
-        - proprietary
-        - other
-        - none
-      description: List of license familities to look for. Empty array means all licenses
-    UserTokenCreateScopedRequest:
+    UserTokenCreateResourceRequest:
       type: object
       additionalProperties: false
       required:
       - name
-      - scopes
+      - resources
       properties:
         name:
           type: string
@@ -761,15 +872,21 @@ components:
         expires_at:
           type: string
           minLength: 1
-          format: date
-        scopes:
+          pattern: ^\d{4}-\d{2}-\d{2}$
+        resources:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/UserTokenPermissionResourceItem'
           minItems: 1
-    AccountAuditLog:
+    UserTokenCreateResponse:
       type: object
-      description: Activity performed by the account
+      properties:
+        id:
+          type: string
+          description: Token Id, represents the token position for token management
+        token:
+          type: string
+          description: Token itself. It's one-time generated, couldn't be read with different api.
     UserScopeToken:
       type: object
       properties:
@@ -789,103 +906,10 @@ components:
           items:
             type: string
             description: must be valid, which is available in the system
-    FilterExcludeSpecs:
-      type: array
-      uniqueItems: true
-      items:
-        type: string
-      description: 'A list of MatchSpec strings, for excluding specific packages. General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
-
-        '
     UserTokenUpdateResponse:
       type: object
       properties:
         token:
-          type: string
-    UserTokenCreateResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Token Id, represents the token position for token management
-        token:
-          type: string
-          description: Token itself. It's one-time generated, couldn't be read with different api.
-    FilterIncludeSpecs:
-      type: array
-      uniqueItems: true
-      items:
-        type: string
-      description: 'A list of MatchSpec strings, for including from excluded list General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
-
-        '
-    Account:
-      type: object
-      description: Data pertaining to an account
-      required:
-      - user_id
-      - username
-      - default_channel_name
-      properties:
-        user_id:
-          description: the user_id of the account
-          type: string
-        username:
-          description: the username of the user
-          type: string
-        default_channel_name:
-          description: user's default channel name
-          type: string
-        roles:
-          type: array
-          description: user roles
-          items:
-            type: string
-    ChannelPrivacy:
-      description: channel privacy channel
-      type: string
-      enum:
-      - private
-      - authenticated
-      - public
-    AccountHistory:
-      type: object
-      description: Account events history
-      additionalProperties: false
-      required:
-      - items
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              event_id:
-                type: string
-                description: Event identifier
-              event_type:
-                type: string
-                description: Event type
-                example: channel_created
-              data:
-                type: object
-                description: Event data
-                example: channel name, access level
-              meta:
-                type: object
-                description: the captured event context
-                example: user
-              created:
-                type: number
-                description: timestamp of log creation
-    AccountUpdateRequest:
-      type: object
-      description: Data pertaining to an account
-      required:
-      - default_channel_name
-      properties:
-        default_channel_name:
-          description: user's default channel name
           type: string
     ErrorResponse:
       type: object
@@ -903,55 +927,24 @@ components:
           type: integer
           description: The HTTP Status code
           example: 401
-    VirtualChannelSource:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          pattern: ^[a-z][a-z0-9_\-]*$
-        parent_name:
-          type: string
-          pattern: ^[a-z][a-z0-9_\-]*$
-    ChannelIndexingBehavior:
-      description: channel indexing behavior
-      type: string
-      default: default
-      enum:
-      - default
-      - frozen
-    UserTokenUpdateRequest:
+    UserPermission:
       type: object
       properties:
-        name:
+        resource_type:
           type: string
-          minLength: 1
-        expires_at:
+        action:
           type: string
-          minLength: 1
-          format: date
-        resources:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserTokenPermissionResourceItem'
-          minItems: 1
+        permissions:
+          type: string
   parameters:
-    include-subchannels:
+    limit-query:
       in: query
-      name: include_subchannels
-      description: option to include or exclude subchannels from the response
-      schema:
-        type: boolean
-        default: false
-    reissue_token-query:
-      in: query
-      name: reissue_token
+      name: limit
       required: false
       schema:
-        type: boolean
-        default: true
-      description: update token endpoint by default reissues a new token.
+        type: integer
+        default: 100
+      description: the number of results in the result set
     permission-query:
       name: permission
       in: query
@@ -961,25 +954,17 @@ components:
         - read
         - write
         - manage
-    user-id-query:
+    include-subchannels:
       in: query
-      name: user_id
-      required: false
-      description: id of a user to filter for
+      name: include_subchannels
+      description: option to include or exclude subchannels from the response
       schema:
-        type: string
-    token_id-parameter:
-      name: token_id
-      description: Id of the token position, not an X-Auth or JWT token itself!
-      in: path
-      required: true
-      schema:
-        type: string
-        minLength: 1
-    created-query:
+        type: boolean
+        default: false
+    updated-query:
       in: query
-      name: created
-      description: timestamp start boundary for when created. I guess this could be either "only artifacts created on this exact date" or "artifacts created on this date and newer"
+      name: updated
+      description: timestamp end boundary
       schema:
         type: integer
     channel-sort-query:
@@ -995,20 +980,33 @@ components:
           - -name
           - updated_at
           - -updated_at
-    updated-query:
+    reissue_token-query:
       in: query
-      name: updated
-      description: timestamp end boundary
-      schema:
-        type: integer
-    limit-query:
-      in: query
-      name: limit
+      name: reissue_token
       required: false
       schema:
+        type: boolean
+        default: true
+      description: update token endpoint by default reissues a new token.
+    search-query:
+      in: query
+      name: q
+      description: the string to search on
+      schema:
+        type: string
+    created-query:
+      in: query
+      name: created
+      description: timestamp start boundary for when created. I guess this could be either "only artifacts created on this exact date" or "artifacts created on this date and newer"
+      schema:
         type: integer
-        default: 100
-      description: the number of results in the result set
+    user-id-query:
+      in: query
+      name: user_id
+      required: false
+      description: id of a user to filter for
+      schema:
+        type: string
     offset-query:
       in: query
       name: offset
@@ -1040,25 +1038,15 @@ components:
           - artifact_generated
           - artifact_metadata_updated
           - artifact_downloaded
-    search-query:
-      in: query
-      name: q
-      description: the string to search on
+    token_id-parameter:
+      name: token_id
+      description: Id of the token position, not an X-Auth or JWT token itself!
+      in: path
+      required: true
       schema:
         type: string
+        minLength: 1
   responses:
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     BadRequest:
       description: Server cannot execute request due to something that is perceived to be a client error
       content:
@@ -1073,6 +1061,18 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
     Forbidden:
       description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
       content:
         application/json:
           schema:

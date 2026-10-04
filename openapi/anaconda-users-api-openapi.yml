@@ -533,135 +533,66 @@ paths:
       security:
       - jwt: []
 components:
+  parameters:
+    with_hash-query:
+      in: query
+      name: with_hash
+      required: false
+      schema:
+        type: boolean
+        default: true
+      description: get token endpoint by default returns token hash.
+    limit-query:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 100
+      description: the number of results in the result set
+    reissue_token-query:
+      in: query
+      name: reissue_token
+      required: false
+      schema:
+        type: boolean
+        default: true
+      description: update token endpoint by default reissues a new token.
+    search-query:
+      in: query
+      name: q
+      description: the string to search on
+      schema:
+        type: string
+    role_id-parameter:
+      name: role_id
+      in: path
+      required: true
+      schema:
+        type: string
+    user_id-parameter:
+      name: user_id
+      in: path
+      required: true
+      schema:
+        type: string
+    offset-query:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+        default: 0
+      description: the offset of the result set
+    token_id-parameter:
+      name: token_id
+      description: Id of the token position, not an X-Auth or JWT token itself!
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 1
   schemas:
-    UserResourceToken:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Id of the token in the system, not a token itself!
-        name:
-          type: string
-        created_at:
-          type: string
-        expires_at:
-          type: string
-        metadata:
-          type: object
-        resources:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserTokenPermissionResourceItem'
-    UserTokenPermissionResourceItem:
-      type: object
-      description: Represents a resource element, which user can access, for example specific channel. This enforces the default user authorization level.
-      required:
-      - resource_type
-      - resource_id
-      - permission
-      properties:
-        resource_type:
-          type: string
-          enum:
-          - channel
-          - subchannel
-          - artifact
-        resource_id:
-          type: string
-          description: resource name
-        permission:
-          type: string
-    UserTokenCreateRequest:
-      oneOf:
-      - $ref: '#/components/schemas/UserTokenCreateResourceRequest'
-      - $ref: '#/components/schemas/UserTokenCreateScopedRequest'
-      description: The token could be created either `scope` or `resource` based.
-      example:
-        name: channel view token
-        expires_at: '2021-01-01'
-        scopes:
-        - channel:view
-        - subchannel:view
-    GroupMember:
-      type: object
-      description: Small object that represents the users belonging to the group
-      properties:
-        id:
-          type: string
-          description: the uid of the
-        username:
-          type: string
-          description: the username of the member
-    User:
-      type: object
-      description: Use same structure for create and read
-      properties:
-        id:
-          type: string
-        username:
-          type: string
-          description: could username be the email? its unique
-        firstName:
-          type: string
-          description: do we need this?
-        lastName:
-          type: string
-          description: do we need this?
-        email:
-          type: string
-        org:
-          type: string
-          description: the uid of the org this user might belong to
-        role:
-          type: array
-          items:
-            type: string
-            enum:
-            - user
-            - author
-            - admin
-          description: "permissions types for users\n  * \"user\" - Allows for searching and downloading\n  * \"author\" - Allows for searching, downloading, uploading, and updating packages\n"
-    UserTokenCreateResourceRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - name
-      - resources
-      properties:
-        name:
-          type: string
-          minLength: 1
-        metadata:
-          type: object
-        expires_at:
-          type: string
-          minLength: 1
-          pattern: ^\d{4}-\d{2}-\d{2}$
-        resources:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserTokenPermissionResourceItem'
-          minItems: 1
-    UsersTokenUpdateRequest:
-      type: object
-      properties:
-        token_ids:
-          type: array
-        expires_at:
-          type: string
-          minLength: 1
-          format: date
-        resources:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserTokenPermissionResourceItem'
-          minItems: 1
-          maxItems: 100
-    UsersTokenGetRequest:
-      type: object
-      properties:
-        users_ids:
-          type: array
     UserLogs:
       type: object
       description: Logs for a user
@@ -676,84 +607,16 @@ components:
           type: string
         logs:
           type: string
-    UserTokenList:
+    GroupMember:
       type: object
-      description: The list of user tokens, either `scope` or `resource` types.
-      properties:
-        items:
-          type: array
-          items:
-            oneOf:
-            - $ref: '#/components/schemas/UserResourceToken'
-            - $ref: '#/components/schemas/UserScopeToken'
-    UsersTokensGetResponse:
-      type: object
-      properties:
-        items:
-          type: array
-    UserTokenCreateScopedRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - name
-      - scopes
-      properties:
-        name:
-          type: string
-          minLength: 1
-        metadata:
-          type: object
-        expires_at:
-          type: string
-          minLength: 1
-          format: date
-        scopes:
-          type: array
-          items:
-            type: string
-          minItems: 1
-    UserScopeToken:
-      type: object
+      description: Small object that represents the users belonging to the group
       properties:
         id:
           type: string
-          description: Id of the token in the system, not a token itself!
-        name:
+          description: the uid of the
+        username:
           type: string
-        metadata:
-          type: object
-        created_at:
-          type: string
-        expires_at:
-          type: string
-        scopes:
-          type: array
-          items:
-            type: string
-            description: must be valid, which is available in the system
-    UserTokenCreateResponse:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Token Id, represents the token position for token management
-        token:
-          type: string
-          description: Token itself. It's one-time generated, couldn't be read with different api.
-    UserTokenUpdateResponse:
-      type: object
-      properties:
-        token:
-          type: string
-    UserTokenUpdateMetadataRequest:
-      type: object
-    UsersTokenUpdateResponse:
-      type: object
-      properties:
-        tokens:
-          type: array
-        successful_updated_users:
-          type: array
+          description: the username of the member
     AuthRolePermissions:
       type: object
       additionalProperties: false
@@ -794,31 +657,26 @@ components:
           $ref: '#/components/schemas/AuthRolePermissionValue'
         cve-notifications:
           $ref: '#/components/schemas/AuthRolePermissionValue'
-    AuthRolePermissionValue:
-      type:
-      - string
-      - 'null'
-      enum:
-      - read
-      - write
-      - manage
-      description: the lowerest permission level, which could be set for the resource
-    ErrorResponse:
+    UserTokenUpdateRequest:
       type: object
-      description: The metadata contained in an error response
       properties:
-        code:
+        name:
           type: string
-          description: Internal error code. Could be used to show corresponding message text from a message catalog
-          example: bad-parameter
-        message:
+          minLength: 1
+        expires_at:
           type: string
-          description: Short human-readable error message. Used mainly for logging
-          example: Bad request parameter for 'sort'
-        status:
-          type: integer
-          description: The HTTP Status code
-          example: 401
+          minLength: 1
+          format: date
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserTokenPermissionResourceItem'
+          minItems: 1
+    UsersTokenGetRequest:
+      type: object
+      properties:
+        users_ids:
+          type: array
     AuthRole:
       type: object
       required:
@@ -839,12 +697,105 @@ components:
           description: persistent roles are built-in and can't be removed. This is read-only attribute
         permissions:
           $ref: '#/components/schemas/AuthRolePermissions'
-    UserTokenUpdateRequest:
+    AuthRolePermissionValue:
+      type:
+      - string
+      - 'null'
+      enum:
+      - read
+      - write
+      - manage
+      description: the lowerest permission level, which could be set for the resource
+    UserTokenUpdateMetadataRequest:
       type: object
+    UserTokenList:
+      type: object
+      description: The list of user tokens, either `scope` or `resource` types.
+      properties:
+        items:
+          type: array
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/UserResourceToken'
+            - $ref: '#/components/schemas/UserScopeToken'
+    User:
+      type: object
+      description: Use same structure for create and read
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+          description: could username be the email? its unique
+        firstName:
+          type: string
+          description: do we need this?
+        lastName:
+          type: string
+          description: do we need this?
+        email:
+          type: string
+        org:
+          type: string
+          description: the uid of the org this user might belong to
+        role:
+          type: array
+          items:
+            type: string
+            enum:
+            - user
+            - author
+            - admin
+          description: "permissions types for users\n  * \"user\" - Allows for searching and downloading\n  * \"author\" - Allows for searching, downloading, uploading, and updating packages\n"
+    UsersTokensGetResponse:
+      type: object
+      properties:
+        items:
+          type: array
+    UserTokenCreateScopedRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - scopes
       properties:
         name:
           type: string
           minLength: 1
+        metadata:
+          type: object
+        expires_at:
+          type: string
+          minLength: 1
+          format: date
+        scopes:
+          type: array
+          items:
+            type: string
+          minItems: 1
+    UserResourceToken:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the token in the system, not a token itself!
+        name:
+          type: string
+        created_at:
+          type: string
+        expires_at:
+          type: string
+        metadata:
+          type: object
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserTokenPermissionResourceItem'
+    UsersTokenUpdateRequest:
+      type: object
+      properties:
+        token_ids:
+          type: array
         expires_at:
           type: string
           minLength: 1
@@ -854,84 +805,115 @@ components:
           items:
             $ref: '#/components/schemas/UserTokenPermissionResourceItem'
           minItems: 1
-  parameters:
-    reissue_token-query:
-      in: query
-      name: reissue_token
-      required: false
-      schema:
-        type: boolean
-        default: true
-      description: update token endpoint by default reissues a new token.
-    token_id-parameter:
-      name: token_id
-      description: Id of the token position, not an X-Auth or JWT token itself!
-      in: path
-      required: true
-      schema:
-        type: string
-        minLength: 1
-    limit-query:
-      in: query
-      name: limit
-      required: false
-      schema:
-        type: integer
-        default: 100
-      description: the number of results in the result set
-    with_hash-query:
-      in: query
-      name: with_hash
-      required: false
-      schema:
-        type: boolean
-        default: true
-      description: get token endpoint by default returns token hash.
-    user_id-parameter:
-      name: user_id
-      in: path
-      required: true
-      schema:
-        type: string
-    role_id-parameter:
-      name: role_id
-      in: path
-      required: true
-      schema:
-        type: string
-    offset-query:
-      in: query
-      name: offset
-      required: false
-      schema:
-        type: integer
-        default: 0
-      description: the offset of the result set
-    search-query:
-      in: query
-      name: q
-      description: the string to search on
-      schema:
-        type: string
+          maxItems: 100
+    UserTokenCreateRequest:
+      oneOf:
+      - $ref: '#/components/schemas/UserTokenCreateResourceRequest'
+      - $ref: '#/components/schemas/UserTokenCreateScopedRequest'
+      description: The token could be created either `scope` or `resource` based.
+      example:
+        name: channel view token
+        expires_at: '2021-01-01'
+        scopes:
+        - channel:view
+        - subchannel:view
+    UserTokenPermissionResourceItem:
+      type: object
+      description: Represents a resource element, which user can access, for example specific channel. This enforces the default user authorization level.
+      required:
+      - resource_type
+      - resource_id
+      - permission
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - channel
+          - subchannel
+          - artifact
+        resource_id:
+          type: string
+          description: resource name
+        permission:
+          type: string
+    UserTokenCreateResourceRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - resources
+      properties:
+        name:
+          type: string
+          minLength: 1
+        metadata:
+          type: object
+        expires_at:
+          type: string
+          minLength: 1
+          pattern: ^\d{4}-\d{2}-\d{2}$
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserTokenPermissionResourceItem'
+          minItems: 1
+    UsersTokenUpdateResponse:
+      type: object
+      properties:
+        tokens:
+          type: array
+        successful_updated_users:
+          type: array
+    UserTokenCreateResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Token Id, represents the token position for token management
+        token:
+          type: string
+          description: Token itself. It's one-time generated, couldn't be read with different api.
+    UserScopeToken:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the token in the system, not a token itself!
+        name:
+          type: string
+        metadata:
+          type: object
+        created_at:
+          type: string
+        expires_at:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: string
+            description: must be valid, which is available in the system
+    UserTokenUpdateResponse:
+      type: object
+      properties:
+        token:
+          type: string
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
   responses:
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Conflict:
-      description: Creating/updating resource raises a conflict
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     BadRequest:
       description: Server cannot execute request due to something that is perceived to be a client error
       content:
@@ -946,6 +928,24 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
     Forbidden:
       description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: Creating/updating resource raises a conflict
       content:
         application/json:
           schema:

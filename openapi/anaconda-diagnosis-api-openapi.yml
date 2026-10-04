@@ -45,6 +45,19 @@ paths:
       - jwt: []
       - user_token: []
 components:
+  responses:
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   schemas:
     DiagnoseRoutesAndBlobs:
       type: object
@@ -55,6 +68,17 @@ components:
         index_blobs:
           $ref: '#/components/schemas/DiagnosisDetails'
         diagnosis_timestamp:
+          type: string
+    DiagnosisDetails:
+      type: object
+      properties:
+        channel_name:
+          type: string
+        artifacts_list:
+          type: array
+        total:
+          type: number
+        action_taken:
           type: string
     DiagnosisRequest:
       type: object
@@ -88,30 +112,6 @@ components:
           type: integer
           description: The HTTP Status code
           example: 401
-    DiagnosisDetails:
-      type: object
-      properties:
-        channel_name:
-          type: string
-        artifacts_list:
-          type: array
-        total:
-          type: number
-        action_taken:
-          type: string
-  responses:
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     jwt:
       type: http
