@@ -595,6 +595,9 @@ apis:
   - type: Documentation
     url: https://anaconda.com/docs/anaconda-desktop/main
 common:
+- type: CapabilityMap
+  url: capabilities/anaconda-capability-edges.yml
+  name: Anaconda Business Capability Map
 - type: AgenticAccess
   url: agentic-access/anaconda-agentic-access.yml
 - type: TrustCenter
