@@ -1,0 +1,12 @@
+{
+ "url": "https://api.anaconda.cloud/openapi.json",
+ "requested_url": "https://api.anaconda.cloud/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 213040,
+ "sha256": "6aef0cb7a15182a1926d1be25438d574b4a2aadd088d23c64e4f99d7f88d2ac1",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
