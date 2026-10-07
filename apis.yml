@@ -595,6 +595,8 @@ apis:
   - type: Documentation
     url: https://anaconda.com/docs/anaconda-desktop/main
 common:
+- type: Plans
+  url: plans/anaconda-plans-pricing.yml
 - type: CapabilityMap
   url: capabilities/anaconda-capability-edges.yml
   name: Anaconda Business Capability Map
