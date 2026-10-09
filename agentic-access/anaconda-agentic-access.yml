@@ -1,862 +1,30 @@
-generated: '2026-08-02'
+generated: '2026-09-23'
 method: generated
-source: openapi/anaconda-ai-navigator-openapi-original.json, openapi/anaconda-audit-logs-openapi-original.json,
-  openapi/anaconda-desktop-openapi-original.json, openapi/anaconda-org-management-openapi-original.json,
-  openapi/anaconda-server-openapi-original.json
+source: openapi/anaconda-account-api-openapi.yml, openapi/anaconda-ai-navigator-api-api-openapi.yml,
+  openapi/anaconda-artifacts-api-openapi.yml, openapi/anaconda-audit-logs-api-openapi.yml, openapi/anaconda-auth-api-openapi.yml,
+  openapi/anaconda-channels-api-openapi.yml, openapi/anaconda-cves-api-openapi.yml, openapi/anaconda-diagnosis-api-openapi.yml,
+  openapi/anaconda-docs-api-openapi.yml, openapi/anaconda-files-api-openapi.yml, openapi/anaconda-groups-api-openapi.yml,
+  openapi/anaconda-installers-api-openapi.yml, openapi/anaconda-mirrors-api-openapi.yml, openapi/anaconda-models-api-openapi.yml,
+  openapi/anaconda-organizations-api-openapi.yml, openapi/anaconda-repo-api-openapi.yml, openapi/anaconda-reports-api-openapi.yml,
+  openapi/anaconda-servers-api-openapi.yml, openapi/anaconda-system-api-openapi.yml, openapi/anaconda-users-api-openapi.yml,
+  openapi/anaconda-vectordb-api-openapi.yml, openapi/anaconda-websocket-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
-  operations: 223
+  operations: 235
   by_action_class:
-    connected: 126
-    acting: 97
+    connected: 140
+    acting: 95
   by_consequence:
-    read: 126
-    write: 90
-    safety-critical: 7
-  human_in_the_loop_required: 7
+    read: 140
+    write: 89
+    safety-critical: 6
+  human_in_the_loop_required: 6
 operations:
-- path: /api
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/models/health
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/models
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/models/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /models/{modelId}/files
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/models/{modelId}/files/{fileId}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/models/{modelId}/files/{fileId}
-  method: patch
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/models/{modelId}/files/{fileId}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/servers/health
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/servers
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/servers
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/servers/{serverId}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/servers/{serverId}
-  method: patch
-  x-agentic-access:
-    action-class: acting
-    consequence: safety-critical
-    subject: required
-    audience: null
-    token:
-      max-ttl: 120
-      exchange: true
-      purpose-required: true
-      proof-of-possession: true
-    escalation:
-      human-in-the-loop: required
-    audit: required
-- path: /api/servers/{serverId}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/vector-db/health
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/vector-db
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/vector-db
-  method: patch
-  x-agentic-access:
-    action-class: acting
-    consequence: safety-critical
-    subject: required
-    audience: null
-    token:
-      max-ttl: 120
-      exchange: true
-      purpose-required: true
-      proof-of-possession: true
-    escalation:
-      human-in-the-loop: required
-    audit: required
-- path: /api/vector-db/tables
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/vector-db/tables
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/vector-db/tables/{tableName}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/audit-logs
-  method: get
-  operationId: get_audit_logs__get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/audit-logs/{audit_log_id}
-  method: get
-  operationId: get_audit_log__audit_log_id__get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/audit-logs/export
-  method: post
-  operationId: create_export_job_export_post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/audit-logs/export/{job_id}
-  method: get
-  operationId: get_export_job_status_export__job_id__get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/audit-logs/export/{job_id}/download
-  method: get
-  operationId: download_export_export__job_id__download_get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/models/health
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/models
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/models/{id}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /models/{modelId}/files
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/models/{modelId}/files/{fileId}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/models/{modelId}/files/{fileId}
-  method: patch
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/models/{modelId}/files/{fileId}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/servers/health
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/servers
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/servers
-  method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/servers/{serverId}
-  method: get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/servers/{serverId}
-  method: patch
-  x-agentic-access:
-    action-class: acting
-    consequence: safety-critical
-    subject: required
-    audience: null
-    token:
-      max-ttl: 120
-      exchange: true
-      purpose-required: true
-      proof-of-possession: true
-    escalation:
-      human-in-the-loop: required
-    audit: required
-- path: /api/servers/{serverId}
-  method: delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v1/organizations/{org_id}/service-accounts
-  method: post
-  operationId: create_service_account
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v1/organizations/{org_id}/service-accounts
-  method: get
-  operationId: list_service_accounts
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v1/organizations/{org_id}/service-accounts/{client_id}
-  method: delete
-  operationId: delete_service_account
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v1/organizations/{org_id}/users_auto_registration
-  method: post
-  operationId: auto_register_users
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v1/organizations/{org_id}/users
-  method: post
-  operationId: add_user
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v1/organizations/{org_id}/users
-  method: get
-  operationId: list_users
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v1/organizations/{org_id}/users/{user_id}
-  method: delete
-  operationId: remove_user
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v1/organizations/{org_id}/users/{user_id}/seats
-  method: post
-  operationId: assign_seat
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v1/organizations/{org_id}/users/{user_id}/seats
-  method: delete
-  operationId: revoke_seat
-  x-agentic-access:
-    action-class: acting
-    consequence: safety-critical
-    subject: required
-    audience: null
-    token:
-      max-ttl: 120
-      exchange: true
-      purpose-required: true
-      proof-of-possession: true
-    escalation:
-      human-in-the-loop: required
-    audit: required
-- path: /api/v1/organizations/{org_id}/users/{user_id}/token
-  method: post
-  operationId: create_user_token
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v1/organizations/{org_id}/users/{user_id}/token
-  method: patch
-  operationId: update_user_token
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /api/v1/organizations/{org_id}/users/{user_id}/tokens
-  method: get
-  operationId: list_user_tokens
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /api/v1/organizations/{org_id}/users/{user_id}/tokens/{token_id}
-  method: delete
-  operationId: revoke_user_token
-  x-agentic-access:
-    action-class: acting
-    consequence: safety-critical
-    subject: required
-    audience: null
-    token:
-      max-ttl: 120
-      exchange: true
-      purpose-required: true
-      proof-of-possession: true
-    escalation:
-      human-in-the-loop: required
-    audit: required
-- path: /installers
-  method: get
-  operationId: repo.endpoints.installers.list_installers
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /installers/{installer_name}
-  method: get
-  operationId: repo.endpoints.installers.download_installer
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /external-docs
-  method: get
-  operationId: repo.endpoints.system.get_external_docs
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /system
-  method: get
-  operationId: repo.endpoints.system.health
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /system/stats
-  method: get
-  operationId: repo.endpoints.system.stats
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /system/metrics
-  method: get
-  operationId: repo.endpoints.system.metrics
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
 - path: /system/history
   method: get
   operationId: repo.endpoints.system.history
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /system/scopes
-  method: get
-  operationId: repo.endpoints.system.scopes
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /system/resource_types
-  method: get
-  operationId: repo.endpoints.system.resource_types
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /system/license
-  method: get
-  operationId: repo.endpoints.system.get_license
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /system/license
-  method: post
-  operationId: repo.endpoints.system.post_license
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /system/license
-  method: put
-  operationId: repo.endpoints.system.put_license
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /system/settings
-  method: get
-  operationId: repo.endpoints.system.get_settings
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /system/settings
-  method: put
-  operationId: repo.endpoints.system.update_settings
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /diagnose/blobs
-  method: post
-  operationId: repo.endpoints.diagnosis.blobs.troubleshoot_routes_blobs
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /auth/login
-  method: post
-  operationId: repo.endpoints.auth.login
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /auth/logout
-  method: get
-  operationId: repo.endpoints.auth.logout_get
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /auth/authorize
-  method: get
-  operationId: repo.endpoints.auth.openidc_authorize
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /auth/callback/kc
-  method: get
-  operationId: repo.endpoints.auth.openidc_callback_keycloak
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1026,128 +194,6 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /account/tokens/{token_id}/metadata
-  method: put
-  operationId: repo.endpoints.tokens.user_tokens.put_token_metadata
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /users/{user_id}/tokens
-  method: get
-  operationId: repo.endpoints.tokens.admin_user_tokens.list_tokens
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /users/{user_id}/tokens
-  method: post
-  operationId: repo.endpoints.tokens.admin_user_tokens.post_token
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /users/tokens
-  method: post
-  operationId: repo.endpoints.tokens.admin_user_tokens.list_users_tokens
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /users/tokens
-  method: put
-  operationId: repo.endpoints.tokens.admin_user_tokens.put_tokens
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /users/{user_id}/tokens/{token_id}
-  method: put
-  operationId: repo.endpoints.tokens.admin_user_tokens.put_token
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /users/{user_id}/tokens/{token_id}
-  method: delete
-  operationId: repo.endpoints.tokens.admin_user_tokens.delete_token
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /users/{user_id}/tokens/{token_id}/metadata
-  method: put
-  operationId: repo.endpoints.tokens.admin_user_tokens.put_token_metadata
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
 - path: /account/history
   method: get
   operationId: repo.endpoints.account.history
@@ -1208,9 +254,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /users
+- path: /api
   method: get
-  operationId: repo.endpoints.users.list_users
+  operationId: getApi
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1218,9 +264,69 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /users
+- path: /artifacts
+  method: get
+  operationId: repo.endpoints.artifacts.search_artifacts
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /artifacts/{artifact_family}/
+  method: get
+  operationId: repo.endpoints.artifacts.get_all_by_type
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /artifacts/{artifact_family}/{artifact_name}
+  method: get
+  operationId: repo.endpoints.artifacts.get_all_by_type_and_name
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /artifacts/{artifact_family}/{artifact_name}/channels
+  method: get
+  operationId: repo.endpoints.artifacts.artifact_channels
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /artifacts/{artifact_family}/{artifact_name}/{artifact_file}/download
+  method: get
+  operationId: repo.endpoints.artifacts.download_artifact
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /artifacts/{artifact_family}/{artifact_name}/versions
+  method: get
+  operationId: repo.endpoints.artifacts.versions
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /repo/upload
   method: post
-  operationId: repo.endpoints.users.post
+  operationId: repo.endpoints.artifacts.upload_artifact
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1234,9 +340,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /users/{user_id}
+- path: /repo/{channel_name}/{ckey:[^/].*?}
   method: get
-  operationId: repo.endpoints.users.get
+  operationId: repo.endpoints.artifacts.get_artifact
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1244,9 +350,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /users/{user_id}
-  method: put
-  operationId: repo.endpoints.users.put
+- path: /repo/{channel_name}/{ckey:[^/].*?}
+  method: patch
+  operationId: repo.endpoints.artifacts.patch_artifact_metadata
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1260,25 +366,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /users/{user_id}
-  method: delete
-  operationId: repo.endpoints.users.delete
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /users/{user_id}/activity
+- path: /repo/{root_version:\d+}.root.json
   method: get
-  operationId: repo.endpoints.users.logs
+  operationId: repo.endpoints.signatures.root_json
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1286,9 +376,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /roles
+- path: /repo/key_mgr.json
   method: get
-  operationId: repo.endpoints.roles.list_roles
+  operationId: repo.endpoints.signatures.key_mgr_json
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1296,9 +386,29 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /roles
+- path: /api/audit-logs
+  method: get
+  operationId: get_audit_logs__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/audit-logs/{audit_log_id}
+  method: get
+  operationId: get_audit_log__audit_log_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/audit-logs/export
   method: post
-  operationId: repo.endpoints.roles.post_role
+  operationId: create_export_job_export_post
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -1312,41 +422,65 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /roles/{role_id}
-  method: put
-  operationId: repo.endpoints.roles.put_role
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /roles/{role_id}
-  method: delete
-  operationId: repo.endpoints.roles.delete_role
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /mirrors
+- path: /api/audit-logs/export/{job_id}
   method: get
-  operationId: repo.endpoints.mirrors.get_all
+  operationId: get_export_job_status_export__job_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/audit-logs/export/{job_id}/download
+  method: get
+  operationId: download_export_export__job_id__download_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /auth/login
+  method: post
+  operationId: repo.endpoints.auth.login
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /auth/logout
+  method: get
+  operationId: repo.endpoints.auth.logout_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /auth/authorize
+  method: get
+  operationId: repo.endpoints.auth.openidc_authorize
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /auth/callback/kc
+  method: get
+  operationId: repo.endpoints.auth.openidc_callback_keycloak
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -1432,64 +566,6 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /channels/{channel_name}/groups
-  method: get
-  operationId: repo.endpoints.channels.channel_groups.list_groups
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /channels/{channel_name}/groups
-  method: post
-  operationId: repo.endpoints.channels.channel_groups.post_group
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /channels/{channel_name}/groups/{group_id}
-  method: put
-  operationId: repo.endpoints.channels.channel_groups.change_group
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /channels/{channel_name}/groups/{group_id}
-  method: delete
-  operationId: repo.endpoints.channels.channel_groups.delete_group
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
 - path: /channels/{channel_name}/history
   method: get
   operationId: repo.endpoints.channels.channels.channel_history
@@ -2366,6 +1442,394 @@ operations:
       - abnormal
       - high-value
     audit: required
+- path: /channels/{channel_name}/subchannels/{subchannel_name}/history
+  method: get
+  operationId: repo.endpoints.channels.subchannels.subchannel_history
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/cves_history
+  method: get
+  operationId: repo.endpoints.channels.channels_cve_history.get_cve_channel_history
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/cves_history
+  method: post
+  operationId: repo.endpoints.channels.channels_cve_history.generate_cve_notifications
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /channels/{channel_name}/cves
+  method: get
+  operationId: repo.endpoints.channels.channel_artifacts.list_channel_cves
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/cves/ws
+  method: get
+  operationId: repo.endpoints.channels.channel_artifacts.cve_report_batched
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/cves/{cve_id}
+  method: get
+  operationId: repo.endpoints.channels.channel_artifacts.get_channel_cve_details
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/cves/{cve_id}/files
+  method: get
+  operationId: repo.endpoints.channels.channel_artifacts.list_channel_cve_files
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/cves
+  method: get
+  operationId: repo.endpoints.channels.channel_artifacts.list_artifact_cves
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/cves/{cve_id}
+  method: get
+  operationId: repo.endpoints.channels.channel_artifacts.get_artifact_cve_details
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/artifacts/{artifact_family}/{artifact_name}/cves/{cve_id}/files
+  method: get
+  operationId: repo.endpoints.channels.channel_artifacts.list_artifact_cve_files
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/subchannels/{subchannel_name}/cves_history
+  method: get
+  operationId: repo.endpoints.channels.subchannels_cve_history.get_cve_subchannel_history
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/subchannels/{subchannel_name}/cves_history
+  method: post
+  operationId: repo.endpoints.channels.subchannels_cve_history.generate_cve_notifications
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /channels/{channel_name}/subchannels/{subchannel_name}/cves
+  method: get
+  operationId: repo.endpoints.channels.subchannel_artifacts.list_subchannel_cves
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/subchannels/{subchannel_name}/cves/ws
+  method: get
+  operationId: repo.endpoints.channels.subchannel_artifacts.cve_report_batched
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/subchannels/{subchannel_name}/cves/{cve_id}
+  method: get
+  operationId: repo.endpoints.channels.subchannel_artifacts.get_subchannel_cve_details
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/subchannels/{subchannel_name}/cves/{cve_id}/files
+  method: get
+  operationId: repo.endpoints.channels.subchannel_artifacts.list_subchannel_cve_files
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/cves
+  method: get
+  operationId: repo.endpoints.channels.subchannel_artifacts.list_artifact_cves
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/cves/{cve_id}
+  method: get
+  operationId: repo.endpoints.channels.subchannel_artifacts.get_artifact_cve_details
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/subchannels/{subchannel_name}/artifacts/{artifact_family}/{artifact_name}/cves/{cve_id}/files
+  method: get
+  operationId: repo.endpoints.channels.subchannel_artifacts.list_artifact_cve_files
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /cves
+  method: get
+  operationId: repo.endpoints.cves.list_cves
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /cves/{cve_id}
+  method: get
+  operationId: repo.endpoints.cves.get_cve
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /cves/{cve_id}/files
+  method: get
+  operationId: repo.endpoints.cves.list_cve_files
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /cves-report
+  method: get
+  operationId: repo.endpoints.cves.list_cves_for_packages
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /cves-report
+  method: post
+  operationId: repo.endpoints.cves.list_cves_for_packages_post_query
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /diagnose/blobs
+  method: post
+  operationId: repo.endpoints.diagnosis.blobs.troubleshoot_routes_blobs
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /external-docs
+  method: get
+  operationId: repo.endpoints.system.get_external_docs
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /models/{modelId}/files
+  method: get
+  operationId: getModelsByModelIdFiles
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/models/{modelId}/files/{fileId}
+  method: get
+  operationId: getApiModelsByModelIdFilesByFileId
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/models/{modelId}/files/{fileId}
+  method: patch
+  operationId: patchApiModelsByModelIdFilesByFileId
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/models/{modelId}/files/{fileId}
+  method: delete
+  operationId: deleteApiModelsByModelIdFilesByFileId
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /channels/{channel_name}/groups
+  method: get
+  operationId: repo.endpoints.channels.channel_groups.list_groups
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/groups
+  method: post
+  operationId: repo.endpoints.channels.channel_groups.post_group
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /channels/{channel_name}/groups/{group_id}
+  method: put
+  operationId: repo.endpoints.channels.channel_groups.change_group
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /channels/{channel_name}/groups/{group_id}
+  method: delete
+  operationId: repo.endpoints.channels.channel_groups.delete_group
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
 - path: /channels/{channel_name}/subchannels/{subchannel_name}/groups
   method: get
   operationId: repo.endpoints.channels.subchannel_groups.list_groups
@@ -2424,16 +1888,6 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /channels/{channel_name}/subchannels/{subchannel_name}/history
-  method: get
-  operationId: repo.endpoints.channels.subchannels.subchannel_history
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
 - path: /groups
   method: get
   operationId: repo.endpoints.groups.list_all_groups
@@ -2544,9 +1998,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /artifacts
+- path: /installers
   method: get
-  operationId: repo.endpoints.artifacts.search_artifacts
+  operationId: repo.endpoints.installers.list_installers
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2554,9 +2008,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /artifacts/{artifact_family}/
+- path: /installers/{installer_name}
   method: get
-  operationId: repo.endpoints.artifacts.get_all_by_type
+  operationId: repo.endpoints.installers.download_installer
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2564,9 +2018,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /artifacts/{artifact_family}/{artifact_name}
+- path: /mirrors
   method: get
-  operationId: repo.endpoints.artifacts.get_all_by_type_and_name
+  operationId: repo.endpoints.mirrors.get_all
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2574,9 +2028,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /artifacts/{artifact_family}/{artifact_name}/channels
+- path: /api/models/health
   method: get
-  operationId: repo.endpoints.artifacts.artifact_channels
+  operationId: getApiModelsHealth
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2584,9 +2038,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /artifacts/{artifact_family}/{artifact_name}/{artifact_file}/download
+- path: /api/models
   method: get
-  operationId: repo.endpoints.artifacts.download_artifact
+  operationId: getApiModels
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2594,9 +2048,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /artifacts/{artifact_family}/{artifact_name}/versions
+- path: /api/models/{id}
   method: get
-  operationId: repo.endpoints.artifacts.versions
+  operationId: getApiModelsById
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2604,9 +2058,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /cves
+- path: /models/{modelId}/files
   method: get
-  operationId: repo.endpoints.cves.list_cves
+  operationId: getModelsByModelIdFiles
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2614,9 +2068,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /cves/{cve_id}
+- path: /api/models/{modelId}/files/{fileId}
   method: get
-  operationId: repo.endpoints.cves.get_cve
+  operationId: getApiModelsByModelIdFilesByFileId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2624,29 +2078,453 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /cves/{cve_id}/files
-  method: get
-  operationId: repo.endpoints.cves.list_cve_files
+- path: /api/models/{modelId}/files/{fileId}
+  method: patch
+  operationId: patchApiModelsByModelIdFilesByFileId
   x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
     token:
-      max-ttl: 3600
-    audit: none
-- path: /cves-report
-  method: get
-  operationId: repo.endpoints.cves.list_cves_for_packages
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/models/{modelId}/files/{fileId}
+  method: delete
+  operationId: deleteApiModelsByModelIdFilesByFileId
   x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
     token:
-      max-ttl: 3600
-    audit: none
-- path: /cves-report
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v1/organizations/{org_id}/service-accounts
   method: post
-  operationId: repo.endpoints.cves.list_cves_for_packages_post_query
+  operationId: create_service_account
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v1/organizations/{org_id}/service-accounts
+  method: get
+  operationId: list_service_accounts
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/organizations/{org_id}/service-accounts/{client_id}
+  method: delete
+  operationId: delete_service_account
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v1/organizations/{org_id}/users_auto_registration
+  method: post
+  operationId: auto_register_users
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v1/organizations/{org_id}/users
+  method: post
+  operationId: add_user
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v1/organizations/{org_id}/users
+  method: get
+  operationId: list_users
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/organizations/{org_id}/users/{user_id}
+  method: delete
+  operationId: remove_user
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v1/organizations/{org_id}/users/{user_id}/seats
+  method: post
+  operationId: assign_seat
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v1/organizations/{org_id}/users/{user_id}/seats
+  method: delete
+  operationId: revoke_seat
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /api/v1/organizations/{org_id}/users/{user_id}/token
+  method: post
+  operationId: create_user_token
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v1/organizations/{org_id}/users/{user_id}/token
+  method: patch
+  operationId: update_user_token
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/v1/organizations/{org_id}/users/{user_id}/tokens
+  method: get
+  operationId: list_user_tokens
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/v1/organizations/{org_id}/users/{user_id}/tokens/{token_id}
+  method: delete
+  operationId: revoke_user_token
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /repo/docker/events
+  method: post
+  operationId: repo.endpoints.docker.publish_events
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /repo/docker/repositories/{channel_id}/{image_name}
+  method: get
+  operationId: repo.endpoints.docker.get_repository
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /reports/artifact_downloads
+  method: post
+  operationId: repo.endpoints.audit_logs.artifact_download.generate_artifact_downloads_report
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/servers/health
+  method: get
+  operationId: getApiServersHealth
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/servers
+  method: get
+  operationId: getApiServers
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/servers
+  method: post
+  operationId: postApiServers
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/servers/{serverId}
+  method: get
+  operationId: getApiServersByServerId
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/servers/{serverId}
+  method: patch
+  operationId: patchApiServersByServerId
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /api/servers/{serverId}
+  method: delete
+  operationId: deleteApiServersByServerId
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /system
+  method: get
+  operationId: repo.endpoints.system.health
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /system/stats
+  method: get
+  operationId: repo.endpoints.system.stats
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /system/metrics
+  method: get
+  operationId: repo.endpoints.system.metrics
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /system/scopes
+  method: get
+  operationId: repo.endpoints.system.scopes
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /system/resource_types
+  method: get
+  operationId: repo.endpoints.system.resource_types
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /system/license
+  method: get
+  operationId: repo.endpoints.system.get_license
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /system/license
+  method: post
+  operationId: repo.endpoints.system.post_license
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /system/license
+  method: put
+  operationId: repo.endpoints.system.put_license
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /system/settings
+  method: get
+  operationId: repo.endpoints.system.get_settings
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /system/settings
+  method: put
+  operationId: repo.endpoints.system.update_settings
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2692,9 +2570,9 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /repo/upload
-  method: post
-  operationId: repo.endpoints.artifacts.upload_artifact
+- path: /account/tokens/{token_id}/metadata
+  method: put
+  operationId: repo.endpoints.tokens.user_tokens.put_token_metadata
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2708,9 +2586,19 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /repo/docker/events
+- path: /users/{user_id}/tokens
+  method: get
+  operationId: repo.endpoints.tokens.admin_user_tokens.list_tokens
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /users/{user_id}/tokens
   method: post
-  operationId: repo.endpoints.docker.publish_events
+  operationId: repo.endpoints.tokens.admin_user_tokens.post_token
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2724,9 +2612,89 @@ operations:
       - abnormal
       - high-value
     audit: required
-- path: /repo/docker/repositories/{channel_id}/{image_name}
+- path: /users/tokens
+  method: post
+  operationId: repo.endpoints.tokens.admin_user_tokens.list_users_tokens
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /users/tokens
+  method: put
+  operationId: repo.endpoints.tokens.admin_user_tokens.put_tokens
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /users/{user_id}/tokens/{token_id}
+  method: put
+  operationId: repo.endpoints.tokens.admin_user_tokens.put_token
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /users/{user_id}/tokens/{token_id}
+  method: delete
+  operationId: repo.endpoints.tokens.admin_user_tokens.delete_token
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /users/{user_id}/tokens/{token_id}/metadata
+  method: put
+  operationId: repo.endpoints.tokens.admin_user_tokens.put_token_metadata
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /users
   method: get
-  operationId: repo.endpoints.docker.get_repository
+  operationId: repo.endpoints.users.list_users
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2734,9 +2702,25 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /repo/{channel_name}/{ckey:[^/].*?}
+- path: /users
+  method: post
+  operationId: repo.endpoints.users.post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /users/{user_id}
   method: get
-  operationId: repo.endpoints.artifacts.get_artifact
+  operationId: repo.endpoints.users.get
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2744,25 +2728,151 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /repo/{channel_name}/{ckey:[^/].*?}
+- path: /users/{user_id}
+  method: put
+  operationId: repo.endpoints.users.put
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /users/{user_id}
+  method: delete
+  operationId: repo.endpoints.users.delete
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /users/{user_id}/activity
+  method: get
+  operationId: repo.endpoints.users.logs
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /roles
+  method: get
+  operationId: repo.endpoints.roles.list_roles
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /roles
+  method: post
+  operationId: repo.endpoints.roles.post_role
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /roles/{role_id}
+  method: put
+  operationId: repo.endpoints.roles.put_role
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /roles/{role_id}
+  method: delete
+  operationId: repo.endpoints.roles.delete_role
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/vector-db/health
+  method: get
+  operationId: getApiVectorDbHealth
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/vector-db
+  method: post
+  operationId: postApiVectorDb
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/vector-db
   method: patch
-  operationId: repo.endpoints.artifacts.patch_artifact_metadata
+  operationId: patchApiVectorDb
   x-agentic-access:
     action-class: acting
-    consequence: write
+    consequence: safety-critical
     subject: required
     audience: null
     token:
-      max-ttl: 900
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
     escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
+      human-in-the-loop: required
     audit: required
-- path: /repo/{root_version:\d+}.root.json
+- path: /api/vector-db/tables
   method: get
-  operationId: repo.endpoints.signatures.root_json
+  operationId: getApiVectorDbTables
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -2770,19 +2880,9 @@ operations:
     token:
       max-ttl: 3600
     audit: none
-- path: /repo/key_mgr.json
-  method: get
-  operationId: repo.endpoints.signatures.key_mgr_json
-  x-agentic-access:
-    action-class: connected
-    consequence: read
-    subject: optional
-    token:
-      max-ttl: 3600
-    audit: none
-- path: /reports/artifact_downloads
+- path: /api/vector-db/tables
   method: post
-  operationId: repo.endpoints.audit_logs.artifact_download.generate_artifact_downloads_report
+  operationId: postApiVectorDbTables
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -2796,3 +2896,49 @@ operations:
       - abnormal
       - high-value
     audit: required
+- path: /api/vector-db/tables/{tableName}
+  method: delete
+  operationId: deleteApiVectorDbTablesByTableName
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /account/history/ws
+  method: get
+  operationId: repo.endpoints.account.publish_events
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/cves/ws
+  method: get
+  operationId: repo.endpoints.channels.channel_artifacts.cve_report_batched
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /channels/{channel_name}/subchannels/{subchannel_name}/cves/ws
+  method: get
+  operationId: repo.endpoints.channels.subchannel_artifacts.cve_report_batched
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none

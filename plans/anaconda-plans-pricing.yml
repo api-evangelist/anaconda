@@ -1,0 +1,259 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-07'
+method: searched
+source: https://www.anaconda.com/pricing
+sources:
+- https://www.anaconda.com/pricing
+provenance:
+  tool: all/0-working/economics/harvest_pricing.py
+  run: 20261007T104522
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: tiered-subscription
+delivery:
+  delivery: managed+licensed
+  method: page
+  read: '2026-10-07'
+  evidence: Deploy as managed cloud, self-hosted cloud, or on-premises.
+  managed_tier: Starter
+published: true
+note: 'Multi-product pricing page (Platform, Kilo, Enkrypt AI, Core). Free tiers plus paid subscriptions;
+  self-hosted/on-prem offered under paid plans. Licensing note: organizations with 200+ employees require
+  a paid Business license.'
+plan_count: 17
+currency: USD
+plans:
+- name: Anaconda Platform
+  price_text: One plan · Contact sales for pricing
+  period: none
+  included_quota: Includes everything in Anaconda Core Business. Deploy as managed cloud, self-hosted
+    cloud, or on-premises.
+- name: Kilo Free & Open Source
+  price_text: $0
+  price: 0
+  currency: USD
+  period: month
+  unit: user
+  included_quota: Open-source VS Code, JetBrains & CLI extensions; usage billed separately
+- name: Kilo Teams
+  price_text: $15 /user/mo
+  price: 15
+  currency: USD
+  period: month
+  unit: user
+  included_quota: Everything in Free, plus team management
+- name: Kilo Enterprise
+  price_text: Custom
+  period: none
+  included_quota: Everything in Teams, plus security and compliance
+- name: Auto Free, BYOK, or Local
+  price_text: $0
+  price: 0
+  currency: USD
+  period: none
+  included_quota: No hosted credit required
+- name: Kilo Credits
+  price_text: $0 /mo + usage
+  price: 0
+  currency: USD
+  period: month
+  included_quota: 500+ models across 60+ providers
+  overage: Pay exact provider rates with no markup
+- name: Kilo Pass
+  price_text: $19 /mo
+  price: 19
+  currency: USD
+  period: month
+  included_quota: Monthly AI credit subscription; up to 50% bonus credits
+- name: Enkrypt AI Explore
+  price_text: $0 /mo
+  price: 0
+  currency: USD
+  period: month
+  included_quota: 500 credits to start, 50/mo
+- name: Enkrypt AI Launch (monthly)
+  price_text: $149 /mo
+  price: 149
+  currency: USD
+  period: month
+  included_quota: 5,000 credits to start, 250/mo
+- name: Enkrypt AI Scale (monthly)
+  price_text: $1,499 /mo
+  price: 1499
+  currency: USD
+  period: month
+  included_quota: 10,000 credits to start, 1,000/mo
+- name: Enkrypt AI Launch (annual)
+  price_text: $134 /mo
+  price: 134
+  currency: USD
+  period: month
+  included_quota: 5,000 credits to start, 250/mo; Save $180/year
+- name: Enkrypt AI Scale (annual)
+  price_text: $1,349 /mo
+  price: 1349
+  currency: USD
+  period: month
+  included_quota: 10,000 credits to start, 1,000/mo; Save $1,800/year
+- name: Enkrypt AI Enterprise
+  price_text: Custom
+  period: none
+  included_quota: Custom credit allocation, unlimited for VPC
+- name: Anaconda Core Free
+  price_text: $0
+  price: 0
+  currency: USD
+  period: none
+  included_quota: Notebooks with 5GB cloud storage
+- name: Anaconda Core Starter
+  price_text: $15 /user/mo
+  price: 15
+  currency: USD
+  period: month
+  unit: user
+  included_quota: 10GB storage per user
+- name: Anaconda Core Business
+  price_text: $50 /user/mo
+  price: 50
+  currency: USD
+  period: month
+  unit: user
+  included_quota: Vulnerability scanning, audit trails, SSO
+- name: Anaconda Core Custom
+  price_text: Let's Talk
+  period: none
+  included_quota: Self-host on-prem, private, or public cloud
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  - metered
+  - seat
+  - subscription
+  units:
+  - seat
+  plans:
+  - name: Anaconda Platform
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Kilo Free & Open Source
+    access: other
+    model: free
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - month
+  - name: Kilo Teams
+    access: other
+    model: seat
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - month
+  - name: Kilo Enterprise
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Auto Free, BYOK, or Local
+    access: other
+    model: free
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Kilo Credits
+    access: other
+    model: metered
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Kilo Pass
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Enkrypt AI Explore
+    access: other
+    model: free
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Enkrypt AI Launch (monthly)
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Enkrypt AI Scale (monthly)
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Enkrypt AI Launch (annual)
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Enkrypt AI Scale (annual)
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Enkrypt AI Enterprise
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Anaconda Core Free
+    access: other
+    model: free
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Anaconda Core Starter
+    access: other
+    model: seat
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - month
+  - name: Anaconda Core Business
+    access: other
+    model: seat
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - month
+  - name: Anaconda Core Custom
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
