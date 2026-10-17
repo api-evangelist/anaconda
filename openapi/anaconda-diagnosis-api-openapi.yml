@@ -46,14 +46,14 @@ paths:
       - user_token: []
 components:
   responses:
-    InternalServerError:
-      description: Internal server error
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
+    InternalServerError:
+      description: Internal server error
       content:
         application/json:
           schema:
@@ -69,33 +69,6 @@ components:
           $ref: '#/components/schemas/DiagnosisDetails'
         diagnosis_timestamp:
           type: string
-    DiagnosisDetails:
-      type: object
-      properties:
-        channel_name:
-          type: string
-        artifacts_list:
-          type: array
-        total:
-          type: number
-        action_taken:
-          type: string
-    DiagnosisRequest:
-      type: object
-      description: "request body with filter details for diagnosis, \ncurrently has channel names list and download_as option\n"
-      properties:
-        download_as:
-          type: string
-          description: "* Specifies the format of report download file. \n* The report name will follow the convention\n  DiagnosisReport_{timestamp('%Y%m%d_%H%M%S')}\n"
-          enum:
-          - json
-        channel_names:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: List of Channel names
     ErrorResponse:
       type: object
       description: The metadata contained in an error response
@@ -112,6 +85,33 @@ components:
           type: integer
           description: The HTTP Status code
           example: 401
+    DiagnosisRequest:
+      type: object
+      description: "request body with filter details for diagnosis, \ncurrently has channel names list and download_as option\n"
+      properties:
+        download_as:
+          type: string
+          description: "* Specifies the format of report download file. \n* The report name will follow the convention\n  DiagnosisReport_{timestamp('%Y%m%d_%H%M%S')}\n"
+          enum:
+          - json
+        channel_names:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of Channel names
+    DiagnosisDetails:
+      type: object
+      properties:
+        channel_name:
+          type: string
+        artifacts_list:
+          type: array
+        total:
+          type: number
+        action_taken:
+          type: string
   securitySchemes:
     jwt:
       type: http

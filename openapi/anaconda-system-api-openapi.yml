@@ -269,35 +269,6 @@ paths:
       - user_token: []
 components:
   schemas:
-    ProductLicenseCompliance:
-      type: object
-      description: Is used in definining compliance checks for different group. warn_limit is triggered when reached 80% of the quota
-      properties:
-        ok:
-          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
-        warn_limit:
-          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
-        over_quota:
-          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
-        no_data:
-          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
-    SystemStats:
-      type: object
-      properties:
-        blob_size:
-          type: object
-          properties:
-            total:
-              type: integer
-            by_artifact_family:
-              type: array
-              items:
-                type: object
-                properties:
-                  artifact_family:
-                    type: string
-                  blob_size:
-                    type: integer
     System:
       type: object
       properties:
@@ -320,16 +291,18 @@ components:
               type: integer
               description: Number of messages in the queue
               example: 12
-    ProductLicenseComplianceGroup:
-      type: array
-      items:
-        type: string
-        enum:
-        - users
-        - channels
-        - instances.api
-        - instances.dispatcher
-        - instances.worker
+    ProductLicenseCompliance:
+      type: object
+      description: Is used in definining compliance checks for different group. warn_limit is triggered when reached 80% of the quota
+      properties:
+        ok:
+          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
+        warn_limit:
+          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
+        over_quota:
+          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
+        no_data:
+          $ref: '#/components/schemas/ProductLicenseComplianceGroup'
     ProductLicenseMetrics:
       type: object
       description: Is used in definining limits as well as current compliance metrics
@@ -349,6 +322,23 @@ components:
           type: integer
         mirrors:
           type: integer
+    SystemStats:
+      type: object
+      properties:
+        blob_size:
+          type: object
+          properties:
+            total:
+              type: integer
+            by_artifact_family:
+              type: array
+              items:
+                type: object
+                properties:
+                  artifact_family:
+                    type: string
+                  blob_size:
+                    type: integer
     ProductLicenseRequest:
       type: object
       required:
@@ -357,6 +347,49 @@ components:
         license_key:
           type: string
           minLength: 1
+    SystemSettings:
+      type: object
+      additionalProperties: false
+      properties:
+        user_channel_autocreate:
+          type: boolean
+          description: create a default user channel on first login
+        show_intro:
+          type: boolean
+          description: show intro screen after first installation or settings reset
+        cve_channel_id:
+          type:
+          - string
+          - 'null'
+          description: ID of global CVE channel
+        anaconda_ident_settings:
+          type:
+          - object
+          - 'null'
+          properties:
+            enabled:
+              type: boolean
+              description: Should anaconda-ident be enabled? If yes, then true, else false
+            enable_from:
+              type: string
+              format: date-time
+              description: From when should anaconda-ident be made mandatory
+            updated_by:
+              type: string
+              description: Username of admin updating this setting
+            selected_tokens:
+              type: array
+              description: List of tokens selected by admin for anaconda-ident
+              items:
+                type: string
+                enum:
+                - client_token
+                - session_token
+                - environment_token
+                - username
+                - hostname
+                - environment
+                - organization
     CleanupStats:
       type: object
       description: Cleanup stats
@@ -422,6 +455,32 @@ components:
           $ref: '#/components/schemas/ProductLicenseMetrics'
         compliance:
           $ref: '#/components/schemas/ProductLicenseCompliance'
+    ProductLicenseComplianceGroup:
+      type: array
+      items:
+        type: string
+        enum:
+        - users
+        - channels
+        - instances.api
+        - instances.dispatcher
+        - instances.worker
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
     OpenMetrics:
       type: array
       items:
@@ -453,68 +512,9 @@ components:
                   oneOf:
                   - type: string
                   - type: number
-    ErrorResponse:
-      type: object
-      description: The metadata contained in an error response
-      properties:
-        code:
-          type: string
-          description: Internal error code. Could be used to show corresponding message text from a message catalog
-          example: bad-parameter
-        message:
-          type: string
-          description: Short human-readable error message. Used mainly for logging
-          example: Bad request parameter for 'sort'
-        status:
-          type: integer
-          description: The HTTP Status code
-          example: 401
-    SystemSettings:
-      type: object
-      additionalProperties: false
-      properties:
-        user_channel_autocreate:
-          type: boolean
-          description: create a default user channel on first login
-        show_intro:
-          type: boolean
-          description: show intro screen after first installation or settings reset
-        cve_channel_id:
-          type:
-          - string
-          - 'null'
-          description: ID of global CVE channel
-        anaconda_ident_settings:
-          type:
-          - object
-          - 'null'
-          properties:
-            enabled:
-              type: boolean
-              description: Should anaconda-ident be enabled? If yes, then true, else false
-            enable_from:
-              type: string
-              format: date-time
-              description: From when should anaconda-ident be made mandatory
-            updated_by:
-              type: string
-              description: Username of admin updating this setting
-            selected_tokens:
-              type: array
-              description: List of tokens selected by admin for anaconda-ident
-              items:
-                type: string
-                enum:
-                - client_token
-                - session_token
-                - environment_token
-                - username
-                - hostname
-                - environment
-                - organization
   responses:
-    InternalServerError:
-      description: Internal server error
+    Forbidden:
+      description: Access is forbidden
       content:
         application/json:
           schema:
@@ -525,8 +525,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Access is forbidden
+    InternalServerError:
+      description: Internal server error
       content:
         application/json:
           schema:

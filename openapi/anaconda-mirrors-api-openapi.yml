@@ -42,13 +42,6 @@ paths:
       - user_token: []
 components:
   schemas:
-    ChannelPrivacy:
-      description: channel privacy channel
-      type: string
-      enum:
-      - private
-      - authenticated
-      - public
     MirrorSyncState:
       type: object
       additionalProperties: false
@@ -225,9 +218,16 @@ components:
           type: integer
           description: The HTTP Status code
           example: 401
+    ChannelPrivacy:
+      description: channel privacy channel
+      type: string
+      enum:
+      - private
+      - authenticated
+      - public
   responses:
-    InternalServerError:
-      description: Internal server error
+    Forbidden:
+      description: Access is forbidden
       content:
         application/json:
           schema:
@@ -238,13 +238,29 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Access is forbidden
+    InternalServerError:
+      description: Internal server error
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
   parameters:
+    limit-query:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 100
+      description: the number of results in the result set
+    offset-query:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+        default: 0
+      description: the offset of the result set
     mirror-sort-query:
       in: query
       name: sort
@@ -266,22 +282,6 @@ components:
           - -updated_at
           - state
           - -state
-    offset-query:
-      in: query
-      name: offset
-      required: false
-      schema:
-        type: integer
-        default: 0
-      description: the offset of the result set
-    limit-query:
-      in: query
-      name: limit
-      required: false
-      schema:
-        type: integer
-        default: 100
-      description: the number of results in the result set
   securitySchemes:
     jwt:
       type: http

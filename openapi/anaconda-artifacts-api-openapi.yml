@@ -291,7 +291,167 @@ paths:
       - Artifacts
       security: []
 components:
+  parameters:
+    created-query:
+      in: query
+      name: created
+      description: timestamp start boundary for when created. I guess this could be either "only artifacts created on this exact date" or "artifacts created on this date and newer"
+      schema:
+        type: integer
+    only_names-query:
+      in: query
+      name: only_names
+      description: list of packages, search for. exact names, separated by comma
+      schema:
+        type: array
+        items:
+          type: string
+    updated-query:
+      in: query
+      name: updated
+      description: timestamp end boundary
+      schema:
+        type: integer
+    artifact_family-query:
+      name: artifact_family
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/ArtifactFamily'
+    offset-query:
+      in: query
+      name: offset
+      required: false
+      schema:
+        type: integer
+        default: 0
+      description: the offset of the result set
+    artifact-sort-query:
+      in: query
+      name: sort
+      description: property to sort artifacts (may be comma-separated)
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - common_name
+          - -common_name
+          - download_count
+          - -download_count
+          - updated_at
+          - -updated_at
+    sbom-query:
+      in: query
+      name: sbom
+      required: false
+      schema:
+        type: string
+        enum:
+        - view
+        - download
+    artifact_name-parameter:
+      name: artifact_name
+      in: path
+      required: true
+      description: the unique name of the artifact
+      schema:
+        type: string
+        example: numpy
+    ckey-parameter:
+      name: ckey
+      in: path
+      required: true
+      schema:
+        type: string
+        format: path
+    search-query:
+      in: query
+      name: q
+      description: the string to search on
+      schema:
+        type: string
+    artifact_family-parameter:
+      name: artifact_family
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/ArtifactFamily'
+    limit-query:
+      in: query
+      name: limit
+      required: false
+      schema:
+        type: integer
+        default: 100
+      description: the number of results in the result set
+    channel-parameter:
+      name: channel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
+    platform-query:
+      name: platform
+      in: query
+      schema:
+        type: string
+      description: filter for the platform
+    root_version-parameter:
+      name: root_version
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 1000
+      description: the number of results in the result set
+  responses:
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   schemas:
+    ArtifactFamily:
+      type: string
+      enum:
+      - anaconda_project
+      - anaconda_env
+      - cve
+      - conda
+      - python
+      - cran
+      - notebook
+      - docker
+      - sbom
     ChannelPrivacy:
       description: channel privacy channel
       type: string
@@ -299,32 +459,33 @@ components:
       - private
       - authenticated
       - public
-    ArtifactVersion:
+    Artifact:
       type: object
-      description: The version or point-in-time that this artifact existed and all it's associated metadata
+      description: The object stored in Repo in as few properties as possible
       properties:
-        id:
-          type: string
-        version:
-          type: integer
         name:
           type: string
-        file_type:
-          description: type of file
-          example: conda
+        family:
+          $ref: '#/components/schemas/ArtifactFamily'
+        channel:
           type: string
-        created_at:
-          description: the date the file was created
-          type: string
-        updated_at:
-          description: date of last update
-          type: string
-        uploader:
-          description: where was this uploaded (channel?)
+        subchannel:
           type: string
         download_count:
-          description: the number of downloads
-          type: integer
+          type: number
+        privacy:
+          $ref: '#/components/schemas/ChannelPrivacy'
+        file_count:
+          description: number of files (routes) in the artifact
+          type: number
+        cve_count:
+          description: number of CVE in the artifact files
+          type: number
+        metadata:
+          type: object
+          description: family specific fields such as base and version
+        updated_at:
+          type: string
     ArtifactMetadata:
       type: object
       description: Artifact's metadata
@@ -354,33 +515,6 @@ components:
           type: integer
         client_fields:
           type: object
-    Artifact:
-      type: object
-      description: The object stored in Repo in as few properties as possible
-      properties:
-        name:
-          type: string
-        family:
-          $ref: '#/components/schemas/ArtifactFamily'
-        channel:
-          type: string
-        subchannel:
-          type: string
-        download_count:
-          type: number
-        privacy:
-          $ref: '#/components/schemas/ChannelPrivacy'
-        file_count:
-          description: number of files (routes) in the artifact
-          type: number
-        cve_count:
-          description: number of CVE in the artifact files
-          type: number
-        metadata:
-          type: object
-          description: family specific fields such as base and version
-        updated_at:
-          type: string
     ErrorResponse:
       type: object
       description: The metadata contained in an error response
@@ -397,166 +531,32 @@ components:
           type: integer
           description: The HTTP Status code
           example: 401
-    ArtifactFamily:
-      type: string
-      enum:
-      - anaconda_project
-      - anaconda_env
-      - cve
-      - conda
-      - python
-      - cran
-      - notebook
-      - docker
-      - sbom
-  parameters:
-    artifact-sort-query:
-      in: query
-      name: sort
-      description: property to sort artifacts (may be comma-separated)
-      schema:
-        type: array
-        items:
+    ArtifactVersion:
+      type: object
+      description: The version or point-in-time that this artifact existed and all it's associated metadata
+      properties:
+        id:
           type: string
-          enum:
-          - common_name
-          - -common_name
-          - download_count
-          - -download_count
-          - updated_at
-          - -updated_at
-    platform-query:
-      name: platform
-      in: query
-      schema:
-        type: string
-      description: filter for the platform
-    artifact_name-parameter:
-      name: artifact_name
-      in: path
-      required: true
-      description: the unique name of the artifact
-      schema:
-        type: string
-        example: numpy
-    updated-query:
-      in: query
-      name: updated
-      description: timestamp end boundary
-      schema:
-        type: integer
-    search-query:
-      in: query
-      name: q
-      description: the string to search on
-      schema:
-        type: string
-    created-query:
-      in: query
-      name: created
-      description: timestamp start boundary for when created. I guess this could be either "only artifacts created on this exact date" or "artifacts created on this date and newer"
-      schema:
-        type: integer
-    root_version-parameter:
-      name: root_version
-      in: path
-      required: true
-      schema:
-        type: integer
-        minimum: 0
-        maximum: 1000
-      description: the number of results in the result set
-    channel-parameter:
-      name: channel_name
-      in: path
-      required: true
-      schema:
-        type: string
-        pattern: ^[a-z][a-z0-9_-]*$
-    artifact_family-parameter:
-      name: artifact_family
-      in: path
-      required: true
-      schema:
-        $ref: '#/components/schemas/ArtifactFamily'
-    ckey-parameter:
-      name: ckey
-      in: path
-      required: true
-      schema:
-        type: string
-        format: path
-    offset-query:
-      in: query
-      name: offset
-      required: false
-      schema:
-        type: integer
-        default: 0
-      description: the offset of the result set
-    only_names-query:
-      in: query
-      name: only_names
-      description: list of packages, search for. exact names, separated by comma
-      schema:
-        type: array
-        items:
+        version:
+          type: integer
+        name:
           type: string
-    artifact_family-query:
-      name: artifact_family
-      in: query
-      schema:
-        type: array
-        items:
-          $ref: '#/components/schemas/ArtifactFamily'
-    sbom-query:
-      in: query
-      name: sbom
-      required: false
-      schema:
-        type: string
-        enum:
-        - view
-        - download
-    limit-query:
-      in: query
-      name: limit
-      required: false
-      schema:
-        type: integer
-        default: 100
-      description: the number of results in the result set
-  responses:
-    BadRequest:
-      description: Server cannot execute request due to something that is perceived to be a client error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Access is forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
+        file_type:
+          description: type of file
+          example: conda
+          type: string
+        created_at:
+          description: the date the file was created
+          type: string
+        updated_at:
+          description: date of last update
+          type: string
+        uploader:
+          description: where was this uploaded (channel?)
+          type: string
+        download_count:
+          description: the number of downloads
+          type: integer
   securitySchemes:
     jwt:
       type: http

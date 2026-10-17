@@ -303,6 +303,56 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              enum:
+              - INVALID_REQUEST
+              - DATABASE_NOT_RUNNING
+              - INTERNAL_SERVER_ERROR
+              - INVALID_SERVER_ID
+              - SERVER_NOT_RUNNING
+              - SERVER_RUNNING
+              - INTERNAL_SERVER_ERROR
+            message:
+              type: string
+    Server:
+      type: object
+      required:
+      - serverConfig
+      properties:
+        serverConfig:
+          type: object
+          required:
+          - modelFileName
+          properties:
+            modelFileName:
+              type: string
+            apiParams:
+              type: object
+            loadParams:
+              type: object
+            inferParams:
+              type: object
+            logsDir:
+              type: string
+        startServerOnCreate:
+          type: boolean
+    ServerAction:
+      type: object
+      required:
+      - action
+      properties:
+        action:
+          type: string
+          enum:
+          - start
+          - stop
     ServerDetails:
       type: object
       properties:
@@ -359,56 +409,6 @@ components:
         id:
           type: string
           description: Unique server identifier
-    Server:
-      type: object
-      required:
-      - serverConfig
-      properties:
-        serverConfig:
-          type: object
-          required:
-          - modelFileName
-          properties:
-            modelFileName:
-              type: string
-            apiParams:
-              type: object
-            loadParams:
-              type: object
-            inferParams:
-              type: object
-            logsDir:
-              type: string
-        startServerOnCreate:
-          type: boolean
-    Error:
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            code:
-              type: string
-              enum:
-              - INVALID_REQUEST
-              - DATABASE_NOT_RUNNING
-              - INTERNAL_SERVER_ERROR
-              - INVALID_SERVER_ID
-              - SERVER_NOT_RUNNING
-              - SERVER_RUNNING
-              - INTERNAL_SERVER_ERROR
-            message:
-              type: string
-    ServerAction:
-      type: object
-      required:
-      - action
-      properties:
-        action:
-          type: string
-          enum:
-          - start
-          - stop
   securitySchemes:
     bearerAuth:
       type: http

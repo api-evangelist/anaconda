@@ -499,25 +499,6 @@ paths:
       - jwt: []
 components:
   schemas:
-    ChannelGroupPermissions:
-      type: object
-      description: group members permissions to channel
-      required:
-      - permission
-      properties:
-        permission:
-          type: string
-          enum:
-          - read
-          - write
-          - manage
-    ChannelPrivacy:
-      description: channel privacy channel
-      type: string
-      enum:
-      - private
-      - authenticated
-      - public
     Subchannel:
       type: object
       description: Nested channel object
@@ -550,35 +531,6 @@ components:
         updated:
           description: date of last update
           type: string
-    ChannelGroup:
-      type: object
-      description: Channel group relationship metadata
-      properties:
-        group_id:
-          type: string
-          description: the assigned group_id
-        name:
-          type: string
-          description: the assigned group name
-          pattern: ^[A-Za-z0-9_\-\/].*$
-        description:
-          type: string
-          description: the assigned group description
-        permission:
-          type: string
-          enum:
-          - read
-          - write
-          - manage
-        persistent:
-          type: boolean
-          description: the persistent groups could not be deleted
-        created_at:
-          type: string
-          description: when the group was created
-        updated_at:
-          type: string
-          description: when the group was updated
     Channel:
       type: object
       description: Channel object
@@ -620,21 +572,108 @@ components:
           type: number
         filters:
           $ref: '#/components/schemas/ChannelFilters'
-    ChannelGroupRequest:
+    ChannelGroup:
       type: object
-      required:
-      - group_id
-      - permission
+      description: Channel group relationship metadata
       properties:
         group_id:
           type: string
-          description: group_id to add
+          description: the assigned group_id
+        name:
+          type: string
+          description: the assigned group name
+          pattern: ^[A-Za-z0-9_\-\/].*$
+        description:
+          type: string
+          description: the assigned group description
         permission:
           type: string
           enum:
           - read
           - write
           - manage
+        persistent:
+          type: boolean
+          description: the persistent groups could not be deleted
+        created_at:
+          type: string
+          description: when the group was created
+        updated_at:
+          type: string
+          description: when the group was updated
+    ChannelIndexingBehavior:
+      description: channel indexing behavior
+      type: string
+      default: default
+      enum:
+      - default
+      - frozen
+    ChannelGroupPermissions:
+      type: object
+      description: group members permissions to channel
+      required:
+      - permission
+      properties:
+        permission:
+          type: string
+          enum:
+          - read
+          - write
+          - manage
+    ChannelPrivacy:
+      description: channel privacy channel
+      type: string
+      enum:
+      - private
+      - authenticated
+      - public
+    VirtualChannelSource:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        parent_name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+    Group:
+      type: object
+      description: Logical collection of users within a channel
+      properties:
+        id:
+          type: string
+          description: uid
+        name:
+          type: string
+          pattern: ^[A-Za-z0-9_-\/].*$
+          description: the name of the group
+          example: ui-team
+        description:
+          type: string
+          description: the description of the group
+          example: ui-team owner access
+        members_count:
+          type: integer
+          description: member count
+          example: 1
+        created_at:
+          type: string
+          description: when the group was created
+        updated_at:
+          type: string
+          description: when the group was updated
+        user_permission:
+          type: string
+          enum:
+          - read
+          - manage
+          description: "permissions types for users\n  * \"read\" - the group member can only view within the group\n  * \"manage\" - the group member can both view and edit group and update users\n"
+        remote:
+          type: boolean
+          description: remote group
+          example: false
     FilterLicenses:
       type: array
       uniqueItems: true
@@ -662,43 +701,6 @@ components:
       description: 'A list of MatchSpec strings, for including from excluded list General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
 
         '
-    GroupRequest:
-      type: object
-      required:
-      - name
-      - description
-      properties:
-        name:
-          type: string
-          description: the name of the group
-          example: ui-team
-          pattern: ^[A-Za-z0-9_\-\/].*$
-        description:
-          type: string
-          description: the description of the group
-          example: ui-team description
-    ChannelType:
-      description: channel type
-      type: string
-      default: default
-      enum:
-      - default
-      - virtual
-    FilterExcludeSpecs:
-      type: array
-      uniqueItems: true
-      items:
-        type: string
-      description: 'A list of MatchSpec strings, for excluding specific packages. General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
-
-        '
-    ChannelIndexingBehavior:
-      description: channel indexing behavior
-      type: string
-      default: default
-      enum:
-      - default
-      - frozen
     ChannelFilters:
       type: object
       description: 'Filter directives for mirroring operation. Fields are optional. Can''t have include and exclude licenses together. This attribute is not returned by default in channels list
@@ -742,53 +744,36 @@ components:
               $ref: '#/components/schemas/FilterIncludeSpecs'
             exclude_specs:
               $ref: '#/components/schemas/FilterExcludeSpecs'
-    Group:
-      type: object
-      description: Logical collection of users within a channel
-      properties:
-        id:
-          type: string
-          description: uid
-        name:
-          type: string
-          pattern: ^[A-Za-z0-9_-\/].*$
-          description: the name of the group
-          example: ui-team
-        description:
-          type: string
-          description: the description of the group
-          example: ui-team owner access
-        members_count:
-          type: integer
-          description: member count
-          example: 1
-        created_at:
-          type: string
-          description: when the group was created
-        updated_at:
-          type: string
-          description: when the group was updated
-        user_permission:
-          type: string
-          enum:
-          - read
-          - manage
-          description: "permissions types for users\n  * \"read\" - the group member can only view within the group\n  * \"manage\" - the group member can both view and edit group and update users\n"
-        remote:
-          type: boolean
-          description: remote group
-          example: false
-    VirtualChannelSource:
+    GroupRequest:
       type: object
       required:
       - name
+      - description
       properties:
         name:
           type: string
-          pattern: ^[a-z][a-z0-9_\-]*$
-        parent_name:
+          description: the name of the group
+          example: ui-team
+          pattern: ^[A-Za-z0-9_\-\/].*$
+        description:
           type: string
-          pattern: ^[a-z][a-z0-9_\-]*$
+          description: the description of the group
+          example: ui-team description
+    FilterExcludeSpecs:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+      description: 'A list of MatchSpec strings, for excluding specific packages. General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
+
+        '
+    ChannelType:
+      description: channel type
+      type: string
+      default: default
+      enum:
+      - default
+      - virtual
     ErrorResponse:
       type: object
       description: The metadata contained in an error response
@@ -805,9 +790,30 @@ components:
           type: integer
           description: The HTTP Status code
           example: 401
+    ChannelGroupRequest:
+      type: object
+      required:
+      - group_id
+      - permission
+      properties:
+        group_id:
+          type: string
+          description: group_id to add
+        permission:
+          type: string
+          enum:
+          - read
+          - write
+          - manage
   responses:
-    BadRequest:
-      description: Server cannot execute request due to something that is perceived to be a client error
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: Creating/updating resource raises a conflict
       content:
         application/json:
           schema:
@@ -830,53 +836,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Conflict:
-      description: Creating/updating resource raises a conflict
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
   parameters:
-    channel-sort-query:
-      in: query
-      name: sort
-      description: property to sort channels (may be comma-separated)
-      schema:
-        type: array
-        items:
-          type: string
-          enum:
-          - name
-          - -name
-          - updated_at
-          - -updated_at
-    channel-parameter:
-      name: channel_name
-      in: path
-      required: true
-      schema:
-        type: string
-        pattern: ^[a-z][a-z0-9_-]*$
-    group_id-parameter:
-      name: group_id
-      in: path
-      required: true
-      schema:
-        type: string
-        pattern: ^[a-z0-9-]+$
-    subchannel-parameter:
-      name: subchannel_name
-      in: path
-      required: true
-      schema:
-        type: string
-        pattern: ^[a-z][a-z0-9_-]*$
     user_id-parameter:
       name: user_id
       in: path
@@ -899,6 +865,19 @@ components:
       schema:
         type: boolean
         default: true
+    channel-sort-query:
+      in: query
+      name: sort
+      description: property to sort channels (may be comma-separated)
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - name
+          - -name
+          - updated_at
+          - -updated_at
     limit-query:
       in: query
       name: limit
@@ -907,6 +886,27 @@ components:
         type: integer
         default: 100
       description: the number of results in the result set
+    channel-parameter:
+      name: channel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
+    group_id-parameter:
+      name: group_id
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z0-9-]+$
+    subchannel-parameter:
+      name: subchannel_name
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: ^[a-z][a-z0-9_-]*$
   securitySchemes:
     jwt:
       type: http

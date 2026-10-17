@@ -57,7 +57,77 @@ paths:
       - jwt: []
       - user_token: []
 components:
+  responses:
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Access is forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   schemas:
+    ArtifactDownloadReportRequest:
+      type: object
+      description: Artifact download report request to be downloaded from a  given start date to a given end date channel id and user id filters are optional
+      required:
+      - from_date
+      - to_date
+      - download_as
+      properties:
+        from_date:
+          type: string
+          format: date
+          description: "* Report start date. \n* Supported date formats:\n  - '%Y-%m-%d'\n"
+        to_date:
+          type: string
+          format: date
+          description: "* Report end date. \n* Supported date formats:\n  - '%Y-%m-%d'\n"
+        download_as:
+          type: string
+          description: "* Specifies the format of report download file. \n* The report name will follow the convention\n  ArtifactsReport_{timestamp('%Y%m%d_%H%M%S')}\n"
+          enum:
+          - json
+          - csv
+        channel_names:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of Channel names
+        user_names:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: List of user names
+    CVE_status:
+      type: string
+      enum:
+      - reported
+      - active
+      - mitigated
+      - cleared
+      - disputed
+      - unknown
     ArtifactDownloadReportResponse:
       type: object
       description: Artifact Download Report response
@@ -120,15 +190,6 @@ components:
                 type: string
         user_agent_headers:
           type: string
-    CVE_status:
-      type: string
-      enum:
-      - reported
-      - active
-      - mitigated
-      - cleared
-      - disputed
-      - unknown
     ErrorResponse:
       type: object
       description: The metadata contained in an error response
@@ -145,67 +206,6 @@ components:
           type: integer
           description: The HTTP Status code
           example: 401
-    ArtifactDownloadReportRequest:
-      type: object
-      description: Artifact download report request to be downloaded from a  given start date to a given end date channel id and user id filters are optional
-      required:
-      - from_date
-      - to_date
-      - download_as
-      properties:
-        from_date:
-          type: string
-          format: date
-          description: "* Report start date. \n* Supported date formats:\n  - '%Y-%m-%d'\n"
-        to_date:
-          type: string
-          format: date
-          description: "* Report end date. \n* Supported date formats:\n  - '%Y-%m-%d'\n"
-        download_as:
-          type: string
-          description: "* Specifies the format of report download file. \n* The report name will follow the convention\n  ArtifactsReport_{timestamp('%Y%m%d_%H%M%S')}\n"
-          enum:
-          - json
-          - csv
-        channel_names:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: List of Channel names
-        user_names:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: List of user names
-  responses:
-    InternalServerError:
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Forbidden:
-      description: Access is forbidden
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    BadRequest:
-      description: Server cannot execute request due to something that is perceived to be a client error
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     jwt:
       type: http

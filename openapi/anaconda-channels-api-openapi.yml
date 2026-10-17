@@ -2571,835 +2571,6 @@ paths:
       - user_token: []
 components:
   schemas:
-    FileSignatureVerificationRequest:
-      type: object
-      properties:
-        metadata:
-          type: object
-          properties:
-            md5:
-              type: string
-            name:
-              type: string
-            size:
-              type: number
-            build:
-              type: string
-            sha256:
-              type: string
-            subdir:
-              type: string
-            depends:
-              type: array
-              items:
-                type: string
-            license:
-              type: string
-            version:
-              type: string
-            build_number:
-              type: number
-          required:
-          - md5
-          - name
-          - size
-          - build
-          - sha256
-          - subdir
-          - depends
-          - license
-          - version
-          - build_number
-        signatures:
-          type: object
-          additionalProperties: false
-          properties:
-            public_key:
-              pattern: ^[a-f0-9]{64}$
-              type: string
-            signature:
-              type: string
-              pattern: ^[a-f0-9]{128}$
-          required:
-          - signature
-          - public_key
-      required:
-      - metadata
-      - signatures
-    ArtifactBulkActionRequest:
-      type: object
-      additionalProperties: false
-      properties:
-        action:
-          type: string
-          enum:
-          - copy
-          - move
-          - delete
-          description: Bulk action name
-        target_channel:
-          type: string
-          description: Target channel name (only for copy and move actions)
-        target_subchannel:
-          type: string
-          description: Target subchannel name (target_channel is also required as a parent)
-        items:
-          type: array
-          items:
-            type: object
-            description: actionable artifact items
-            required:
-            - name
-            - family
-            properties:
-              name:
-                type: string
-              family:
-                $ref: '#/components/schemas/ArtifactFamily'
-              ckey:
-                type: string
-      required:
-      - action
-      - items
-    ResourcePermissions:
-      type: object
-      properties:
-        scopes:
-          type: array
-          items:
-            type: string
-            example: channel:edit
-    Channel:
-      type: object
-      description: Channel object
-      required:
-      - name
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-          pattern: ^[a-z][a-z0-9_\-]*$
-        parent:
-          type: string
-          pattern: ^[a-z][a-z0-9_\-]*$
-          description: if present, the object is supposed to be a subchannel
-        description:
-          type: string
-        privacy:
-          $ref: '#/components/schemas/ChannelPrivacy'
-        channel_type:
-          $ref: '#/components/schemas/ChannelType'
-        indexing_behavior:
-          $ref: '#/components/schemas/ChannelIndexingBehavior'
-        sources:
-          type: array
-          items:
-            $ref: '#/components/schemas/VirtualChannelSource'
-        created:
-          description: date created
-          type: string
-        updated:
-          description: date of last update
-          type: string
-        artifact_count:
-          description: number of artifacts the channel currently has
-          type: number
-        download_count:
-          description: number of downloads
-          type: number
-        filters:
-          $ref: '#/components/schemas/ChannelFilters'
-    RouteChange:
-      type: string
-      enum:
-      - added
-      - removed
-    MirrorSyncState:
-      type: object
-      additionalProperties: false
-      description: State of current mirror synchronization
-      properties:
-        count:
-          type: object
-          additionalProperties: false
-          properties:
-            removed:
-              type: integer
-              description: Number of packages, removed from the channel
-            passive:
-              type: integer
-              description: Number of passively mirrored packages
-            active:
-              type: integer
-              description: Number of pulled packages
-            active_planned:
-              type: integer
-              description: Number of total planned packages for pulling
-            failed:
-              type: integer
-              description: Number of failed packages to pull
-            package_stat:
-              type: object
-              additionalProperties: false
-              properties:
-                primary:
-                  type: integer
-                  description: Number of primary packages listed in only specs mirrored
-                dependencies:
-                  type: integer
-                  description: Number of dependencies packages mirrored
-            mirror_filtered:
-              type: object
-              additionalProperties: false
-              properties:
-                cve:
-                  type: integer
-                  description: Number of packages removed because of CVE filter
-                date:
-                  type: integer
-                  description: Number of packages removed because of date filter
-                signed:
-                  type: integer
-                  description: Number of packages removed because of missing signatures
-                license:
-                  type: integer
-                  description: Number of packages removed because of license filter
-                only_specs:
-                  type: integer
-                  description: Number of packages removed because of "only packages" filter
-                exclude_specs:
-                  type: integer
-                  description: Number of packages removed because of exclude/include filter
-                duplicated_legacy_conda:
-                  type: integer
-                  description: \ Number of packages removed because of legacy package format and having corresponding .conda package
-            channel_filtered:
-              type: object
-              additionalProperties: false
-              properties:
-                license:
-                  type: integer
-                exclude_specs:
-                  type: integer
-        last_ckey:
-          type: string
-        last_exception:
-          type: string
-        total_steps_count:
-          type: integer
-        current_step_number:
-          type: integer
-        current_step_description:
-          type: string
-        current_step_percentage:
-          type: integer
-        bytes_transfered:
-          type: integer
-          description: Total number of bytes transfered during active mirroring
-    ArtifactDependency:
-      type: object
-      description: Dependent package of an artifact
-      properties:
-        name:
-          type: string
-          example: numpy
-        version:
-          type: string
-          example: '>=8.9.2,<9.0b0'
-        artifact:
-          $ref: '#/components/schemas/Artifact'
-    ChannelCreateRequest:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          pattern: ^[a-z][a-z0-9_\-]*$
-        description:
-          type: string
-        privacy:
-          $ref: '#/components/schemas/ChannelPrivacy'
-        channel_type:
-          $ref: '#/components/schemas/ChannelType'
-        indexing_behavior:
-          $ref: '#/components/schemas/ChannelIndexingBehavior'
-        sources:
-          type: array
-          items:
-            $ref: '#/components/schemas/VirtualChannelSource'
-        filters:
-          $ref: '#/components/schemas/ChannelFilters'
-        settings:
-          $ref: '#/components/schemas/ChannelSettings'
-    ChannelUpdateRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          pattern: ^[a-z][a-z0-9_\-]*$
-        description:
-          type: string
-        privacy:
-          $ref: '#/components/schemas/ChannelPrivacy'
-        filters:
-          $ref: '#/components/schemas/ChannelFilters'
-        settings:
-          $ref: '#/components/schemas/ChannelSettings'
-        indexing_behavior:
-          type: string
-          enum:
-          - default
-          - frozen
-    FilterExcludeSpecs:
-      type: array
-      uniqueItems: true
-      items:
-        type: string
-      description: 'A list of MatchSpec strings, for excluding specific packages. General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
-
-        '
-    Artifact:
-      type: object
-      description: The object stored in Repo in as few properties as possible
-      properties:
-        name:
-          type: string
-        family:
-          $ref: '#/components/schemas/ArtifactFamily'
-        channel:
-          type: string
-        subchannel:
-          type: string
-        download_count:
-          type: number
-        privacy:
-          $ref: '#/components/schemas/ChannelPrivacy'
-        file_count:
-          description: number of files (routes) in the artifact
-          type: number
-        cve_count:
-          description: number of CVE in the artifact files
-          type: number
-        metadata:
-          type: object
-          description: family specific fields such as base and version
-        updated_at:
-          type: string
-    ChannelFilters:
-      type: object
-      description: 'Filter directives for mirroring operation. Fields are optional. Can''t have include and exclude licenses together. This attribute is not returned by default in channels list
-
-        '
-      additionalProperties: false
-      properties:
-        conda:
-          type: object
-          additionalProperties: false
-          properties:
-            include_licenses:
-              $ref: '#/components/schemas/FilterLicenses'
-            exclude_licenses:
-              $ref: '#/components/schemas/FilterLicenses'
-            include_specs:
-              $ref: '#/components/schemas/FilterIncludeSpecs'
-            exclude_specs:
-              $ref: '#/components/schemas/FilterExcludeSpecs'
-        cran:
-          type: object
-          additionalProperties: false
-          properties:
-            include_licenses:
-              $ref: '#/components/schemas/FilterLicenses'
-            exclude_licenses:
-              $ref: '#/components/schemas/FilterLicenses'
-            include_specs:
-              $ref: '#/components/schemas/FilterIncludeSpecs'
-            exclude_specs:
-              $ref: '#/components/schemas/FilterExcludeSpecs'
-        python:
-          type: object
-          additionalProperties: false
-          properties:
-            include_licenses:
-              $ref: '#/components/schemas/FilterLicenses'
-            exclude_licenses:
-              $ref: '#/components/schemas/FilterLicenses'
-            include_specs:
-              $ref: '#/components/schemas/FilterIncludeSpecs'
-            exclude_specs:
-              $ref: '#/components/schemas/FilterExcludeSpecs'
-    CVEPackage:
-      type: object
-      description: CVE Package information
-      properties:
-        channel_name:
-          type: string
-          example: The Channel
-        parent_channel_name:
-          type: string
-          example: The Root Channel
-        cve_status:
-          $ref: '#/components/schemas/CVE_status'
-        artifact_family:
-          $ref: '#/components/schemas/ArtifactFamily'
-        artifact_type:
-          type: string
-          example: conda1
-        ckey:
-          type: string
-          example: osx-64/numpy-1.1.1.conda
-        common_name:
-          type: string
-          example: numpy
-        blob_sha256:
-          type: string
-          example: 82cf9c932145565158eb8ee67dba369851210aab
-        blob_size:
-          type: string
-          example: 1234
-    ErrorResponse:
-      type: object
-      description: The metadata contained in an error response
-      properties:
-        code:
-          type: string
-          description: Internal error code. Could be used to show corresponding message text from a message catalog
-          example: bad-parameter
-        message:
-          type: string
-          description: Short human-readable error message. Used mainly for logging
-          example: Bad request parameter for 'sort'
-        status:
-          type: integer
-          description: The HTTP Status code
-          example: 401
-    FilterOnlySpecs:
-      type: array
-      uniqueItems: true
-      items:
-        type: string
-      description: 'A list of MatchSpec strings, for explicit list of artifacts Doesn''t work together with licenses and exclude_specs General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
-
-        '
-    CVENotificationChanges:
-      type: array
-      additionalProperties: true
-      required:
-      - cve_id
-      - new_score
-      - new_status
-      properties:
-        cve_id:
-          type: string
-        old_score:
-          type: number
-        new_score:
-          type: string
-        old_status:
-          type: string
-        new_status:
-          type: string
-    CVE_status:
-      type: string
-      enum:
-      - reported
-      - active
-      - mitigated
-      - cleared
-      - disputed
-      - unknown
-    ChannelIndexingBehavior:
-      description: channel indexing behavior
-      type: string
-      default: default
-      enum:
-      - default
-      - frozen
-    FileFiltered:
-      type: object
-      description: File filtered from latest mirror
-      properties:
-        channel_id:
-          type: string
-        channel_name:
-          type: string
-          pattern: ^[a-z][a-z0-9_\-]*$
-        ckey:
-          type: string
-          example: osx-64/numpy-1.1.1.conda
-        filtered_cause:
-          allOf:
-          - $ref: '#/components/schemas/FilteredCause'
-        change:
-          $ref: '#/components/schemas/RouteChange'
-        mirror_id:
-          type:
-          - string
-          - 'null'
-        created_at:
-          type: string
-    UploadFileType:
-      type: string
-      enum:
-      - conda1
-      - anaconda_cve
-      - anaconda_cve_index
-      - anaconda_project
-      - anaconda_env
-      - bdist_wheel
-      - bdist_egg
-      - sdist
-      - cran_source_package
-      - cran_binary_package
-      - jupyter_notebook
-      - docker_repository
-    FilteredCause:
-      type: string
-      enum:
-      - only_specs
-      - exclude_specs
-      - duplicated_legacy_conda
-      - cve
-      - license
-      - date
-      - signed
-      - platforms
-    MirrorConfiguration:
-      type: object
-      description: Information about mirroring configuration
-      required:
-      - mirror_name
-      - source_root
-      - mirror_type
-      - mirror_mode
-      - cron
-      properties:
-        mirror_name:
-          type: string
-          description: Mirror name
-          pattern: ^[A-Za-z0-9_\-\/\.].*$
-        source_root:
-          type: string
-          format: uri
-          example: https://conda.anaconda.org/mewtwo
-          description: The upstream location of the channel to mirror.
-        mirror_type:
-          type: string
-          description: Type of upstream source to mirror
-          enum:
-          - conda
-          - python_simple
-          - cran
-          - cve
-          - sbom
-        mirror_mode:
-          type: string
-          default: passive
-          enum:
-          - active
-          - passive
-          - redirect
-        cron:
-          type: string
-          description: 'A five-field cron expression indicating the schedule for active synchronization.
-
-            '
-        proxy:
-          type:
-          - string
-          - 'null'
-          format: uri
-          description: 'Proxy server URL configuration to use to attain access to upstream source.
-
-            '
-        filters:
-          type: object
-          description: Filter directives that are specific to each individual mirror type.
-          properties:
-            subdirs:
-              type: array
-              uniqueItems: true
-              items:
-                type: string
-              description: Conda specific subdirs. Empty array means include all subdirs
-              example:
-              - osx-64
-              - linux-64
-              - noarch
-            cve_score_threshold:
-              type: number
-              description: Any packages with CVE score higher than that will be filtered out
-              example: 5.9
-            cve_score_exceptions:
-              type: array
-              uniqueItems: true
-              items:
-                type: string
-              description: CVE ids that are excluded from cve score threshold
-              example:
-              - CVE-2022-21372
-              - CVE-2019-1348
-            exclude_non_curated_cve:
-              type: boolean
-              description: Omit mirroring files associated to non curated CVEs
-            exclude_cve_statuses:
-              type: array
-              uniqueItems: true
-              items:
-                $ref: '#/components/schemas/CVE_status'
-              description: Omit mirroring files associated to non curated CVEs
-            dedupe_conda_legacy:
-              type: boolean
-              description: Ignore legacy .tar.bz2 conda packages when .conda is available
-            projects:
-              type: array
-              uniqueItems: true
-              items:
-                type: string
-              description: python_simple specific list of projects. empty array means all projects
-              example:
-              - numpy
-              - pandas
-              - scikit-learn
-            packages:
-              type: array
-              uniqueItems: true
-              items:
-                type: string
-              description: CRAN specific list of packages
-              example:
-              - dplyr
-              - MASS
-              - RPostgres
-            include_licenses:
-              $ref: '#/components/schemas/FilterLicenses'
-            exclude_licenses:
-              $ref: '#/components/schemas/FilterLicenses'
-            include_specs:
-              $ref: '#/components/schemas/FilterIncludeSpecs'
-            exclude_specs:
-              $ref: '#/components/schemas/FilterExcludeSpecs'
-            only_specs:
-              $ref: '#/components/schemas/FilterOnlySpecs'
-            include_dependencies:
-              type: boolean
-              default: false
-              description: '* If this is true, then dependencies will be mirrored
-
-                * The value should be True / enabled only if only_specs list is not empty.
-
-                '
-            date_from:
-              type: string
-              format: date
-              description: bottom date YYYY-mm-dd when package published. Conda-only
-            date_to:
-              type: string
-              format: date
-              description: upper date YYYY-mm-dd when package was published. Conda-only
-            only_signed:
-              type: boolean
-              default: false
-              description: Unsigned packages will be filtered out. Conda-only
-        run_now:
-          type: boolean
-          default: false
-          description: 'Does a one-time, immediate, and off-schedule run of the mirroring operation.
-
-            '
-    ChannelHistory:
-      type: object
-      description: The object to return for Channel History
-      additionalProperties: false
-      required:
-      - items
-      properties:
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              event_type:
-                type: string
-                description: Event type
-                example: channel_created
-              data:
-                type: object
-                description: Event data
-                example: channel/subchannel name, access level
-              meta:
-                type: object
-                description: the captured event context
-                example: user
-              created:
-                type: number
-                description: timestamp of log creation
-    FilterLicenses:
-      type: array
-      uniqueItems: true
-      items:
-        type: string
-        enum:
-        - agpl
-        - gpl2
-        - gpl3
-        - lgpl
-        - bsd
-        - mit
-        - apache
-        - psf
-        - public_domain
-        - proprietary
-        - other
-        - none
-      description: List of license familities to look for. Empty array means all licenses
-    CVEsBySeverity:
-      type: object
-      description: CVE counts grouped by severity based on NVD classification
-      properties:
-        critical:
-          type: integer
-        high:
-          type: integer
-        medium:
-          type: integer
-        low:
-          type: integer
-        none:
-          type: integer
-    CVEsNotificationEventTypes:
-      type: string
-      enum:
-      - score_increased
-      - score_decreased
-      - status_changed
-    ChannelStats:
-      type: object
-      description: Channel stats object
-      additionalProperties: false
-      required:
-      - stats
-      properties:
-        stats:
-          type: object
-          properties:
-            counters:
-              type: object
-              properties:
-                total_artifact_count:
-                  type: integer
-                  description: Total number of artifacts
-                  example: 10
-                package_count:
-                  type: integer
-                  description: Number of packages (conda, cran, python)
-                  example: 10
-                project_count:
-                  type: integer
-                  description: Number of anaconda projects
-                  example: 10
-                notebook_count:
-                  type: integer
-                  description: Number of notebooks
-                  example: 10
-                environment_count:
-                  type: integer
-                  description: Number of environments
-                  example: 10
-                mirror_count:
-                  type: integer
-                  description: Number of channel mirrors
-                  example: 10
-                group_count:
-                  type: integer
-                  description: Number of groups
-                  example: 10
-                subchannel_count:
-                  type: integer
-                  description: Number of subchannels in the channel
-                  example: 10
-                download_count:
-                  type: integer
-                  description: Number of downloads
-                  example: 10
-    CVENotificationsTimestamp:
-      required:
-      - timestamp
-      additionalProperties: false
-      type: object
-      description: Timestamp for Generation of CVE Notifications
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-    ChannelType:
-      description: channel type
-      type: string
-      default: default
-      enum:
-      - default
-      - virtual
-    VirtualChannelSource:
-      type: object
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          pattern: ^[a-z][a-z0-9_\-]*$
-        parent_name:
-          type: string
-          pattern: ^[a-z][a-z0-9_\-]*$
-    ChannelSettings:
-      type: object
-      description: 'Settings for cve notifications and other  channel related activities.
-
-        '
-      additionalProperties: false
-      properties:
-        cve_notifications:
-          type: object
-          additionalProperties: false
-          properties:
-            cve_score_increase:
-              description: Do you want to see cve notifications when cve score increases?
-              type: boolean
-            cve_score_decrease:
-              description: Do you want to see cve notifications when cve score decreases?
-              type: boolean
-            cve_status_change:
-              description: 'Do you want to see cve notifications when cve status changes? Currently by default "active", "mitigated", "cleared" statuses are considered.
-
-                '
-              type: boolean
-            cve_score_threshold:
-              description: 'Threshold value for which score changes should be considered. If the value is -1, then no threshold is considered -  Notifications will be shown for any score changes
-
-                '
-              type: number
-              minimum: -1
-              maximum: 10
-    ArtifactFamily:
-      type: string
-      enum:
-      - anaconda_project
-      - anaconda_env
-      - cve
-      - conda
-      - python
-      - cran
-      - notebook
-      - docker
-      - sbom
-    ChannelPrivacy:
-      description: channel privacy channel
-      type: string
-      enum:
-      - private
-      - authenticated
-      - public
     Subchannel:
       type: object
       description: Nested channel object
@@ -3432,11 +2603,14 @@ components:
         updated:
           description: date of last update
           type: string
-    ChannelCveHistory:
+    FilterIncludeSpecs:
       type: array
-      description: List of cve histories
+      uniqueItems: true
       items:
-        $ref: '#/components/schemas/CVENotificationsHistory'
+        type: string
+      description: 'A list of MatchSpec strings, for including from excluded list General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
+
+        '
     ArtifactFile:
       type: object
       description: The file associated with an artifact
@@ -3488,14 +2662,25 @@ components:
           type: string
         updated_at:
           type: string
-    FilterIncludeSpecs:
-      type: array
-      uniqueItems: true
-      items:
-        type: string
-      description: 'A list of MatchSpec strings, for including from excluded list General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
-
-        '
+    ChannelUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        description:
+          type: string
+        privacy:
+          $ref: '#/components/schemas/ChannelPrivacy'
+        filters:
+          $ref: '#/components/schemas/ChannelFilters'
+        settings:
+          $ref: '#/components/schemas/ChannelSettings'
+        indexing_behavior:
+          type: string
+          enum:
+          - default
+          - frozen
     CVE:
       type: object
       description: CVE information
@@ -3671,30 +2856,214 @@ components:
           type: array
           items:
             type: string
-    CVENotificationsHistory:
+    RouteChange:
+      type: string
+      enum:
+      - added
+      - removed
+    FileFiltered:
       type: object
-      description: The object representing cve notification
+      description: File filtered from latest mirror
       properties:
-        file_name:
+        channel_id:
           type: string
-        platform:
+        channel_name:
           type: string
-        artifact_family:
-          $ref: '#/components/schemas/ArtifactFamily'
-        cves_count:
-          type: number
-        old_max_score:
-          type: number
-        new_max_score:
-          type: number
-        notification_changes:
-          type: array
-          items:
-            $ref: '#/components/schemas/CVENotificationChanges'
-        number_of_downloads:
-          type: number
+          pattern: ^[a-z][a-z0-9_\-]*$
+        ckey:
+          type: string
+          example: osx-64/numpy-1.1.1.conda
+        filtered_cause:
+          allOf:
+          - $ref: '#/components/schemas/FilteredCause'
+        change:
+          $ref: '#/components/schemas/RouteChange'
+        mirror_id:
+          type:
+          - string
+          - 'null'
         created_at:
           type: string
+    ChannelType:
+      description: channel type
+      type: string
+      default: default
+      enum:
+      - default
+      - virtual
+    UploadFileType:
+      type: string
+      enum:
+      - conda1
+      - anaconda_cve
+      - anaconda_cve_index
+      - anaconda_project
+      - anaconda_env
+      - bdist_wheel
+      - bdist_egg
+      - sdist
+      - cran_source_package
+      - cran_binary_package
+      - jupyter_notebook
+      - docker_repository
+    ArtifactFamily:
+      type: string
+      enum:
+      - anaconda_project
+      - anaconda_env
+      - cve
+      - conda
+      - python
+      - cran
+      - notebook
+      - docker
+      - sbom
+    CVENotificationsTimestamp:
+      required:
+      - timestamp
+      additionalProperties: false
+      type: object
+      description: Timestamp for Generation of CVE Notifications
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+    ChannelIndexingBehavior:
+      description: channel indexing behavior
+      type: string
+      default: default
+      enum:
+      - default
+      - frozen
+    MirrorSyncState:
+      type: object
+      additionalProperties: false
+      description: State of current mirror synchronization
+      properties:
+        count:
+          type: object
+          additionalProperties: false
+          properties:
+            removed:
+              type: integer
+              description: Number of packages, removed from the channel
+            passive:
+              type: integer
+              description: Number of passively mirrored packages
+            active:
+              type: integer
+              description: Number of pulled packages
+            active_planned:
+              type: integer
+              description: Number of total planned packages for pulling
+            failed:
+              type: integer
+              description: Number of failed packages to pull
+            package_stat:
+              type: object
+              additionalProperties: false
+              properties:
+                primary:
+                  type: integer
+                  description: Number of primary packages listed in only specs mirrored
+                dependencies:
+                  type: integer
+                  description: Number of dependencies packages mirrored
+            mirror_filtered:
+              type: object
+              additionalProperties: false
+              properties:
+                cve:
+                  type: integer
+                  description: Number of packages removed because of CVE filter
+                date:
+                  type: integer
+                  description: Number of packages removed because of date filter
+                signed:
+                  type: integer
+                  description: Number of packages removed because of missing signatures
+                license:
+                  type: integer
+                  description: Number of packages removed because of license filter
+                only_specs:
+                  type: integer
+                  description: Number of packages removed because of "only packages" filter
+                exclude_specs:
+                  type: integer
+                  description: Number of packages removed because of exclude/include filter
+                duplicated_legacy_conda:
+                  type: integer
+                  description: \ Number of packages removed because of legacy package format and having corresponding .conda package
+            channel_filtered:
+              type: object
+              additionalProperties: false
+              properties:
+                license:
+                  type: integer
+                exclude_specs:
+                  type: integer
+        last_ckey:
+          type: string
+        last_exception:
+          type: string
+        total_steps_count:
+          type: integer
+        current_step_number:
+          type: integer
+        current_step_description:
+          type: string
+        current_step_percentage:
+          type: integer
+        bytes_transfered:
+          type: integer
+          description: Total number of bytes transfered during active mirroring
+    ChannelHistory:
+      type: object
+      description: The object to return for Channel History
+      additionalProperties: false
+      required:
+      - items
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              event_type:
+                type: string
+                description: Event type
+                example: channel_created
+              data:
+                type: object
+                description: Event data
+                example: channel/subchannel name, access level
+              meta:
+                type: object
+                description: the captured event context
+                example: user
+              created:
+                type: number
+                description: timestamp of log creation
+    VirtualChannelSource:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        parent_name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+    CVE_status:
+      type: string
+      enum:
+      - reported
+      - active
+      - mitigated
+      - cleared
+      - disputed
+      - unknown
     Mirror:
       type: object
       description: Configured mirror object
@@ -3763,47 +3132,684 @@ components:
           type: string
         updated_at:
           type: string
+    ArtifactBulkActionRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        action:
+          type: string
+          enum:
+          - copy
+          - move
+          - delete
+          description: Bulk action name
+        target_channel:
+          type: string
+          description: Target channel name (only for copy and move actions)
+        target_subchannel:
+          type: string
+          description: Target subchannel name (target_channel is also required as a parent)
+        items:
+          type: array
+          items:
+            type: object
+            description: actionable artifact items
+            required:
+            - name
+            - family
+            properties:
+              name:
+                type: string
+              family:
+                $ref: '#/components/schemas/ArtifactFamily'
+              ckey:
+                type: string
+      required:
+      - action
+      - items
+    ResourcePermissions:
+      type: object
+      properties:
+        scopes:
+          type: array
+          items:
+            type: string
+            example: channel:edit
+    ChannelStats:
+      type: object
+      description: Channel stats object
+      additionalProperties: false
+      required:
+      - stats
+      properties:
+        stats:
+          type: object
+          properties:
+            counters:
+              type: object
+              properties:
+                total_artifact_count:
+                  type: integer
+                  description: Total number of artifacts
+                  example: 10
+                package_count:
+                  type: integer
+                  description: Number of packages (conda, cran, python)
+                  example: 10
+                project_count:
+                  type: integer
+                  description: Number of anaconda projects
+                  example: 10
+                notebook_count:
+                  type: integer
+                  description: Number of notebooks
+                  example: 10
+                environment_count:
+                  type: integer
+                  description: Number of environments
+                  example: 10
+                mirror_count:
+                  type: integer
+                  description: Number of channel mirrors
+                  example: 10
+                group_count:
+                  type: integer
+                  description: Number of groups
+                  example: 10
+                subchannel_count:
+                  type: integer
+                  description: Number of subchannels in the channel
+                  example: 10
+                download_count:
+                  type: integer
+                  description: Number of downloads
+                  example: 10
+    FilteredCause:
+      type: string
+      enum:
+      - only_specs
+      - exclude_specs
+      - duplicated_legacy_conda
+      - cve
+      - license
+      - date
+      - signed
+      - platforms
+    CVEPackage:
+      type: object
+      description: CVE Package information
+      properties:
+        channel_name:
+          type: string
+          example: The Channel
+        parent_channel_name:
+          type: string
+          example: The Root Channel
+        cve_status:
+          $ref: '#/components/schemas/CVE_status'
+        artifact_family:
+          $ref: '#/components/schemas/ArtifactFamily'
+        artifact_type:
+          type: string
+          example: conda1
+        ckey:
+          type: string
+          example: osx-64/numpy-1.1.1.conda
+        common_name:
+          type: string
+          example: numpy
+        blob_sha256:
+          type: string
+          example: 82cf9c932145565158eb8ee67dba369851210aab
+        blob_size:
+          type: string
+          example: 1234
+    ChannelFilters:
+      type: object
+      description: 'Filter directives for mirroring operation. Fields are optional. Can''t have include and exclude licenses together. This attribute is not returned by default in channels list
+
+        '
+      additionalProperties: false
+      properties:
+        conda:
+          type: object
+          additionalProperties: false
+          properties:
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+        cran:
+          type: object
+          additionalProperties: false
+          properties:
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+        python:
+          type: object
+          additionalProperties: false
+          properties:
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+    ArtifactDependency:
+      type: object
+      description: Dependent package of an artifact
+      properties:
+        name:
+          type: string
+          example: numpy
+        version:
+          type: string
+          example: '>=8.9.2,<9.0b0'
+        artifact:
+          $ref: '#/components/schemas/Artifact'
+    FileSignatureVerificationRequest:
+      type: object
+      properties:
+        metadata:
+          type: object
+          properties:
+            md5:
+              type: string
+            name:
+              type: string
+            size:
+              type: number
+            build:
+              type: string
+            sha256:
+              type: string
+            subdir:
+              type: string
+            depends:
+              type: array
+              items:
+                type: string
+            license:
+              type: string
+            version:
+              type: string
+            build_number:
+              type: number
+          required:
+          - md5
+          - name
+          - size
+          - build
+          - sha256
+          - subdir
+          - depends
+          - license
+          - version
+          - build_number
+        signatures:
+          type: object
+          additionalProperties: false
+          properties:
+            public_key:
+              pattern: ^[a-f0-9]{64}$
+              type: string
+            signature:
+              type: string
+              pattern: ^[a-f0-9]{128}$
+          required:
+          - signature
+          - public_key
+      required:
+      - metadata
+      - signatures
+    ChannelCveHistory:
+      type: array
+      description: List of cve histories
+      items:
+        $ref: '#/components/schemas/CVENotificationsHistory'
+    CVEsBySeverity:
+      type: object
+      description: CVE counts grouped by severity based on NVD classification
+      properties:
+        critical:
+          type: integer
+        high:
+          type: integer
+        medium:
+          type: integer
+        low:
+          type: integer
+        none:
+          type: integer
+    CVEsNotificationEventTypes:
+      type: string
+      enum:
+      - score_increased
+      - score_decreased
+      - status_changed
+    ChannelSettings:
+      type: object
+      description: 'Settings for cve notifications and other  channel related activities.
+
+        '
+      additionalProperties: false
+      properties:
+        cve_notifications:
+          type: object
+          additionalProperties: false
+          properties:
+            cve_score_increase:
+              description: Do you want to see cve notifications when cve score increases?
+              type: boolean
+            cve_score_decrease:
+              description: Do you want to see cve notifications when cve score decreases?
+              type: boolean
+            cve_status_change:
+              description: 'Do you want to see cve notifications when cve status changes? Currently by default "active", "mitigated", "cleared" statuses are considered.
+
+                '
+              type: boolean
+            cve_score_threshold:
+              description: 'Threshold value for which score changes should be considered. If the value is -1, then no threshold is considered -  Notifications will be shown for any score changes
+
+                '
+              type: number
+              minimum: -1
+              maximum: 10
+    ErrorResponse:
+      type: object
+      description: The metadata contained in an error response
+      properties:
+        code:
+          type: string
+          description: Internal error code. Could be used to show corresponding message text from a message catalog
+          example: bad-parameter
+        message:
+          type: string
+          description: Short human-readable error message. Used mainly for logging
+          example: Bad request parameter for 'sort'
+        status:
+          type: integer
+          description: The HTTP Status code
+          example: 401
+    Channel:
+      type: object
+      description: Channel object
+      required:
+      - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        parent:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+          description: if present, the object is supposed to be a subchannel
+        description:
+          type: string
+        privacy:
+          $ref: '#/components/schemas/ChannelPrivacy'
+        channel_type:
+          $ref: '#/components/schemas/ChannelType'
+        indexing_behavior:
+          $ref: '#/components/schemas/ChannelIndexingBehavior'
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/VirtualChannelSource'
+        created:
+          description: date created
+          type: string
+        updated:
+          description: date of last update
+          type: string
+        artifact_count:
+          description: number of artifacts the channel currently has
+          type: number
+        download_count:
+          description: number of downloads
+          type: number
+        filters:
+          $ref: '#/components/schemas/ChannelFilters'
+    CVENotificationsHistory:
+      type: object
+      description: The object representing cve notification
+      properties:
+        file_name:
+          type: string
+        platform:
+          type: string
+        artifact_family:
+          $ref: '#/components/schemas/ArtifactFamily'
+        cves_count:
+          type: number
+        old_max_score:
+          type: number
+        new_max_score:
+          type: number
+        notification_changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CVENotificationChanges'
+        number_of_downloads:
+          type: number
+        created_at:
+          type: string
+    CVENotificationChanges:
+      type: array
+      additionalProperties: true
+      required:
+      - cve_id
+      - new_score
+      - new_status
+      properties:
+        cve_id:
+          type: string
+        old_score:
+          type: number
+        new_score:
+          type: string
+        old_status:
+          type: string
+        new_status:
+          type: string
+    ChannelPrivacy:
+      description: channel privacy channel
+      type: string
+      enum:
+      - private
+      - authenticated
+      - public
+    Artifact:
+      type: object
+      description: The object stored in Repo in as few properties as possible
+      properties:
+        name:
+          type: string
+        family:
+          $ref: '#/components/schemas/ArtifactFamily'
+        channel:
+          type: string
+        subchannel:
+          type: string
+        download_count:
+          type: number
+        privacy:
+          $ref: '#/components/schemas/ChannelPrivacy'
+        file_count:
+          description: number of files (routes) in the artifact
+          type: number
+        cve_count:
+          description: number of CVE in the artifact files
+          type: number
+        metadata:
+          type: object
+          description: family specific fields such as base and version
+        updated_at:
+          type: string
+    FilterOnlySpecs:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+      description: 'A list of MatchSpec strings, for explicit list of artifacts Doesn''t work together with licenses and exclude_specs General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
+
+        '
+    FilterLicenses:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+        enum:
+        - agpl
+        - gpl2
+        - gpl3
+        - lgpl
+        - bsd
+        - mit
+        - apache
+        - psf
+        - public_domain
+        - proprietary
+        - other
+        - none
+      description: List of license familities to look for. Empty array means all licenses
+    ChannelCreateRequest:
+      type: object
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          pattern: ^[a-z][a-z0-9_\-]*$
+        description:
+          type: string
+        privacy:
+          $ref: '#/components/schemas/ChannelPrivacy'
+        channel_type:
+          $ref: '#/components/schemas/ChannelType'
+        indexing_behavior:
+          $ref: '#/components/schemas/ChannelIndexingBehavior'
+        sources:
+          type: array
+          items:
+            $ref: '#/components/schemas/VirtualChannelSource'
+        filters:
+          $ref: '#/components/schemas/ChannelFilters'
+        settings:
+          $ref: '#/components/schemas/ChannelSettings'
+    MirrorConfiguration:
+      type: object
+      description: Information about mirroring configuration
+      required:
+      - mirror_name
+      - source_root
+      - mirror_type
+      - mirror_mode
+      - cron
+      properties:
+        mirror_name:
+          type: string
+          description: Mirror name
+          pattern: ^[A-Za-z0-9_\-\/\.].*$
+        source_root:
+          type: string
+          format: uri
+          example: https://conda.anaconda.org/mewtwo
+          description: The upstream location of the channel to mirror.
+        mirror_type:
+          type: string
+          description: Type of upstream source to mirror
+          enum:
+          - conda
+          - python_simple
+          - cran
+          - cve
+          - sbom
+        mirror_mode:
+          type: string
+          default: passive
+          enum:
+          - active
+          - passive
+          - redirect
+        cron:
+          type: string
+          description: 'A five-field cron expression indicating the schedule for active synchronization.
+
+            '
+        proxy:
+          type:
+          - string
+          - 'null'
+          format: uri
+          description: 'Proxy server URL configuration to use to attain access to upstream source.
+
+            '
+        filters:
+          type: object
+          description: Filter directives that are specific to each individual mirror type.
+          properties:
+            subdirs:
+              type: array
+              uniqueItems: true
+              items:
+                type: string
+              description: Conda specific subdirs. Empty array means include all subdirs
+              example:
+              - osx-64
+              - linux-64
+              - noarch
+            cve_score_threshold:
+              type: number
+              description: Any packages with CVE score higher than that will be filtered out
+              example: 5.9
+            cve_score_exceptions:
+              type: array
+              uniqueItems: true
+              items:
+                type: string
+              description: CVE ids that are excluded from cve score threshold
+              example:
+              - CVE-2022-21372
+              - CVE-2019-1348
+            exclude_non_curated_cve:
+              type: boolean
+              description: Omit mirroring files associated to non curated CVEs
+            exclude_cve_statuses:
+              type: array
+              uniqueItems: true
+              items:
+                $ref: '#/components/schemas/CVE_status'
+              description: Omit mirroring files associated to non curated CVEs
+            dedupe_conda_legacy:
+              type: boolean
+              description: Ignore legacy .tar.bz2 conda packages when .conda is available
+            projects:
+              type: array
+              uniqueItems: true
+              items:
+                type: string
+              description: python_simple specific list of projects. empty array means all projects
+              example:
+              - numpy
+              - pandas
+              - scikit-learn
+            packages:
+              type: array
+              uniqueItems: true
+              items:
+                type: string
+              description: CRAN specific list of packages
+              example:
+              - dplyr
+              - MASS
+              - RPostgres
+            include_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            exclude_licenses:
+              $ref: '#/components/schemas/FilterLicenses'
+            include_specs:
+              $ref: '#/components/schemas/FilterIncludeSpecs'
+            exclude_specs:
+              $ref: '#/components/schemas/FilterExcludeSpecs'
+            only_specs:
+              $ref: '#/components/schemas/FilterOnlySpecs'
+            include_dependencies:
+              type: boolean
+              default: false
+              description: '* If this is true, then dependencies will be mirrored
+
+                * The value should be True / enabled only if only_specs list is not empty.
+
+                '
+            date_from:
+              type: string
+              format: date
+              description: bottom date YYYY-mm-dd when package published. Conda-only
+            date_to:
+              type: string
+              format: date
+              description: upper date YYYY-mm-dd when package was published. Conda-only
+            only_signed:
+              type: boolean
+              default: false
+              description: Unsigned packages will be filtered out. Conda-only
+        run_now:
+          type: boolean
+          default: false
+          description: 'Does a one-time, immediate, and off-schedule run of the mirroring operation.
+
+            '
+    FilterExcludeSpecs:
+      type: array
+      uniqueItems: true
+      items:
+        type: string
+      description: 'A list of MatchSpec strings, for excluding specific packages. General format is (channel(/subdir):(namespace):)name(version(build))[key1=value1,key2=value2]
+
+        '
   parameters:
-    max-impact-score-query:
+    ckey-query:
+      name: ckey
       in: query
-      name: max_score
-      description: Returns the CVE Notifications below provided maximum impact score
-      schema:
-        type: number
-        minimum: 0
-        maximum: 10
-    min-impact-score-query:
-      in: query
-      name: min_score
-      description: Returns the CVE Notifications with at least provided minimum impact score
-      schema:
-        type: number
-        minimum: 0
-        maximum: 10
-    include-subchannels:
-      in: query
-      name: include_subchannels
-      description: option to include or exclude subchannels from the response
-      schema:
-        type: boolean
-        default: false
-    created-min-query:
-      in: query
-      name: created_min
-      description: date of creation in string
       schema:
         type: string
-    omit_cve-query:
+      description: ckey
+    only_names-query:
       in: query
-      name: omit_cve
-      description: Explicitly don't return CVE data
+      name: only_names
+      description: list of packages, search for. exact names, separated by comma
       schema:
-        type: boolean
-        default: false
+        type: array
+        items:
+          type: string
+    from-date-parameter:
+      name: from_date
+      description: starting timestamp for filtering data
+      in: query
+      schema:
+        type: string
+        format: date
+        description: bottom date YYYY-mm-dd
     created-max-query:
       in: query
       name: created_max
       description: date of creation (in combination with created_min field as start date)
+      schema:
+        type: string
+    version-query:
+      in: query
+      name: version
+      description: Package Version
+      schema:
+        type: string
+    ckey-parameter:
+      name: ckey
+      in: path
+      required: true
+      schema:
+        type: string
+        format: path
+    cve-name-query:
+      in: query
+      name: cve_name
+      description: the exact CVE id to search on
+      example: CVE-2018-1000805
       schema:
         type: string
     event-types-query:
@@ -3829,93 +3835,6 @@ components:
           - artifact_generated
           - artifact_metadata_updated
           - artifact_downloaded
-    artifact_name-query:
-      in: query
-      name: artifact
-      description: package name to search on
-      schema:
-        type: string
-    mirror_id-parameter:
-      name: mirror_id
-      in: path
-      required: true
-      schema:
-        type: string
-    cve_extra_info-query:
-      in: query
-      name: cve_extra_info
-      description: In addition to relevant cve_id, score and status provide description, etc.
-      schema:
-        type: boolean
-        default: false
-    package-state-query:
-      in: query
-      name: state
-      description: active or passive state
-      schema:
-        type: string
-        enum:
-        - active
-        - passive
-    task-manager-schedule-query:
-      name: task_manager_schedule
-      in: query
-      description: if true, schedule mirroring in task manager component
-      schema:
-        type: boolean
-        default: false
-    file-sort-query:
-      in: query
-      name: sort
-      description: property to sort artifact files (may be comma-separated)
-      schema:
-        type: array
-        items:
-          type: string
-          enum:
-          - ckey
-          - -ckey
-          - updated_at
-          - -updated_at
-          - blob_size
-          - -blob_size
-          - metadata_version
-          - -metadata_version
-          - metadata_platforms
-          - -metadata_platforms
-    ckey-query:
-      name: ckey
-      in: query
-      schema:
-        type: string
-      description: ckey
-    platform-query:
-      name: platform
-      in: query
-      schema:
-        type: string
-      description: filter for the platform
-    search-query:
-      in: query
-      name: q
-      description: the string to search on
-      schema:
-        type: string
-    signature-artifact_family-parameter:
-      in: path
-      name: artifact_family
-      required: true
-      schema:
-        type: string
-        enum:
-        - conda
-    subchannel-parameter:
-      name: subchannel_name
-      in: path
-      required: true
-      schema:
-        type: string
-        pattern: ^[a-z][a-z0-9_-]*$
     channel-ids-query:
       in: query
       name: ids
@@ -3925,14 +3844,21 @@ components:
         type: array
         items:
           type: string
-    from-date-parameter:
-      name: from_date
-      description: starting timestamp for filtering data
+    task-manager-schedule-query:
+      name: task_manager_schedule
       in: query
+      description: if true, schedule mirroring in task manager component
       schema:
-        type: string
-        format: date
-        description: bottom date YYYY-mm-dd
+        type: boolean
+        default: false
+    min-download-count-query:
+      in: query
+      name: min_download_count
+      description: Displays notifications only for packages with provided minimum number of downloads
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
     min_cve_score-query:
       in: query
       name: min_score
@@ -3941,21 +3867,101 @@ components:
         type: number
         minimum: 0
         maximum: 10
-    include_nonsearchable-query:
+    created-min-query:
       in: query
-      name: include_nonsearchable
-      description: Include also nonsearchable files
+      name: created_min
+      description: date of creation in string
+      schema:
+        type: string
+    to-date-parameter:
+      name: to_date
+      description: ending timestamp for filtering data
+      in: query
+      schema:
+        type: string
+        format: date
+        description: upper date YYYY-mm-dd
+    cve_extra_info-query:
+      in: query
+      name: cve_extra_info
+      description: In addition to relevant cve_id, score and status provide description, etc.
       schema:
         type: boolean
         default: false
-    limit-query:
+    offset-query:
       in: query
-      name: limit
+      name: offset
       required: false
       schema:
         type: integer
-        default: 100
-      description: the number of results in the result set
+        default: 0
+      description: the offset of the result set
+    mirror_id-parameter:
+      name: mirror_id
+      in: path
+      required: true
+      schema:
+        type: string
+    max_cve_score-query:
+      in: query
+      name: max_score
+      description: Returns files below requesed max_cve_score
+      schema:
+        type: number
+        minimum: 0
+        maximum: 10
+    artifact_name-parameter:
+      name: artifact_name
+      in: path
+      required: true
+      description: the unique name of the artifact
+      schema:
+        type: string
+        example: numpy
+    platform-query:
+      name: platform
+      in: query
+      schema:
+        type: string
+      description: filter for the platform
+    cve-notifications-event-type-query:
+      in: query
+      name: event_types
+      description: filter CVE Notifications by event types
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/CVEsNotificationEventTypes'
+    min-impact-score-query:
+      in: query
+      name: min_score
+      description: Returns the CVE Notifications with at least provided minimum impact score
+      schema:
+        type: number
+        minimum: 0
+        maximum: 10
+    timestamp-parameter:
+      name: timestamp
+      description: exact timestamp for filtering data
+      in: query
+      schema:
+        type: string
+        format: date-time
+    max-impact-score-query:
+      in: query
+      name: max_score
+      description: Returns the CVE Notifications below provided maximum impact score
+      schema:
+        type: number
+        minimum: 0
+        maximum: 10
+    artifact_family-query:
+      name: artifact_family
+      in: query
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/ArtifactFamily'
     cve_status-query:
       in: query
       name: status
@@ -3964,6 +3970,121 @@ components:
         type: array
         items:
           $ref: '#/components/schemas/CVE_status'
+    artifact-sort-query:
+      in: query
+      name: sort
+      description: property to sort artifacts (may be comma-separated)
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - common_name
+          - -common_name
+          - download_count
+          - -download_count
+          - updated_at
+          - -updated_at
+    search-query:
+      in: query
+      name: q
+      description: the string to search on
+      schema:
+        type: string
+    include_nonsearchable-query:
+      in: query
+      name: include_nonsearchable
+      description: Include also nonsearchable files
+      schema:
+        type: boolean
+        default: false
+    omit_cve-query:
+      in: query
+      name: omit_cve
+      description: Explicitly don't return CVE data
+      schema:
+        type: boolean
+        default: false
+    cve-sort-query:
+      in: query
+      name: sort
+      description: property to sort CVEs (may be comma-separated)
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - score
+          - -score
+          - published_at
+          - -published_at
+          - modified_at
+          - -modified_at
+          - created_at
+          - -created_at
+    cve_id-parameter:
+      name: cve_id
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 1
+    include-reserved-query:
+      in: query
+      name: include_reserved
+      description: option to include reserved channels in response
+      schema:
+        type: boolean
+        default: false
+    artifact_name-query:
+      in: query
+      name: artifact
+      description: package name to search on
+      schema:
+        type: string
+    architectures-query:
+      in: query
+      name: architectures
+      description: the package architectures list to search on
+      schema:
+        type: array
+        example:
+        - linux-64
+        - osx-64
+        - win-32
+        - win-64
+        items:
+          type: string
+    include-subchannels:
+      in: query
+      name: include_subchannels
+      description: option to include or exclude subchannels from the response
+      schema:
+        type: boolean
+        default: false
+    min_packages_count-query:
+      in: query
+      name: min_packages_count
+      description: Returns the CVE with at least provided minimum score
+      schema:
+        type: integer
+        minimum: 0
+    with_cve_counts_by_severity-query:
+      in: query
+      name: with_cve_counts_by_severity
+      required: false
+      schema:
+        type: boolean
+        default: false
+      description: return cve counts by severity.
+    signature-artifact_family-parameter:
+      in: path
+      name: artifact_family
+      required: true
+      schema:
+        type: string
+        enum:
+        - conda
     mirror-sort-query:
       in: query
       name: sort
@@ -3985,133 +4106,31 @@ components:
           - -updated_at
           - state
           - -state
-    artifact-sort-query:
+    file-sort-query:
       in: query
       name: sort
-      description: property to sort artifacts (may be comma-separated)
+      description: property to sort artifact files (may be comma-separated)
       schema:
         type: array
         items:
           type: string
           enum:
-          - common_name
-          - -common_name
-          - download_count
-          - -download_count
+          - ckey
+          - -ckey
           - updated_at
           - -updated_at
-    min-download-count-query:
-      in: query
-      name: min_download_count
-      description: Displays notifications only for packages with provided minimum number of downloads
-      schema:
-        type: integer
-        minimum: 0
-        default: 0
-    to-date-parameter:
-      name: to_date
-      description: ending timestamp for filtering data
-      in: query
-      schema:
-        type: string
-        format: date
-        description: upper date YYYY-mm-dd
-    only_names-query:
-      in: query
-      name: only_names
-      description: list of packages, search for. exact names, separated by comma
-      schema:
-        type: array
-        items:
-          type: string
-    with_cve_counts_by_severity-query:
-      in: query
-      name: with_cve_counts_by_severity
-      required: false
-      schema:
-        type: boolean
-        default: false
-      description: return cve counts by severity.
-    artifact_family-query:
-      name: artifact_family
-      in: query
-      schema:
-        type: array
-        items:
-          $ref: '#/components/schemas/ArtifactFamily'
-    architectures-query:
-      in: query
-      name: architectures
-      description: the package architectures list to search on
-      schema:
-        type: array
-        example:
-        - linux-64
-        - osx-64
-        - win-32
-        - win-64
-        items:
-          type: string
-    timestamp-parameter:
-      name: timestamp
-      description: exact timestamp for filtering data
-      in: query
-      schema:
-        type: string
-        format: date-time
-    version-query:
-      in: query
-      name: version
-      description: Package Version
-      schema:
-        type: string
-    cve-notifications-event-type-query:
-      in: query
-      name: event_types
-      description: filter CVE Notifications by event types
-      schema:
-        type: array
-        items:
-          $ref: '#/components/schemas/CVEsNotificationEventTypes'
+          - blob_size
+          - -blob_size
+          - metadata_version
+          - -metadata_version
+          - metadata_platforms
+          - -metadata_platforms
     artifact_family-parameter:
       name: artifact_family
       in: path
       required: true
       schema:
         $ref: '#/components/schemas/ArtifactFamily'
-    max_cve_score-query:
-      in: query
-      name: max_score
-      description: Returns files below requesed max_cve_score
-      schema:
-        type: number
-        minimum: 0
-        maximum: 10
-    cve-sort-query:
-      in: query
-      name: sort
-      description: property to sort CVEs (may be comma-separated)
-      schema:
-        type: array
-        items:
-          type: string
-          enum:
-          - score
-          - -score
-          - published_at
-          - -published_at
-          - modified_at
-          - -modified_at
-          - created_at
-          - -created_at
-    artifact_name-parameter:
-      name: artifact_name
-      in: path
-      required: true
-      description: the unique name of the artifact
-      schema:
-        type: string
-        example: numpy
     channel-sort-query:
       in: query
       name: sort
@@ -4125,13 +4144,14 @@ components:
           - -name
           - updated_at
           - -updated_at
-    min_packages_count-query:
+    limit-query:
       in: query
-      name: min_packages_count
-      description: Returns the CVE with at least provided minimum score
+      name: limit
+      required: false
       schema:
         type: integer
-        minimum: 0
+        default: 100
+      description: the number of results in the result set
     channel-parameter:
       name: channel_name
       in: path
@@ -4139,45 +4159,43 @@ components:
       schema:
         type: string
         pattern: ^[a-z][a-z0-9_-]*$
-    ckey-parameter:
-      name: ckey
+    package-state-query:
+      in: query
+      name: state
+      description: active or passive state
+      schema:
+        type: string
+        enum:
+        - active
+        - passive
+    subchannel-parameter:
+      name: subchannel_name
       in: path
       required: true
       schema:
         type: string
-        format: path
-    offset-query:
-      in: query
-      name: offset
-      required: false
-      schema:
-        type: integer
-        default: 0
-      description: the offset of the result set
-    cve_id-parameter:
-      name: cve_id
-      in: path
-      required: true
-      schema:
-        type: string
-        minLength: 1
-    cve-name-query:
-      in: query
-      name: cve_name
-      description: the exact CVE id to search on
-      example: CVE-2018-1000805
-      schema:
-        type: string
-    include-reserved-query:
-      in: query
-      name: include_reserved
-      description: option to include reserved channels in response
-      schema:
-        type: boolean
-        default: false
+        pattern: ^[a-z][a-z0-9_-]*$
   responses:
+    Conflict:
+      description: Creating/updating resource raises a conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
     BadRequest:
       description: Server cannot execute request due to something that is perceived to be a client error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthenticated:
+      description: Unauthenticated, no token is provided or token is invalid
       content:
         application/json:
           schema:
@@ -4190,24 +4208,6 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
     NotFound:
       description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Conflict:
-      description: Creating/updating resource raises a conflict
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthenticated:
-      description: Unauthenticated, no token is provided or token is invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    InternalServerError:
-      description: Internal server error
       content:
         application/json:
           schema:
